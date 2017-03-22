@@ -162,8 +162,8 @@ PlayerSettings:
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: 
-  AndroidKeyaliasName: 
+  AndroidKeystoreName: D:/UnityKeystore/alexmalyk.keystore
+  AndroidKeyaliasName: optical games studio
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   androidEnableBanner: 1
