@@ -57,18 +57,7 @@ public class ScreenManager : MonoBehaviour
     {
         if (!isTransition)
         {
-            if (GameManager.manager.isGameOver && GameManager.manager.isGameRestarted)
-            {
-                AudioManager.manager.PlayNegativeSound();
-            }
-            else if (GameManager.manager.isGameOver)
-            {
-                AudioManager.manager.PlayPositiveSound();
-            }
-            else
-            {
-                AudioManager.manager.PlayClickSound();
-            }
+            
             Animator animator = obj.GetComponent<Animator>();
             if (AdditionalScreenAnimator == null)
             {

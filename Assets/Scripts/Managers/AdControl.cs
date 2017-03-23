@@ -19,6 +19,7 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
     string kRewardType1 = "record";
     string kRewardType2 = "out of hint";
     string kRewardType3 = "default";
+    string kRewardType4 = "points";
 
     string rewardType;
     int rewardAmount;
@@ -47,7 +48,14 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
     public void ShowRewardedAd() {
         Appodeal.setRewardedVideoCallbacks(this);
         Appodeal.show(Appodeal.REWARDED_VIDEO);
-        onRewardedVideoFinished(rewardAmount, rewardType);
+        //onRewardedVideoFinished(100, kRewardType4);
+    }
+
+    public void ShowSpecialAd() {
+        Appodeal.setRewardedVideoCallbacks(this);
+        Appodeal.show(Appodeal.REWARDED_VIDEO);
+        //onRewardedVideoFinished(rewardAmount, rewardType);
+
     }
 
     public void SetupSpecialAd() {
@@ -90,14 +98,30 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
     public void onRewardedVideoClosed() {
         print("Video closed");
         testResult.text += "C";
+
+        BankManager.bank += 1;
+        DataControl.control.SaveAll();
     }
     public void onRewardedVideoFinished(int amount, string name) {
-        print("Reward: finished");
-        HintManager.manager.amountPU1 += amount;
-        HintManager.manager.amountPU2 += amount;
-        HintManager.manager.amountPU3 += amount;
+        //if (name == kRewardType4)
+        //{
+        //    BankManager.bank += amount;
+        //    DataControl.control.SaveAll();
+        //}
+        //else
+        //{
 
-        DataControl.control.SavePU();
+
+        //    print("Reward: finished");
+        //    HintManager.manager.amountPU1 += amount;
+        //    HintManager.manager.amountPU2 += amount;
+        //    HintManager.manager.amountPU3 += amount;
+
+        //    DataControl.control.SaveAll();
+        //}
+
+        BankManager.bank += 100;
+        DataControl.control.SaveAll();
     }
     #endregion
 }

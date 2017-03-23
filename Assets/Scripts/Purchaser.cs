@@ -24,7 +24,7 @@ using UnityEngine.Purchasing;
         public static string kProductIDtier_2 = "2_tier_points";
         public static string kProductIDtier_3 = "3_tier_points";
         public static string kProductIDtier_4 = "4_tier_points";
-        public static string kProductIDdoubler = "doubler";
+        public static string kProductIDdoubler = "com.ogs.therealone.doubler";
 
         void Start()
         {
@@ -48,8 +48,9 @@ using UnityEngine.Purchasing;
             // Create a builder, first passing in a suite of Unity provided stores.
             var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
-            // Add a product to sell / restore by way of its identifier, associating the general identifier
-            // with its store-specific identifiers.
+            builder.Configure<ISamsungAppsConfiguration>().SetMode(SamsungAppsMode.AlwaysSucceed); // TESTING: auto-approves all transactions by Samsung.
+                                                                                               // Add a product to sell / restore by way of its identifier, associating the general identifier
+                                                                                               // with its store-specific identifiers.
             builder.AddProduct(kProductIDtier_1, ProductType.Consumable);
             builder.AddProduct(kProductIDtier_2, ProductType.Consumable);
             builder.AddProduct(kProductIDtier_3, ProductType.Consumable);

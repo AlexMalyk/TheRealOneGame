@@ -28,7 +28,21 @@ public class SettingsManager : MonoBehaviour {
     }
     // Use this for initialization
     void Start () {
-	
+        if (isAudioOn)
+        {
+            audioButton.text = kValueOn;
+        }
+        else {
+            audioButton.text = kValueOff;
+        }
+
+        if (isVibrationOn)
+        {
+            vibroButton.text = kValueOn;
+        }
+        else {
+            vibroButton.text = kValueOff;
+        }
 	}
 
     public void AudioSwitch() {
