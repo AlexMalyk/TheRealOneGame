@@ -79,9 +79,9 @@ public class GameManager : MonoBehaviour {
 
         Analytics.CustomEvent("start game", new Dictionary<string, object>
         {
-            {"pu1", HintManager.manager.amountPU1 },
-            {"pu2", HintManager.manager.amountPU2 },
-            {"pu3", HintManager.manager.amountPU3 }
+            {"pu1", HintManager.manager.amountTimeStops },
+            {"pu2", HintManager.manager.amountFlashes },
+            {"pu3", HintManager.manager.amountFlankers }
         });
 
         HintManager.manager.DeleteEffects();

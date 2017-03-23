@@ -12,16 +12,16 @@ public class HintManager : MonoBehaviour {
 
     public GameObject gameScreen;
     public GameObject iapScreen;
-    public GameObject powerUp1;
-    public GameObject powerUp2;
-    public GameObject powerUp3;
+    public GameObject timeStopsGameObject;
+    public GameObject flashesGameObject;
+    public GameObject flankersGameObject;
 
-    public Button pu1Button;
-    public GameObject pu1ButtonDisabledImage;
-    public Button pu2Button;
-    public GameObject pu2ButtonDisabledImage;
-    public Button pu3Button;
-    public GameObject pu3ButtonDisabledImage;
+    public Button timeStopButton;
+    public GameObject timeStopButtonDisabledImage;
+    public Button flashButton;
+    public GameObject flashButtonDisabledImage;
+    public Button flankerButton;
+    public GameObject flankerButtonDisabledImage;
 
     public GameObject sphere;
     public GameObject leftSide;
@@ -29,12 +29,20 @@ public class HintManager : MonoBehaviour {
 
     public Text hintMessage;
 
+    public Text plus5TimeStops;
+    public Text plus5Flashes;
+    public Text plus5Flankers;
+
+    public Text plus5TimeStopsPUscreen;
+    public Text plus5FlashesPUscreen;
+    public Text plus5FlankersPUscreen;
+
     [HideInInspector]
-    public static bool isPU1UsedInMatch;
+    public static bool isTimeStopUsedInMatch;
     [HideInInspector]
-    public static bool isPU2UsedInRound;
+    public static bool isFlashUsedInRound;
     [HideInInspector]
-    public static bool isPU3UsedInRound;
+    public static bool isFlankerUsedInRound;
 
     static string kOncePerMatchMessage = "Can only be used once a match";
     static string kOncePerRoundMessage = "Already used";
@@ -42,23 +50,23 @@ public class HintManager : MonoBehaviour {
     static string kFlashesDescription = "Increases flashing";
     static string kFlankerDescription = "Shows the side to which the dot is closer";
 
-    int priceTimeStops = 2000;
-    int priceFlankers = 1000;
-    int priceFlashes = 500;
+    int priceTimeStops = 10;
+    int priceFlankers = 10;
+    int priceFlashes = 10;
 
-
-    public  int amountPU1;
-
-    public  int amountPU2;
-
-    public  int amountPU3;
+    [HideInInspector]
+    public  int amountTimeStops;
+    [HideInInspector]
+    public  int amountFlashes;
+    [HideInInspector]
+    public  int amountFlankers;
 
     private Animator sphereAnimator;
     private Animator leftSideAnimator;
     private Animator rightSideAnimator;
-    private Animator PU1animator;
-    private Animator PU2animator;
-    private Animator PU3animator;
+    private Animator timeStopAnimator;
+    private Animator flashAnimator;
+    private Animator flankerAnimator;
 
     void Awake()
     {
@@ -79,77 +87,82 @@ public class HintManager : MonoBehaviour {
         leftSideAnimator = leftSide.GetComponent<Animator>();
         rightSideAnimator = rightSide.GetComponent<Animator>();
 
-        PU1animator = powerUp1.GetComponent<Animator>();
-        PU2animator = powerUp2.GetComponent<Animator>();
-        PU3animator = powerUp3.GetComponent<Animator>();
+        timeStopAnimator = timeStopsGameObject.GetComponent<Animator>();
+        flashAnimator = flashesGameObject.GetComponent<Animator>();
+        flankerAnimator = flankersGameObject.GetComponent<Animator>();
 
-        isPU1UsedInMatch = false;
-        isPU2UsedInRound = false;
-        isPU3UsedInRound = false;
+        isTimeStopUsedInMatch = false;
+        isFlashUsedInRound = false;
+        isFlankerUsedInRound = false;
 
     }
     //добавление времени (можно использовать раз в игру)
-    public void AddTime()
+    public void TimeStopHint()
     {
         //проверка что еще не использовалась в матче => вывод сообщения
-        if (!ScreenManager.screenManager.isMenuOpen && isPU1UsedInMatch) {
+        if (!ScreenManager.screenManager.isMenuOpen && isTimeStopUsedInMatch) {
             ShowMessage(kOncePerMatchMessage);
         }
         //проверка количества и что меню не открыто => добавление времени
-        else if (!ScreenManager.screenManager.isMenuOpen && amountPU1 > 0)
+        else if (!ScreenManager.screenManager.isMenuOpen && amountTimeStops > 0)
         {
             Debug.Log("AddTime");
             GameManager.manager.time += 5;
-            amountPU1--;
-            pu1ButtonDisabledImage.SetActive(true);//добавление штриховки
-            isPU1UsedInMatch = true; //флаг что использована в этом матче
+
+            amountTimeStops--;
+            DataControl.control.SaveAll();
+
+            timeStopButtonDisabledImage.SetActive(true);//добавление штриховки
+            isTimeStopUsedInMatch = true; //флаг что использована в этом матче
 
             ShowMessage(kTimeStopDescription); 
         }
         //проверка количества и что меню не открыто и количество 0 => открытие окна поверапа
-        else if ( (!ScreenManager.screenManager.isMenuOpen && amountPU1 ==0) || ScreenManager.screenManager.GetOpenScreen() != powerUp1)
+        else if ( (!ScreenManager.screenManager.isMenuOpen && amountTimeStops == 0) || ScreenManager.screenManager.GetOpenScreen() != timeStopsGameObject)
         {
             GameManager.manager.PauseGame(true);
             ScreenManager.screenManager.isMenuOpen = true;
             gameScreen.GetComponent<Animator>().SetTrigger("HideUp");
             ScreenManager.screenManager.WithoutAdditionalAnimator();
-            ScreenManager.screenManager.OpenScreen(powerUp1);
+            ScreenManager.screenManager.OpenScreen(timeStopsGameObject);
         }
     }
     //сверкание точки (можно использовать раз в раунд)
-    public void IncreaseSparkleSpeed() {
+    public void FlashHint() {
         //проверка что еще не использовалась в раунде
-        if (!ScreenManager.screenManager.isMenuOpen && isPU2UsedInRound)
+        if (!ScreenManager.screenManager.isMenuOpen && isFlashUsedInRound)
         {
             ShowMessage(kOncePerRoundMessage);
         }
-        else if (!ScreenManager.screenManager.isMenuOpen && amountPU2 > 0)
+        else if (!ScreenManager.screenManager.isMenuOpen && amountFlashes > 0)
         {
             Debug.Log("IncreaseSparkleSpeed");
             sphereAnimator.SetBool("HintOn", true);
 
-            amountPU2--;
-            pu2ButtonDisabledImage.SetActive(true);//добавление штриховки
-            isPU2UsedInRound = true; //флаг что использована в этом раунде
+            amountFlashes--;
+            DataControl.control.SaveAll();
+
+            flashButtonDisabledImage.SetActive(true);//добавление штриховки
+            isFlashUsedInRound = true; //флаг что использована в этом раунде
 
             ShowMessage(kFlashesDescription);
         }
-        else if ( (!ScreenManager.screenManager.isMenuOpen && amountPU2 == 0) || ScreenManager.screenManager.GetOpenScreen() != powerUp2)
+        else if ( (!ScreenManager.screenManager.isMenuOpen && amountFlashes == 0) || ScreenManager.screenManager.GetOpenScreen() != flashesGameObject)
         {
             GameManager.manager.PauseGame(true);
             gameScreen.GetComponent<Animator>().SetTrigger("HideUp");
             ScreenManager.screenManager.WithoutAdditionalAnimator();
-            ScreenManager.screenManager.OpenScreen(powerUp2);
+            ScreenManager.screenManager.OpenScreen(flashesGameObject);
         }
     }
     //определение позиции (можно использовать раз в раунд)
-    public void ShowSide() {
+    public void FlankerHint() {
         //проверка что еще не использовалась в раунде
-        if (!ScreenManager.screenManager.isMenuOpen && isPU3UsedInRound)
+        if (!ScreenManager.screenManager.isMenuOpen && isFlankerUsedInRound)
         {
             ShowMessage(kOncePerRoundMessage);
         }
-        else if (!ScreenManager.screenManager.isMenuOpen && amountPU3 > 0)
+        else if (!ScreenManager.screenManager.isMenuOpen && amountFlankers > 0)
         {
             Debug.Log("ShowSide");
             Debug.Log("SpherePosition = "+ sphere.GetComponent<RectTransform>().localPosition.x);
@@ -162,48 +175,50 @@ public class HintManager : MonoBehaviour {
                 rightSideAnimator.SetBool("HintOn", true);
             }
 
-            amountPU3--;
-            pu3ButtonDisabledImage.SetActive(true);//добавление штриховки
-            isPU3UsedInRound = true; //флаг что использована в этом раунде
+            amountFlankers--;
+            DataControl.control.SaveAll();
+
+            flankerButtonDisabledImage.SetActive(true);//добавление штриховки
+            isFlankerUsedInRound = true; //флаг что использована в этом раунде
 
             ShowMessage(kFlankerDescription);
         }
-        else if ( (!ScreenManager.screenManager.isMenuOpen && amountPU3 == 0) || ScreenManager.screenManager.GetOpenScreen() != powerUp3)
+        else if ( (!ScreenManager.screenManager.isMenuOpen && amountFlankers == 0) || ScreenManager.screenManager.GetOpenScreen() != flankersGameObject)
         {
             GameManager.manager.PauseGame(true);
             gameScreen.GetComponent<Animator>().SetTrigger("HideUp");
             ScreenManager.screenManager.WithoutAdditionalAnimator();
-            ScreenManager.screenManager.OpenScreen(powerUp3);
+            ScreenManager.screenManager.OpenScreen(flankersGameObject);
         }
     }
 
     public void DeleteEffects(bool first, bool second, bool third) {
         if (first) {
-            pu1ButtonDisabledImage.SetActive(false);
-            isPU1UsedInMatch = false;
+            timeStopButtonDisabledImage.SetActive(false);
+            isTimeStopUsedInMatch = false;
         }
         if (second) {
-            pu2ButtonDisabledImage.SetActive(false);
-            isPU2UsedInRound = false;
+            flashButtonDisabledImage.SetActive(false);
+            isFlashUsedInRound = false;
         }
         if (third) {
-            pu3ButtonDisabledImage.SetActive(false);
-            isPU3UsedInRound = false;
+            flankerButtonDisabledImage.SetActive(false);
+            isFlankerUsedInRound = false;
 
             RemoveFlankers();
         }
     }
     public void DeleteEffects()
     {
-        pu1ButtonDisabledImage.SetActive(false);
-        isPU1UsedInMatch = false;
+        timeStopButtonDisabledImage.SetActive(false);
+        isTimeStopUsedInMatch = false;
 
-        pu2ButtonDisabledImage.SetActive(false);
-        isPU2UsedInRound = false;
-        
+        flashButtonDisabledImage.SetActive(false);
+        isFlashUsedInRound = false;
 
-        pu3ButtonDisabledImage.SetActive(false);
-        isPU3UsedInRound = false;
+
+        flankerButtonDisabledImage.SetActive(false);
+        isFlankerUsedInRound = false;
 
         RemoveFlankers();   
     }
@@ -220,9 +235,16 @@ public class HintManager : MonoBehaviour {
 
     public void BuyTimeStops() {
         if (BankManager.bank >= priceTimeStops)
-        {
-            amountPU1 += 5;
-            DataControl.control.SavePU();
+        {           
+            if (ScreenManager.screenManager.GetOpenScreen() == timeStopsGameObject)
+            {
+                plus5TimeStopsPUscreen.GetComponent<Animator>().SetTrigger("Show");
+            }
+            else { 
+                plus5TimeStops.GetComponent<Animator>().SetTrigger("Show");
+            }
+            amountTimeStops += 5;
+            DataControl.control.SaveAll();           
         }
         else {
             iapScreen.GetComponent<Animator>().SetBool("Open", true);
@@ -233,8 +255,16 @@ public class HintManager : MonoBehaviour {
     {
         if (BankManager.bank >= priceFlashes)
         {
-            amountPU2 += 5;
-            DataControl.control.SavePU();
+            if (ScreenManager.screenManager.GetOpenScreen() == flashesGameObject)
+            {
+                plus5FlankersPUscreen.GetComponent<Animator>().SetTrigger("Show");
+            }
+            else
+            {
+                plus5Flashes.GetComponent<Animator>().SetTrigger("Show");
+            }
+            amountFlashes += 5;
+            DataControl.control.SaveAll();         
         }
         else
         {
@@ -246,8 +276,16 @@ public class HintManager : MonoBehaviour {
     {
         if (BankManager.bank >= priceFlankers)
         {
-            amountPU3 += 5;
-            DataControl.control.SavePU();
+            if (ScreenManager.screenManager.GetOpenScreen() == flankersGameObject)
+            {
+                plus5FlankersPUscreen.GetComponent<Animator>().SetTrigger("Show");
+            }
+            else
+            {
+                plus5Flankers.GetComponent<Animator>().SetTrigger("Show");
+            }
+            amountFlankers += 5;
+            DataControl.control.SaveAll();      
         }
         else
         {

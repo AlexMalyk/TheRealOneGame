@@ -57,7 +57,7 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
             rewardType = kRewardType1;
             rewardAmount = 3;
         }
-        else if (HintManager.manager.amountPU1 == 0 || HintManager.manager.amountPU2 == 0 || HintManager.manager.amountPU3 == 0)
+        else if (HintManager.manager.amountTimeStops == 0 || HintManager.manager.amountFlashes == 0 || HintManager.manager.amountFlankers == 0)
         {
             kPromoMessage.text = kZeroAmountOfHint;
             rewardType = kRewardType2;

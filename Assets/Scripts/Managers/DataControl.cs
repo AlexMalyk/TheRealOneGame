@@ -50,9 +50,9 @@ public class DataControl : MonoBehaviour
         FileStream file = File.Create(Application.persistentDataPath + "/playerInfo.dat");
         PlayerData data = new PlayerData();
 
-        data.amountPU1 = HintManager.manager.amountPU1;
-        data.amountPU2 = HintManager.manager.amountPU2;
-        data.amountPU3 = HintManager.manager.amountPU3;
+        data.amountTimeStops = HintManager.manager.amountTimeStops;
+        data.amountFlashes = HintManager.manager.amountFlashes;
+        data.amountFlankers = HintManager.manager.amountFlankers;
 
         data.bestScoreTimed = bestScoreTimed;
         data.bestScoreEndless = bestScoreEndless;
@@ -60,10 +60,24 @@ public class DataControl : MonoBehaviour
 
         data.bank = BankManager.bank;
 
+        data.isVibrationOn = SettingsManager.manager.isVibrationOn;
+        data.isAudioOn = SettingsManager.manager.isAudioOn;
+
+        data.isEndlessModePlayed = GameManager.manager.isEndlessModePlayed;
+        data.isTimedModePlayed = GameManager.manager.isTimedModePlayed;
+        data.isZenModePlayed = GameManager.manager.isZenModePlayed;
+        data.isTutorialPlayed = GameManager.manager.isTutorialPlayed;
+
+
+
         bf.Serialize(file, data);
         file.Close();
 
-        //Debug.Log("All data saved. PU1=" + HintManager.amountPU1 + ", PU2=" + HintManager.amountPU2 + ", PU3=" + HintManager.amountPU3 + ", best=" + bestScore + ", bank=" + BankManager.bank);
+        Debug.Log("All data saved. PU1=" + data.amountTimeStops + ", PU2=" + data.amountFlashes + ", PU3=" + data.amountFlankers +
+                        ", bestScoreTimed=" + data.bestScoreTimed + ", bestScoreZen=" + data.bestScoreZen + ", bestScoreEndless=" + data.bestScoreEndless +
+                        ", bank=" + data.bank + ", isVibratioOn=" + data.isVibrationOn + ", isAudioOn=" + data.isAudioOn +
+                        ", isEndlessModePlayed=" + data.isEndlessModePlayed + ", isTimedModePlayed=" + data.isTimedModePlayed +
+                        ", isZenModePlayed=" + data.isZenModePlayed + ", isTutorialPlayed=" + data.isTutorialPlayed);
     }
 
     public void LoadAll()
@@ -75,9 +89,9 @@ public class DataControl : MonoBehaviour
             PlayerData data = (PlayerData)bf.Deserialize(file);
             file.Close();
 
-            HintManager.manager.amountPU1 = data.amountPU1;
-            HintManager.manager.amountPU2 = data.amountPU2;
-            HintManager.manager.amountPU3 = data.amountPU3;
+            HintManager.manager.amountTimeStops = data.amountTimeStops;
+            HintManager.manager.amountFlashes = data.amountFlashes;
+            HintManager.manager.amountFlankers = data.amountFlankers;
 
             bestScoreTimed = data.bestScoreTimed;
             bestScoreZen = data.bestScoreZen;
@@ -93,10 +107,11 @@ public class DataControl : MonoBehaviour
             GameManager.manager.isZenModePlayed = data.isZenModePlayed;
             GameManager.manager.isTutorialPlayed = data.isTutorialFinished;
 
-            Debug.Log("All data loaded. PU1=" + HintManager.manager.amountPU1 +
-                        ", PU2=" + HintManager.manager.amountPU2 + ", PU3=" + HintManager.manager.amountPU3 +
+            Debug.Log("All data loaded. PU1=" + HintManager.manager.amountTimeStops + ", PU2=" + HintManager.manager.amountFlashes + ", PU3=" + HintManager.manager.amountFlankers +
                         ", bestScoreTimed=" + bestScoreTimed + ", bestScoreZen=" + bestScoreZen + ", bestScoreEndless=" + bestScoreEndless +
-                        ", bank=" + BankManager.bank);
+                        ", bank=" + BankManager.bank + ", isVibratioOn=" + SettingsManager.manager.isVibrationOn + ", isAudioOn=" + SettingsManager.manager.isAudioOn +
+                        ", isEndlessModePlayed=" + GameManager.manager.isEndlessModePlayed + ", isTimedModePlayed=" + GameManager.manager.isTimedModePlayed +
+                        ", isZenModePlayed=" + GameManager.manager.isZenModePlayed + ", isTutorialPlayed=" + GameManager.manager.isTutorialPlayed);
         }
     }
 
@@ -223,9 +238,9 @@ public class DataControl : MonoBehaviour
 [Serializable]
 class PlayerData
 {
-    public int amountPU1;
-    public int amountPU2;
-    public int amountPU3;
+    public int amountTimeStops;
+    public int amountFlashes;
+    public int amountFlankers;
 
     public int bestScoreTimed;
     public int bestScoreEndless;
