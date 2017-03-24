@@ -22,11 +22,9 @@ public class SphereSpawn : MonoBehaviour {
         x = Random.Range(leftMax, rightMax + 1) * rangeOnCanvas;
         y = Random.Range(downMax, upMax + 1) * rangeOnCanvas;
         Debug.Log("x=" + x + " y=" + y);
-        //x = x * GameBoard.transform.localScale.x;
 
         GetComponent<RectTransform>().localPosition = new Vector3(x,y,0);
 
-        //gameObject.transform.position = new Vector3(x, y, 0);
         Debug.Log("x=" + gameObject.transform.position.x + " y=" + gameObject.transform.position.y + " z=" + gameObject.transform.position.z);
     }
 
@@ -35,7 +33,9 @@ public class SphereSpawn : MonoBehaviour {
         SetNewPosition();
         ScoreManager.score += 10;
         if (GameManager.manager.mode == Mode.Endless)
+        {
             GameManager.manager.time = GameManager.manager.kEndlessModeTime;
+        }
         HintManager.manager.DeleteEffects(false, true, true);
         //на позицию влияет масштаб материнского обьекта
     }
