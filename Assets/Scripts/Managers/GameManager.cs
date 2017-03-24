@@ -13,8 +13,6 @@ public class GameManager : MonoBehaviour {
     public float timeLimit;
     [HideInInspector]
     public float time;
-    [HideInInspector]
-    public float lifes;
 
     [HideInInspector]
     public bool isGameOver;
@@ -41,6 +39,10 @@ public class GameManager : MonoBehaviour {
     public Text EndScoreText;
     public Text ScoreText;
     public Text timerDisplay;
+
+    public GameObject eyeContainer;
+    public GameObject TimeStop;
+    public GameObject infinitySymbol;
 
     [HideInInspector]
     public int kTimedModeTime = 61;
@@ -180,7 +182,8 @@ public class GameManager : MonoBehaviour {
         Debug.Log("time="+time+" limit="+timeLimit);
         mode = Mode.Timed;
 
-        
+        SetZenModeUI(false);
+
         StartGame();
     }
 
@@ -191,46 +194,44 @@ public class GameManager : MonoBehaviour {
         time = 7f;
         mode = Mode.Endless;
 
-        
+        SetZenModeUI(false);
+
         StartGame();
     }
 
     //бесконечное время и три жизни
     public void ZenMode()
     {
-        lifes = 3;
+        MissInput.lifesCount = 3;
         mode = Mode.Zen;
+        timerDisplay.text = "";
+
+        SetZenModeUI(true);
 
         StartGame();
     }
 
+    void SetZenModeUI(bool value) {
+        TimeStop.SetActive(!value);
+        eyeContainer.SetActive(value);
+        infinitySymbol.SetActive(value);
+    }
+
     void Update()
     {
-        if (!isGameOver && isGameRunning)
+        if (!isGameOver && isGameRunning && mode != Mode.Zen)
         {
-            if (mode == Mode.Zen) {
-                if (lifes == 0) {
-                    EndGame();
-                }
+            if (time < 1)
+            {
+                Debug.Log("update if if ");
+                EndGame();
             }
-            else {
-                if (time < 1)
-                {
-                    Debug.Log("update if if ");
-                    EndGame();
-                }
-                else
-                {
-                    // Decrease timeLimit.
-                    time -= Time.deltaTime;
-                    // translate backward.
-                    transform.Translate(Vector3.back * Time.deltaTime, Space.World);
-                    timeInt = (int)time;
-                    //timerDisplay.text = timeInt.ToString();
-                    timerDisplay.text = ((int)time).ToString();
-                }
-            }
-            
+            else
+            {
+                // Decrease timeLimit.
+                time -= Time.deltaTime;
+                timerDisplay.text = ((int)time).ToString();
+            }        
         }
     }
     public void SetUnassignedMode() {

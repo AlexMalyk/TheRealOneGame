@@ -76,6 +76,7 @@ public class GameModesSetup : MonoBehaviour {
             image.GetComponent<Image>().sprite = ZenModeImage;
             buttonText.text = kPay;
             button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => GameManager.manager.ZenMode());
 
             ScreenManager.screenManager.OpenScreen(GameModeCanvas);
         }
