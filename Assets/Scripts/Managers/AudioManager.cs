@@ -8,6 +8,8 @@ public class AudioManager : MonoBehaviour {
     public AudioClip positiveAudio;
     public AudioClip negativeAudio;
     public AudioClip lastSecondsAudio;
+    public AudioClip foundAudio;
+    public AudioClip missedAudio;
 
     AudioSource source;
 
@@ -49,6 +51,19 @@ public class AudioManager : MonoBehaviour {
         if (SettingsManager.manager.isAudioOn)
         {
             source.PlayOneShot(negativeAudio);
+        }
+    }
+    public void PlayFoundSound() {
+        if (SettingsManager.manager.isAudioOn)
+        {
+            source.PlayOneShot(foundAudio);
+        }
+    }
+    public void PlayMissedSound()
+    {
+        if (SettingsManager.manager.isAudioOn)
+        {
+            source.PlayOneShot(missedAudio);
         }
     }
 }

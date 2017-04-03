@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour {
     public int kEndlessModeTime = 6;
 
     int timeInt;
+    Animator[] eyesAnimators;
 
     void Awake()
     {
@@ -158,10 +159,12 @@ public class GameManager : MonoBehaviour {
         {
             TimedMode();
         }
-        else if(mode == Mode.Endless)
+        else if (mode == Mode.Endless)
         {
-            timeLimit = kEndlessModeTime;
-            time = kEndlessModeTime;
+            EndlessMode();
+        }
+        else if (mode == Mode.Zen) {
+            ZenMode();
         }
 
         
@@ -214,6 +217,9 @@ public class GameManager : MonoBehaviour {
     void SetZenModeUI(bool value) {
         TimeStop.SetActive(!value);
         eyeContainer.SetActive(value);
+        eyesAnimators = eyeContainer.GetComponentsInChildren<Animator>();
+        foreach (Animator anim in eyesAnimators)
+            anim.SetTrigger("Show");
         infinitySymbol.SetActive(value);
     }
 

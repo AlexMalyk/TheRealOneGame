@@ -38,7 +38,7 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
     }
 
     void Start() {
-        System.String appKey = "e133979ce241903311829677d991673aa4880304e9224e0f";
+        System.String appKey = "55135bf0c0b7525422af600c5a746d85e028da1628431d85";
         Appodeal.disableLocationPermissionCheck();
         Appodeal.initialize(appKey, Appodeal.REWARDED_VIDEO);
         Appodeal.setTesting(true);
@@ -48,14 +48,11 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
     public void ShowRewardedAd() {
         Appodeal.setRewardedVideoCallbacks(this);
         Appodeal.show(Appodeal.REWARDED_VIDEO);
-        //onRewardedVideoFinished(100, kRewardType4);
     }
 
     public void ShowSpecialAd() {
         Appodeal.setRewardedVideoCallbacks(this);
         Appodeal.show(Appodeal.REWARDED_VIDEO);
-        //onRewardedVideoFinished(rewardAmount, rewardType);
-
     }
 
     public void SetupSpecialAd() {

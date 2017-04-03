@@ -7,16 +7,23 @@ public class MissInput : MonoBehaviour {
     public GameObject life2;
     public GameObject life3;
     public static int lifesCount = 3;
+    public GameObject gameBoard;
+
     private Animator anima;
-
+    private Animator gameBoardAnimator;
     void Start() {
-
+        gameBoardAnimator = gameBoard.GetComponent<Animator>();
     }
     public void OnMouseDown() {
+        gameBoardAnimator.SetTrigger("Miss");
+        AudioManager.manager.PlayMissedSound();
+
         if (SettingsManager.manager.isVibrationOn)
         {
             Handheld.Vibrate();
+            
         }
+        
         if (GameManager.manager.mode == Mode.Zen)
         {
             if (lifesCount == 3)
@@ -48,6 +55,8 @@ public class MissInput : MonoBehaviour {
                 Debug.Log("game over");
             }
         }
+
+
         
         Debug.Log("Miss");
     }
