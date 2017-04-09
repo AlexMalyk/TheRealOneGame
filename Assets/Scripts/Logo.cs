@@ -6,9 +6,14 @@ using UnityEngine.UI;
 public class Logo : MonoBehaviour {
 
     public GameObject mainMenu;
+    public GameObject buttons;
+    public GameObject movingEyePart;
 
+    public GameObject texts;
+    
     float time;
-    float timeLimit = 5f;
+    float timeLimit = 2f;
+
 	// Use this for initialization
 	void Start () {
         time = 0;
@@ -21,12 +26,21 @@ public class Logo : MonoBehaviour {
             time += Time.deltaTime;
         }
         else {
-            this.GetComponent<Canvas>().enabled = false;
-            mainMenu.SetActive(true);
+            StartCoroutine(LogoCoroutine());         
         }
 	}
 
     public void ResetTimer() {
         time = 0;
+    }
+
+    IEnumerator LogoCoroutine() {
+        buttons.SetActive(false);
+        movingEyePart.GetComponent<Animator>().SetTrigger("Center");
+        texts.GetComponent<Animator>().SetTrigger("Show");
+        yield return CoroutineUtil.WaitForRealSeconds(2f);
+
+        this.GetComponent<Canvas>().enabled = false;
+        mainMenu.SetActive(true);
     }
 }

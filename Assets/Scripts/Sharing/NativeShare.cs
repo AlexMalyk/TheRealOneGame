@@ -23,24 +23,12 @@ public class NativeShare : MonoBehaviour
         string screenShotPath = Application.persistentDataPath + "/" + ScreenshotName;
         if (File.Exists(screenShotPath)) File.Delete(screenShotPath);
 
-        StartCoroutine(screenshotCaptureCoroutine(SharingCanvas.GetComponent<Animator>()));
-        //HiddenGameObject.SetActive(false);
-        //ShowedGameObject.SetActive(true);
+        StartCoroutine(screenshotCaptureCoroutine(SharingCanvas.GetComponent<Animator>(), screenShotPath, kMessage));
 
-        //Debug.Log("share on");
-        //Application.CaptureScreenshot(ScreenshotName);
-
-        //ShowedGameObject.SetActive(false);
-        //HiddenGameObject.SetActive(true);
-        //Debug.Log("share off");
-
-
-        StartCoroutine(delayedShare(screenShotPath, kMessage));
+        //StartCoroutine(delayedShare(screenShotPath, kMessage));
     }
 
-    IEnumerator screenshotCaptureCoroutine(Animator anim) {
-
-        //anim.SetTrigger("Show");
+    IEnumerator screenshotCaptureCoroutine(Animator anim, string screenShotPath, string text) {
         Debug.Log("share on");
 
         HiddenGameObject.SetActive(false);
@@ -49,11 +37,17 @@ public class NativeShare : MonoBehaviour
         Application.CaptureScreenshot(ScreenshotName);
         Debug.Log("share capture");
         yield return CoroutineUtil.WaitForRealSeconds(.01f);
-        //anim.SetTrigger("Hide");
 
         ShowedGameObject.SetActive(false);
         HiddenGameObject.SetActive(true);
         Debug.Log("share off");
+
+        while (!File.Exists(screenShotPath))
+        {
+            yield return new WaitForSeconds(.05f);
+        }
+
+        Share(text, screenShotPath, "");
     }
 
 

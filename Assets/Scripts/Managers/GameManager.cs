@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour {
     [HideInInspector]
     public int kTimedModeTime = 61;
     [HideInInspector]
-    public int kEndlessModeTime = 6;
+    public float kEndlessModeTime = 11f;
 
     int timeInt;
     Animator[] eyesAnimators;
@@ -180,8 +180,8 @@ public class GameManager : MonoBehaviour {
     public void TimedMode()
     {
         Debug.Log("GM one minute mod");
-        timeLimit = 62f;
-        time = 62f;
+        timeLimit = kTimedModeTime;
+        time = kTimedModeTime;
         Debug.Log("time="+time+" limit="+timeLimit);
         mode = Mode.Timed;
 
@@ -193,8 +193,8 @@ public class GameManager : MonoBehaviour {
     public void EndlessMode()
     {
         Debug.Log("GM five second mode");
-        timeLimit = 7f;
-        time = 7f;
+        timeLimit = 11f;
+        time = 11f;
         mode = Mode.Endless;
 
         SetZenModeUI(false);
