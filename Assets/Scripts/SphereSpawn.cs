@@ -5,10 +5,13 @@ using UnityEngine.UI;
 public class SphereSpawn : MonoBehaviour
 {
     //public static SphereSpawn SS;
-    public static int leftMax = -2;
-    public static int rightMax = 2;
-    public static int upMax = 3;
-    public static int downMax = -3;
+    public  int leftMax = -2;
+    public  int rightMax = 2;
+    public  int upMax = 3;
+    public  int downMax = -3;
+
+    public GameObject prefabExplosion;
+    public GameObject prefabPlusText;
 
     int rangeOnCanvas = 160;
 
@@ -17,12 +20,6 @@ public class SphereSpawn : MonoBehaviour
     public Canvas GameBoard;
     int x;
     int y;
-    Animator sphereAnimator;
-
-    void Start()
-    {
-        sphereAnimator = GetComponent<Animator>();
-    }
 
     public void SetNewPosition()
     {
@@ -38,17 +35,16 @@ public class SphereSpawn : MonoBehaviour
     public void OnMouseDown()
     {
         AudioManager.manager.PlayFoundSound();
-        GameObject exp = Instantiate(Resources.Load("Sphere Explosion", typeof(GameObject))) as GameObject;
-        exp.transform.parent = transform.parent;
-        exp.GetComponent<RectTransform>().localPosition = new Vector3(x,y,0);
-        exp.GetComponent<RectTransform>().localScale = new Vector3(1,1,0);
+
+        CreateExplosion();
 
         SetNewPosition();
 
         ScoreManager.score += 10;
-        GameObject plus = Instantiate(Resources.Load("Plus Score", typeof(GameObject))) as GameObject;
-        plus.transform.parent = scoreText.transform.parent;
+        GameObject plus = Instantiate(prefabPlusText, new Vector3(0, 0, 0), Quaternion.identity);
+        plus.transform.SetParent(scoreText.transform.parent, false);
         plus.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+        
 
         if (GameManager.manager.mode == Mode.Endless)
         {
@@ -58,6 +54,15 @@ public class SphereSpawn : MonoBehaviour
 
         //на позицию влияет масштаб материнского обьекта
     }
+
+
+    public void CreateExplosion() {
+        GameObject exp = Instantiate(prefabExplosion, new Vector3(0, 0, 0), Quaternion.identity);
+        exp.transform.SetParent(transform.parent);
+        exp.GetComponent<RectTransform>().localPosition = new Vector3(x, y, 0);
+        exp.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 0);
+    }
+
 
 
 }

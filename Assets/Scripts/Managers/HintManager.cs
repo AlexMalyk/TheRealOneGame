@@ -166,12 +166,12 @@ public class HintManager : MonoBehaviour {
         {
             Debug.Log("ShowSide");
             Debug.Log("SpherePosition = "+ sphere.GetComponent<RectTransform>().localPosition.x);
-            if (sphere.GetComponent<RectTransform>().localPosition.x <= 0)
+            if (sphere.transform.parent.GetComponent<RectTransform>().localPosition.x <= 0)
             {
                 leftSideAnimator.SetBool("HintOn", true);
             }
 
-            if (sphere.GetComponent<RectTransform>().localPosition.x >= 0){
+            if (sphere.transform.parent.GetComponent<RectTransform>().localPosition.x >= 0){
                 rightSideAnimator.SetBool("HintOn", true);
             }
 
@@ -257,7 +257,7 @@ public class HintManager : MonoBehaviour {
         {
             if (ScreenManager.screenManager.GetOpenScreen() == flashesGameObject)
             {
-                plus5FlankersPUscreen.GetComponent<Animator>().SetTrigger("Show");
+                plus5FlashesPUscreen.GetComponent<Animator>().SetTrigger("Show");
             }
             else
             {

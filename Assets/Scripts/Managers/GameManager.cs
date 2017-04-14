@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour {
     [HideInInspector]
     public int kTimedModeTime = 61;
     [HideInInspector]
-    public float kEndlessModeTime = 11f;
+    public int kEndlessModeTime = 11;
 
     int timeInt;
     Animator[] eyesAnimators;
@@ -105,6 +105,9 @@ public class GameManager : MonoBehaviour {
 
     public void EndGame()
     {
+        AudioManager.manager.PlayNegativeSound();
+        
+
         isGameOver = true;
         if (mode == Mode.Timed)
         {
@@ -193,8 +196,8 @@ public class GameManager : MonoBehaviour {
     public void EndlessMode()
     {
         Debug.Log("GM five second mode");
-        timeLimit = 11f;
-        time = 11f;
+        timeLimit = kEndlessModeTime;
+        time = kEndlessModeTime;
         mode = Mode.Endless;
 
         SetZenModeUI(false);

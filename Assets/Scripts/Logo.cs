@@ -7,17 +7,17 @@ public class Logo : MonoBehaviour {
 
     public GameObject mainMenu;
     public GameObject buttons;
-    public GameObject movingEyePart;
-
-    public GameObject texts;
     
     float time;
     float timeLimit = 2f;
+    bool onFinish;
 
 	// Use this for initialization
 	void Start () {
         time = 0;
-	}
+        onFinish = false;
+        
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -25,8 +25,8 @@ public class Logo : MonoBehaviour {
         {
             time += Time.deltaTime;
         }
-        else {
-            StartCoroutine(LogoCoroutine());         
+        else if(!onFinish) {
+            StartCoroutine(LogoCoroutine());
         }
 	}
 
@@ -35,12 +35,15 @@ public class Logo : MonoBehaviour {
     }
 
     IEnumerator LogoCoroutine() {
+        onFinish = true;
         buttons.SetActive(false);
-        movingEyePart.GetComponent<Animator>().SetTrigger("Center");
-        texts.GetComponent<Animator>().SetTrigger("Show");
+        GetComponent<Animator>().SetTrigger("Center");
+        GetComponent<Animator>().SetTrigger("ShowText");
         yield return CoroutineUtil.WaitForRealSeconds(2f);
-
+        GetComponent<Animator>().SetTrigger("Hide");
+        yield return CoroutineUtil.WaitForRealSeconds(2f);
         this.GetComponent<Canvas>().enabled = false;
         mainMenu.SetActive(true);
+        this.gameObject.SetActive(false);
     }
 }

@@ -9,7 +9,6 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
     public string zoneId;
     public Text testResult;
     public Text score;
-    int scoreInt;
 
     public Text kPromoMessage;
 
@@ -42,7 +41,6 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
         Appodeal.disableLocationPermissionCheck();
         Appodeal.initialize(appKey, Appodeal.REWARDED_VIDEO);
         Appodeal.setTesting(true);
-        scoreInt = 0;
     }
 
     public void ShowRewardedAd() {
