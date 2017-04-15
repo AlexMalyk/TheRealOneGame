@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class SphereSpawn : MonoBehaviour
 {
-    //public static SphereSpawn SS;
     public  int leftMax = -2;
     public  int rightMax = 2;
     public  int upMax = 3;

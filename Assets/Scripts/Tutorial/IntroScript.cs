@@ -5,23 +5,106 @@ using UnityEngine.UI;
 
 public class IntroScript : MonoBehaviour {
 
-    public GameObject mainScreen;
+    public GameObject nextScreen;
 
-    public Text kFirstUpText;
-    public Text kFirstDownText;
+    public Button sphere;
+    public GameObject prefabExplosion;
 
-    public Text kSecondUpText;
-    public Text kSecondDownText;
-
-    public Text kThirdUpText;
-    public Text kThirdDowntext;
+    public bool isAnimationEnd;
+    public bool isFinish;
+    Animator anim;
 
     void Start() {
-        GetComponent<Animator>().SetBool("1", true);
+        anim = GetComponent<Animator>();
+
+        isFinish = false;
+
+        sphere.onClick.AddListener(()=>PlaySecond());
     }
 
     public void PlaySecond() {
-        
+        Debug.Log("play second");
+        if (isAnimationEnd)
+        {
+            CreateExplosion();
+
+            anim.SetTrigger("PlaySecond");
+            sphere.onClick.RemoveAllListeners();
+            sphere.onClick.AddListener(() => FirstMove());
+        }
+    }
+
+    public void FirstMove()
+    {
+        if (isAnimationEnd)
+        {
+            CreateExplosion();
+
+            anim.SetTrigger("MoveFirst");
+            sphere.onClick.RemoveAllListeners();
+            sphere.onClick.AddListener(() => SecondMove());
+        }
+    }
+
+    public void SecondMove()
+    {
+        if (isAnimationEnd)
+        {
+            CreateExplosion();
+
+            anim.SetTrigger("MoveSecond");
+            sphere.onClick.RemoveAllListeners();
+            sphere.onClick.AddListener(() => PlayThird());
+        }
+    }
+
+    public void PlayThird()
+    {
+        if (isAnimationEnd)
+        {
+            CreateExplosion();
+
+            anim.SetTrigger("PlayThird");
+            sphere.onClick.RemoveAllListeners();
+            sphere.onClick.AddListener(() => PlayFinal());
+        }
+
+    }
+
+    public void PlayFinal()
+    {
+        if (isAnimationEnd)
+        {
+            CreateExplosion();
+
+            anim.SetTrigger("PlayFinal");
+            sphere.onClick.RemoveAllListeners();
+        }
+    }
+
+    void Update() {
+        if (isFinish) {
+            nextScreen.SetActive(true);
+            this.gameObject.SetActive(false);
+        }
+
+    }
+
+    public void CreateExplosion()
+    {
+        AudioManager.manager.PlayFoundSound();
+
+        GameObject exp = Instantiate(prefabExplosion, new Vector3(0, 0, 0), Quaternion.identity);
+        exp.transform.SetParent(sphere.transform.parent);
+        exp.GetComponent<RectTransform>().localPosition = new Vector3(sphere.transform.localPosition.x, sphere.transform.localPosition.y, 0);
+        exp.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 0);
+    }
+
+    public void Miss() {
+        Debug.Log("miss");
+        anim.SetTrigger("Miss");
+
+        AudioManager.manager.PlayMissedSound();
     }
 
 }

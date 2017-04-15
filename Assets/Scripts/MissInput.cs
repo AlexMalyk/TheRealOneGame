@@ -14,7 +14,7 @@ public class MissInput : MonoBehaviour {
     void Start() {
         gameBoardAnimator = gameBoard.GetComponent<Animator>();
     }
-    public void OnMouseDown() {
+    public void Miss() {
         gameBoardAnimator.SetTrigger("Miss");
         AudioManager.manager.PlayMissedSound();
 
