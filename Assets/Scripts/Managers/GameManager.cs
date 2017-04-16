@@ -28,8 +28,6 @@ public class GameManager : MonoBehaviour {
     public bool isEndlessModePlayed;
     [HideInInspector]
     public bool isZenModePlayed;
-    [HideInInspector]
-    public bool isTutorialPlayed;
 
     public GameObject endGameCanvas;
     public GameObject GameBoard;

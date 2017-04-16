@@ -12,6 +12,8 @@ public class DataControl : MonoBehaviour
     public int bestScoreEndless;
     public int bestScoreZen;
 
+    public bool isTutorialFinished;
+
     void Awake()
     {
         if (control == null)
@@ -66,7 +68,7 @@ public class DataControl : MonoBehaviour
         data.isEndlessModePlayed = GameManager.manager.isEndlessModePlayed;
         data.isTimedModePlayed = GameManager.manager.isTimedModePlayed;
         data.isZenModePlayed = GameManager.manager.isZenModePlayed;
-        data.isTutorialPlayed = GameManager.manager.isTutorialPlayed;
+        data.isTutorialPlayed = isTutorialFinished;
 
 
 
@@ -104,13 +106,13 @@ public class DataControl : MonoBehaviour
             GameManager.manager.isEndlessModePlayed = data.isEndlessModePlayed;
             GameManager.manager.isTimedModePlayed = data.isTimedModePlayed;
             GameManager.manager.isZenModePlayed = data.isZenModePlayed;
-            GameManager.manager.isTutorialPlayed = data.isTutorialPlayed;
+            isTutorialFinished = data.isTutorialPlayed;
 
             Debug.Log("All data loaded. PU1=" + HintManager.manager.amountTimeStops + ", PU2=" + HintManager.manager.amountFlashes + ", PU3=" + HintManager.manager.amountFlankers +
                         ", bestScoreTimed=" + bestScoreTimed + ", bestScoreZen=" + bestScoreZen + ", bestScoreEndless=" + bestScoreEndless +
                         ", bank=" + BankManager.bank + ", isVibratioOn=" + SettingsManager.manager.isVibrationOn + ", isAudioOn=" + SettingsManager.manager.isAudioOn +
                         ", isEndlessModePlayed=" + GameManager.manager.isEndlessModePlayed + ", isTimedModePlayed=" + GameManager.manager.isTimedModePlayed +
-                        ", isZenModePlayed=" + GameManager.manager.isZenModePlayed + ", isTutorialPlayed=" + GameManager.manager.isTutorialPlayed);
+                        ", isZenModePlayed=" + GameManager.manager.isZenModePlayed + ", isTutorialPlayed=" + isTutorialFinished);
         }
     }
 
@@ -232,6 +234,38 @@ public class DataControl : MonoBehaviour
     //        SettingsManager.manager.isVibrationOn = data.isVibrationOn;
     //    }
     //}
+
+
+    public void ResetAll() {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + "/playerInfo.dat");
+        PlayerData data = new PlayerData();
+
+        data.amountTimeStops = 0;
+        data.amountFlashes = 0;
+        data.amountFlankers = 0;
+
+        data.bestScoreTimed = 0;
+        data.bestScoreEndless = 0;
+        data.bestScoreZen = 0;
+
+        data.bank = 0;
+
+        data.isVibrationOn = true;
+        data.isAudioOn = true;
+
+        data.isEndlessModePlayed = false;
+        data.isTimedModePlayed = false;
+        data.isZenModePlayed = false;
+        data.isTutorialPlayed = false;
+
+
+
+        bf.Serialize(file, data);
+        file.Close();
+
+        LoadAll();
+    }
 }
 
 [Serializable]
@@ -254,4 +288,5 @@ class PlayerData
     public bool isTimedModePlayed;
     public bool isEndlessModePlayed;
     public bool isZenModePlayed;
+    
 }

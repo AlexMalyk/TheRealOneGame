@@ -50,9 +50,9 @@ public class HintManager : MonoBehaviour {
     static string kFlashesDescription = "Increases flashing";
     static string kFlankerDescription = "Shows the side to which the dot is closer";
 
-    int priceTimeStops = 10;
-    int priceFlankers = 10;
-    int priceFlashes = 10;
+    int priceTimeStops = 2000;
+    int priceFlankers = 500;
+    int priceFlashes = 1000;
 
     [HideInInspector]
     public  int amountTimeStops;
@@ -244,6 +244,7 @@ public class HintManager : MonoBehaviour {
                 plus5TimeStops.GetComponent<Animator>().SetTrigger("Show");
             }
             amountTimeStops += 5;
+            BankManager.bank -= priceTimeStops;
             DataControl.control.SaveAll();           
         }
         else {
@@ -264,6 +265,7 @@ public class HintManager : MonoBehaviour {
                 plus5Flashes.GetComponent<Animator>().SetTrigger("Show");
             }
             amountFlashes += 5;
+            BankManager.bank -= priceFlashes;
             DataControl.control.SaveAll();         
         }
         else
@@ -285,6 +287,7 @@ public class HintManager : MonoBehaviour {
                 plus5Flankers.GetComponent<Animator>().SetTrigger("Show");
             }
             amountFlankers += 5;
+            BankManager.bank -= priceFlankers;
             DataControl.control.SaveAll();      
         }
         else

@@ -74,7 +74,7 @@ public class GameModesSetup : MonoBehaviour {
             titleText.text = "Zen Mode";
             descriptionText.text = kZenDescription;
             image.GetComponent<Image>().sprite = ZenModeImage;
-            buttonText.text = kPay;
+            buttonText.text = kStart;
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => GameManager.manager.ZenMode());
 

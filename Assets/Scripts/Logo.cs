@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Logo : MonoBehaviour {
 
+    public GameObject introScreen;
     public GameObject mainMenu;
     public GameObject buttons;
     
@@ -43,7 +44,13 @@ public class Logo : MonoBehaviour {
         GetComponent<Animator>().SetTrigger("Hide");
         yield return CoroutineUtil.WaitForRealSeconds(2f);
         this.GetComponent<Canvas>().enabled = false;
-        mainMenu.SetActive(true);
+        if (DataControl.control.isTutorialFinished)
+        {
+            mainMenu.SetActive(true);
+        }
+        else {
+            introScreen.SetActive(true);
+        }
         this.gameObject.SetActive(false);
     }
 }

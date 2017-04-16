@@ -84,6 +84,17 @@ public class IntroScript : MonoBehaviour {
 
     void Update() {
         if (isFinish) {
+            if (DataControl.control.isTutorialFinished == false)
+            {
+                DataControl.control.isTutorialFinished = true;
+                HintManager.manager.amountFlankers = 5;
+                HintManager.manager.amountFlashes = 5;
+                HintManager.manager.amountTimeStops = 5;
+                BankManager.bank = 500;
+
+                DataControl.control.SaveAll();
+            }
+
             nextScreen.SetActive(true);
             this.gameObject.SetActive(false);
         }
