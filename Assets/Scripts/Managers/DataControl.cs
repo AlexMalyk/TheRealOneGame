@@ -93,12 +93,17 @@ public class DataControl : MonoBehaviour
             HintManager.manager.amountTimeStops = data.amountTimeStops;
             HintManager.manager.amountFlashes = data.amountFlashes;
             HintManager.manager.amountFlankers = data.amountFlankers;
+            AmountFlankers.isAmountChanged = true;
+            AmountFlashes.isAmountChanged = true;
+            AmountTimeStops.isAmountChanged = true;
+
 
             bestScoreTimed = data.bestScoreTimed;
             bestScoreZen = data.bestScoreZen;
             bestScoreEndless = data.bestScoreEndless;
 
             BankManager.bank = data.bank;
+            BankManager.isBankChanged = true;
 
             SettingsManager.manager.isVibrationOn = data.isVibrationOn;
             SettingsManager.manager.isAudioOn = data.isAudioOn;

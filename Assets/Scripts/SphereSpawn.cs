@@ -39,7 +39,8 @@ public class SphereSpawn : MonoBehaviour
 
         SetNewPosition();
 
-        ScoreManager.score += 10;
+        ScoreManager.ChangeScore();
+
         GameObject plus = Instantiate(prefabPlusText, new Vector3(0, 0, 0), Quaternion.identity);
         plus.transform.SetParent(scoreText.transform.parent, false);
         plus.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);

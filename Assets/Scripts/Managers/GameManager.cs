@@ -13,6 +13,10 @@ public class GameManager : MonoBehaviour {
     public float timeLimit;
     [HideInInspector]
     public float time;
+    [HideInInspector]
+    public bool timeStopsUsed;
+    [HideInInspector]
+    public float timeStopsTimer = 10f;
 
     [HideInInspector]
     public bool isGameOver;
@@ -145,6 +149,9 @@ public class GameManager : MonoBehaviour {
         EndScoreText.text = (ScoreManager.score).ToString();
 
         BankManager.bank += ScoreManager.score;
+        BankManager.isBankChanged = true;
+            
+
         DataControl.control.SaveAll();
         ScreenManager.screenManager.OpenScreen(endGameCanvas);
     }
@@ -226,7 +233,7 @@ public class GameManager : MonoBehaviour {
 
     void Update()
     {
-        if (!isGameOver && isGameRunning && mode != Mode.Zen)
+        if (!isGameOver && isGameRunning && mode != Mode.Zen && !timeStopsUsed)
         {
             if (time < 1)
             {
@@ -238,7 +245,17 @@ public class GameManager : MonoBehaviour {
                 // Decrease timeLimit.
                 time -= Time.deltaTime;
                 timerDisplay.text = ((int)time).ToString();
-            }        
+            }
+        }
+        else if (timeStopsUsed) {
+            if (timeStopsTimer > 0)
+            {
+                timeStopsTimer -= Time.deltaTime;
+            }
+            else {
+                timeStopsUsed = false;
+                timeStopsTimer = 10f;
+            }
         }
     }
     public void SetUnassignedMode() {

@@ -1,10 +1,12 @@
 fileFormatVersion: 2
 guid: ed5940e68cc00e84cbcaa84b4ba1de12
-timeCreated: 1482954280
+timeCreated: 1492436277
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - BankText: {fileID: 114706805715349934, guid: e21c9129f448ff046994e8ad61262120,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

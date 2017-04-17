@@ -5,27 +5,48 @@ using UnityEngine.UI;
 public class BankManager : MonoBehaviour {
 
     public static int bank;
-    public Text BankText;
+    public static bool isBankChanged;
+
+    public Text[] texts;
 
     int thousands;
     int hundreds;
 
-    // Update is called once per frame
+    void Start() {
+        isBankChanged = false;
+    }
+
     void Update () {
-        if (bank >= 1000)
+        if (isBankChanged)
         {
-            thousands = bank / 1000;
-            hundreds = bank - thousands * 1000;
-            if (hundreds < 100)
+            if (bank >= 1000)
             {
-                BankText.text = thousands + ",0" + hundreds;
+                Debug.Log("bank changed if");
+                thousands = bank / 1000;
+                hundreds = bank - thousands * 1000;
+                if (hundreds< 100)
+                {
+                    foreach (Text item in texts)
+                    {
+                        item.text = thousands + ",0" + hundreds;
+                    }
+                }
+                else
+                {
+                    foreach (Text item in texts)
+                    {
+                        item.text = thousands + "," + hundreds; ;
+                    }
+                }
             }
-            else {
-                BankText.text = thousands + "," + hundreds;
+            else
+            {
+                Debug.Log("bank changed else");
+                foreach (Text item in texts) {
+                    item.text = bank.ToString();
+                }
             }
-        }
-        else {
-            BankText.text = bank.ToString();
+            isBankChanged = false;
         }
     }
 }

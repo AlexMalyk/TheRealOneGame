@@ -46,7 +46,7 @@ public class HintManager : MonoBehaviour {
 
     static string kOncePerMatchMessage = "Can only be used once a match";
     static string kOncePerRoundMessage = "Already used";
-    static string kTimeStopDescription = "Time stopped for 5 seconds";
+    static string kTimeStopDescription = "Time stopped for 10 seconds";
     static string kFlashesDescription = "Increases flashing";
     static string kFlankerDescription = "Shows the side to which the dot is closer";
 
@@ -106,10 +106,13 @@ public class HintManager : MonoBehaviour {
         //проверка количества и что меню не открыто => добавление времени
         else if (!ScreenManager.screenManager.isMenuOpen && amountTimeStops > 0)
         {
+
             Debug.Log("AddTime");
-            GameManager.manager.time += 5;
+            GameManager.manager.timeStopsUsed = true;
+            //GameManager.manager.time += 5;
 
             amountTimeStops--;
+            AmountTimeStops.isAmountChanged = true;
             DataControl.control.SaveAll();
 
             timeStopButtonDisabledImage.SetActive(true);//добавление штриховки
@@ -140,6 +143,7 @@ public class HintManager : MonoBehaviour {
             sphereAnimator.SetBool("HintOn", true);
 
             amountFlashes--;
+            AmountFlashes.isAmountChanged = true;
             DataControl.control.SaveAll();
 
             flashButtonDisabledImage.SetActive(true);//добавление штриховки
@@ -176,6 +180,7 @@ public class HintManager : MonoBehaviour {
             }
 
             amountFlankers--;
+            AmountFlankers.isAmountChanged = true;
             DataControl.control.SaveAll();
 
             flankerButtonDisabledImage.SetActive(true);//добавление штриховки
@@ -244,7 +249,11 @@ public class HintManager : MonoBehaviour {
                 plus5TimeStops.GetComponent<Animator>().SetTrigger("Show");
             }
             amountTimeStops += 5;
+            AmountTimeStops.isAmountChanged = true;
+
             BankManager.bank -= priceTimeStops;
+            BankManager.isBankChanged = true;
+
             DataControl.control.SaveAll();           
         }
         else {
@@ -265,7 +274,11 @@ public class HintManager : MonoBehaviour {
                 plus5Flashes.GetComponent<Animator>().SetTrigger("Show");
             }
             amountFlashes += 5;
+            AmountFlashes.isAmountChanged = true;
+
             BankManager.bank -= priceFlashes;
+            BankManager.isBankChanged = true;
+
             DataControl.control.SaveAll();         
         }
         else
@@ -287,7 +300,11 @@ public class HintManager : MonoBehaviour {
                 plus5Flankers.GetComponent<Animator>().SetTrigger("Show");
             }
             amountFlankers += 5;
+            AmountFlankers.isAmountChanged = true;
+
             BankManager.bank -= priceFlankers;
+            BankManager.isBankChanged = true;
+
             DataControl.control.SaveAll();      
         }
         else
