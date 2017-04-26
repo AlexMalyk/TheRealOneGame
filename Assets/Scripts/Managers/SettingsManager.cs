@@ -28,32 +28,18 @@ public class SettingsManager : MonoBehaviour {
     }
     // Use this for initialization
     void Start () {
-        if (isAudioOn)
-        {
-            audioButton.text = kValueOn;
-        }
-        else {
-            audioButton.text = kValueOff;
-        }
-
-        if (isVibrationOn)
-        {
-            vibroButton.text = kValueOn;
-        }
-        else {
-            vibroButton.text = kValueOff;
-        }
+ 
 	}
 
     public void AudioSwitch() {
         isAudioOn = !isAudioOn;
-        audioButton.text = SetValue(isAudioOn);
+        SetTexts();
     }
 
     public void VibroSwitch()
     {
         isVibrationOn = !isVibrationOn;
-        vibroButton.text = SetValue(isVibrationOn);
+        SetTexts();
     }
 
     string SetValue(bool field) {
@@ -62,6 +48,26 @@ public class SettingsManager : MonoBehaviour {
         }
         else {
             return kValueOff;
+        }
+    }
+
+    public void SetTexts() {
+        if (isAudioOn)
+        {
+            audioButton.text = kValueOn;
+        }
+        else
+        {
+            audioButton.text = kValueOff;
+        }
+
+        if (isVibrationOn)
+        {
+            vibroButton.text = kValueOn;
+        }
+        else
+        {
+            vibroButton.text = kValueOff;
         }
     }
 }

@@ -11,12 +11,10 @@ public class TransitionIAP : MonoBehaviour {
 	}
 
     public void OpenCanvas() {
-        //GetComponent<Canvas>().enabled = true;
         IAPCanvasAnimator.SetBool("Open", true);
     }
     public void CloseCanvas()
     {
         IAPCanvasAnimator.SetBool("Open", false);
-        //GetComponent<Canvas>().enabled = true;
     }
 }

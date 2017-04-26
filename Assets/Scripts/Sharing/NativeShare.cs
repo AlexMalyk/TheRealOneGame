@@ -9,7 +9,6 @@ using System.IO;
 
 public class NativeShare : MonoBehaviour
 {
-
     string ScreenshotName = "screenshot.png";
     string kMessage = "Check out my score!";
 
@@ -29,18 +28,14 @@ public class NativeShare : MonoBehaviour
     }
 
     IEnumerator screenshotCaptureCoroutine(Animator anim, string screenShotPath, string text) {
-        Debug.Log("share on");
-
         HiddenGameObject.SetActive(false);
         ShowedGameObject.SetActive(true);
 
         Application.CaptureScreenshot(ScreenshotName);
-        Debug.Log("share capture");
         yield return CoroutineUtil.WaitForRealSeconds(.01f);
 
         ShowedGameObject.SetActive(false);
         HiddenGameObject.SetActive(true);
-        Debug.Log("share off");
 
         while (!File.Exists(screenShotPath))
         {

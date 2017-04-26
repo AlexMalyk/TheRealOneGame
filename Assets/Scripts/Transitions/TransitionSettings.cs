@@ -51,12 +51,10 @@ public class TransitionSettings : MonoBehaviour
             {
                 if (isSettingsOpen)
                 {
-                    Debug.Log("if if");
                     StartCoroutine(TransitionThreeAnimators.MyCoroutine(settingsAnimator, 1, gameMenuAnimator, 0, gameAnimator));
                 }
                 else
                 {
-                    Debug.Log("if else");
                     StartCoroutine(TransitionThreeAnimators.MyCoroutine(gameAnimator, 0, gameMenuAnimator, 1, settingsAnimator));
                 }
             }
@@ -65,12 +63,10 @@ public class TransitionSettings : MonoBehaviour
 
                 if (isSettingsOpen)
                 {
-                    Debug.Log("else if");
                     StartCoroutine(TransitionTwoAnimators.MyCoroutine(settingsAnimator, mainMenuAnimator));
                 }
                 else
                 {
-                    Debug.Log("else else");
                     StartCoroutine(TransitionTwoAnimators.MyCoroutine(mainMenuAnimator, settingsAnimator));
                 }
             }

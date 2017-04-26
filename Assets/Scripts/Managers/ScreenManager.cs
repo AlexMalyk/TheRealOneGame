@@ -56,64 +56,50 @@ public class ScreenManager : MonoBehaviour
     public void OpenScreen(GameObject obj)
     {
         if (!isTransition)
-        {
-            
+        {    
             Animator animator = obj.GetComponent<Animator>();
             if (AdditionalScreenAnimator == null)
             {
-                Debug.Log("AdditionalScreenAnimator = none");
                 StartCoroutine(TransitionTwoAnimators.MyCoroutine(OpenScreenAnimator, animator));
             }
             else
             {
                 if (AdditionalScreenAnimator.gameObject.GetComponent<Canvas>().isActiveAndEnabled)
                 {
-                    Debug.Log("AdditionalScreenAnimator = active");
                     StartCoroutine(TransitionThreeAnimators.MyCoroutine(OpenScreenAnimator, 0, AdditionalScreenAnimator, 1, animator));
                 }
                 else
                 {
-                    Debug.Log("AdditionalScreenAnimator = not active");
                     StartCoroutine(TransitionThreeAnimators.MyCoroutine(OpenScreenAnimator, 1, AdditionalScreenAnimator, 0, animator));
                 }
             }
-            //Set the new Screen as then open one.
             PreviousScreenAnimator = OpenScreenAnimator;
             OpenScreenAnimator = animator;
-
-            Debug.Log("PreviousScreenAnimator = " + PreviousScreenAnimator.gameObject.name);
-            Debug.Log("OpenScreenAnimator = " + OpenScreenAnimator.gameObject.name);
         }
     }
 
     public void BackToPreviousScreen()
     {
-        Debug.Log("back to rpevious");
         OpenScreen(PreviousScreenAnimator.gameObject);
     }
 
     public void SetAdditionalAnimator(GameObject obj)
     {
         AdditionalScreenAnimator = obj.GetComponent<Animator>();
-        Debug.Log("AdditionalScreenAnimator = " + AdditionalScreenAnimator.gameObject.name);
     }
     public void WithoutAdditionalAnimator()
     {
-        Debug.Log("AdditionalScreenAnimator = none");
         AdditionalScreenAnimator = null;
     }
     public void SetPrevious(GameObject obj)
     {
-        Debug.Log("PreviousScreenAnimator = " + obj.GetComponent<Animator>().gameObject.name);
         PreviousScreenAnimator = obj.GetComponent<Animator>();
     }
     public void SetOpen(GameObject obj)
     {
-        Debug.Log("OpenScreenAnimator = " + obj.GetComponent<Animator>().gameObject.name);
         OpenScreenAnimator = obj.GetComponent<Animator>();
     }
     public GameObject GetOpenScreen() {
-        Debug.Log("GetOpenScreen = " + OpenScreenAnimator.gameObject.name);
         return OpenScreenAnimator.gameObject;
     }
     public void SetMenu(bool value) {

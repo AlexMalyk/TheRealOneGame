@@ -4,16 +4,15 @@ using UnityEngine.UI;
 
 public class SphereSpawn : MonoBehaviour
 {
-    public  int leftMax = -2;
-    public  int rightMax = 2;
-    public  int upMax = 3;
-    public  int downMax = -3;
+    int leftMax = -2;
+    int rightMax = 2;
+    int upMax = 3;
+    int downMax = -3;
 
     public GameObject prefabExplosion;
     public GameObject prefabPlusText;
 
     int rangeOnCanvas = 160;
-
 
     public GameObject scoreText;
     public Canvas GameBoard;
@@ -24,11 +23,8 @@ public class SphereSpawn : MonoBehaviour
     {
         x = Random.Range(leftMax, rightMax + 1) * rangeOnCanvas;
         y = Random.Range(downMax, upMax + 1) * rangeOnCanvas;
-        Debug.Log("x=" + x + " y=" + y);
 
         GetComponent<RectTransform>().localPosition = new Vector3(x, y, 0);
-
-        Debug.Log("x=" + gameObject.transform.position.x + " y=" + gameObject.transform.position.y + " z=" + gameObject.transform.position.z);
     }
 
     public void OnMouseDown()
@@ -39,7 +35,7 @@ public class SphereSpawn : MonoBehaviour
 
         SetNewPosition();
 
-        ScoreManager.ChangeScore();
+        ScoreManager.manager.ChangeScore();
 
         GameObject plus = Instantiate(prefabPlusText, new Vector3(0, 0, 0), Quaternion.identity);
         plus.transform.SetParent(scoreText.transform.parent, false);
@@ -51,10 +47,7 @@ public class SphereSpawn : MonoBehaviour
             GameManager.manager.time = GameManager.manager.kEndlessModeTime;
         }
         HintManager.manager.DeleteEffects(false, true, true);
-
-        //на позицию влияет масштаб материнского обьекта
     }
-
 
     public void CreateExplosion() {
         GameObject exp = Instantiate(prefabExplosion, new Vector3(0, 0, 0), Quaternion.identity);
@@ -62,8 +55,5 @@ public class SphereSpawn : MonoBehaviour
         exp.GetComponent<RectTransform>().localPosition = new Vector3(x, y, 0);
         exp.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 0);
     }
-
-
-
 }
 

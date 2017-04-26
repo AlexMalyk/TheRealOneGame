@@ -44,7 +44,7 @@ public class SharingSetup : MonoBehaviour {
             scoreTitleText.text = kBestScore;
         }
         else {
-            scoreText.text = (ScoreManager.score).ToString();
+            scoreText.text = (ScoreManager.manager.score).ToString();
             scoreTitleText.text = kScore;
         }
 

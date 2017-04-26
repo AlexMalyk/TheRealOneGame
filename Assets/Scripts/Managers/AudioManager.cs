@@ -26,7 +26,6 @@ public class AudioManager : MonoBehaviour {
         }
     }
 
-    // Use this for initialization
     void Start () {
         source = gameObject.GetComponent<AudioSource>();
         source.playOnAwake = false;

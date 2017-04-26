@@ -20,11 +20,10 @@ using UnityEngine.Purchasing;
         // when defining the Product Identifiers on the store. Except, for illustration purposes, the 
         // kProductIDSubscription - it has custom Apple and Google identifiers. We declare their store-
         // specific mapping to Unity Purchasing's AddProduct, below.
-        public static string kProductIDtier_1 = "1_tier_points";
-        public static string kProductIDtier_2 = "2_tier_points";
-        public static string kProductIDtier_3 = "3_tier_points";
-        public static string kProductIDtier_4 = "4_tier_points";
-        public static string kProductIDdoubler = "com.ogs.therealone.doubler";
+        public static string kID50kPoints = "com.ogs.therealone.50k_points";
+        public static string kID15kPoints = "com.ogs.therealone.15k_points";
+        public static string kID5kPoints = "com.ogs.therealone.5k_points";
+        public static string kIDdoubler = "com.ogs.therealone.doubler";
 
         void Start()
         {
@@ -48,15 +47,12 @@ using UnityEngine.Purchasing;
             // Create a builder, first passing in a suite of Unity provided stores.
             var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
-            builder.Configure<ISamsungAppsConfiguration>().SetMode(SamsungAppsMode.AlwaysSucceed); // TESTING: auto-approves all transactions by Samsung.
-                                                                                               // Add a product to sell / restore by way of its identifier, associating the general identifier
-                                                                                               // with its store-specific identifiers.
-            builder.AddProduct(kProductIDtier_1, ProductType.Consumable);
-            builder.AddProduct(kProductIDtier_2, ProductType.Consumable);
-            builder.AddProduct(kProductIDtier_3, ProductType.Consumable);
-            builder.AddProduct(kProductIDtier_4, ProductType.Consumable);
+            
+            builder.AddProduct(kID50kPoints, ProductType.Consumable);
+            builder.AddProduct(kID15kPoints, ProductType.Consumable);
+            builder.AddProduct(kID5kPoints, ProductType.Consumable);
             // Continue adding the non-consumable product.
-            builder.AddProduct(kProductIDdoubler, ProductType.NonConsumable);
+            builder.AddProduct(kIDdoubler, ProductType.NonConsumable);
 
 
             // Kick off the remainder of the set-up with an asynchrounous call, passing the configuration 
@@ -72,29 +68,16 @@ using UnityEngine.Purchasing;
         }
 
 
-        public void BuyPoints(int tier)
+        public void Buy50kPoints() {
+            BuyProductID(kID50kPoints);
+        }
+        public void Buy15kPoints()
         {
-            // Buy the consumable product using its general identifier. Expect a response either 
-            // through ProcessPurchase or OnPurchaseFailed asynchronously.
-            if (tier == 1)
-            {
-                BuyProductID(kProductIDtier_1);
-            }
-            else if (tier == 2)
-            {
-                BuyProductID(kProductIDtier_2);
-            }
-            else if (tier == 3)
-            {
-                BuyProductID(kProductIDtier_3);
-            }
-            else if (tier == 4)
-            {
-                BuyProductID(kProductIDtier_4);
-            }
-            else {
-                Debug.Log("Purchaser BuyPoint wrong tier");
-            }
+            BuyProductID(kID15kPoints);
+        }
+        public void Buy5kPoints()
+        {
+            BuyProductID(kID5kPoints);
         }
 
 
@@ -102,7 +85,7 @@ using UnityEngine.Purchasing;
         {
             // Buy the non-consumable product using its general identifier. Expect a response either 
             // through ProcessPurchase or OnPurchaseFailed asynchronously.
-            BuyProductID(kProductIDdoubler);
+            BuyProductID(kIDdoubler);
         }
 
 
@@ -123,57 +106,17 @@ using UnityEngine.Purchasing;
                     // asynchronously.
                     m_StoreController.InitiatePurchase(product);
                 }
-                // Otherwise ...
                 else
                 {
                     // ... report the product look-up failure situation  
                     Debug.Log("BuyProductID: FAIL. Not purchasing product, either is not found or is not available for purchase");
                 }
             }
-            // Otherwise ...
             else
             {
                 // ... report the fact Purchasing has not succeeded initializing yet. Consider waiting longer or 
                 // retrying initiailization.
                 Debug.Log("BuyProductID FAIL. Not initialized.");
-            }
-        }
-
-
-        // Restore purchases previously made by this customer. Some platforms automatically restore purchases, like Google. 
-        // Apple currently requires explicit purchase restoration for IAP, conditionally displaying a password prompt.
-        public void RestorePurchases()
-        {
-            // If Purchasing has not yet been set up ...
-            if (!IsInitialized())
-            {
-                // ... report the situation and stop restoring. Consider either waiting longer, or retrying initialization.
-                Debug.Log("RestorePurchases FAIL. Not initialized.");
-                return;
-            }
-
-            // If we are running on an Apple device ... 
-            if (Application.platform == RuntimePlatform.IPhonePlayer ||
-                Application.platform == RuntimePlatform.OSXPlayer)
-            {
-                // ... begin restoring purchases
-                Debug.Log("RestorePurchases started ...");
-
-                // Fetch the Apple store-specific subsystem.
-                var apple = m_StoreExtensionProvider.GetExtension<IAppleExtensions>();
-                // Begin the asynchronous process of restoring purchases. Expect a confirmation response in 
-                // the Action<bool> below, and ProcessPurchase if there are previously purchased products to restore.
-                apple.RestoreTransactions((result) => {
-                    // The first phase of restoration. If no more responses are received on ProcessPurchase then 
-                    // no purchases are available to be restored.
-                    Debug.Log("RestorePurchases continuing: " + result + ". If no further messages, no purchases available to restore.");
-                });
-            }
-            // Otherwise ...
-            else
-            {
-                // We are not running on an Apple device. No work is necessary to restore purchases.
-                Debug.Log("RestorePurchases FAIL. Not supported on this platform. Current = " + Application.platform);
             }
         }
 
@@ -204,42 +147,33 @@ using UnityEngine.Purchasing;
         public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
         {
             // A consumable product has been purchased by this user.
-            if (String.Equals(args.purchasedProduct.definition.id, kProductIDtier_1, StringComparison.Ordinal))
+            if (String.Equals(args.purchasedProduct.definition.id, kID50kPoints, StringComparison.Ordinal))
             {
                 Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-                // The consumable item has been successfully purchased, add 100 coins to the player's in-game score.
-                BankManager.bank += 10;
+                BankManager.bank += 50000;
+                AudioManager.manager.PlayPositiveSound(); 
             }
-            else if (String.Equals(args.purchasedProduct.definition.id, kProductIDtier_2, StringComparison.Ordinal))
+            else if (String.Equals(args.purchasedProduct.definition.id, kID15kPoints, StringComparison.Ordinal))
             {
                 Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-                // The consumable item has been successfully purchased, add 100 coins to the player's in-game score.
-                BankManager.bank += 20;
+                BankManager.bank += 15000;
+                AudioManager.manager.PlayPositiveSound();
             }
-            else if (String.Equals(args.purchasedProduct.definition.id, kProductIDtier_3, StringComparison.Ordinal))
+            else if (String.Equals(args.purchasedProduct.definition.id, kID5kPoints, StringComparison.Ordinal))
             {
                 Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-                // The consumable item has been successfully purchased, add 100 coins to the player's in-game score.
-                BankManager.bank += 30;
+                BankManager.bank += 5000;
+                AudioManager.manager.PlayPositiveSound();
             }
-            else if (String.Equals(args.purchasedProduct.definition.id, kProductIDtier_4, StringComparison.Ordinal))
+            // A non-consumable product has been purchased by this user.
+            else if (String.Equals(args.purchasedProduct.definition.id, kIDdoubler, StringComparison.Ordinal))
             {
                 Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-                // The consumable item has been successfully purchased, add 100 coins to the player's in-game score.
-                BankManager.bank += 40;
+                ScoreManager.manager.EnableScoreDoubler();
+                AudioManager.manager.PlayPositiveSound();
             }
-            // Or ... a non-consumable product has been purchased by this user.
-            else if (String.Equals(args.purchasedProduct.definition.id, kProductIDdoubler, StringComparison.Ordinal))
-            {
-                Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-                // TODO: The non-consumable item has been successfully purchased, grant this item to the player.
-            }
-            // Or ... an unknown product has been purchased by this user. Fill in additional products here....
-            else
-            {
-                Debug.Log(string.Format("ProcessPurchase: FAIL. Unrecognized product: '{0}'", args.purchasedProduct.definition.id));
-            }
-
+            BankManager.isBankChanged = true;
+            DataControl.control.SaveAll();
             // Return a flag indicating whether this product has completely been received, or if the application needs 
             // to be reminded of this purchase at next app launch. Use PurchaseProcessingResult.Pending when still 
             // saving purchased products to the cloud, and when that save is delayed. 
@@ -252,6 +186,7 @@ using UnityEngine.Purchasing;
             // A product purchase attempt did not succeed. Check failureReason for more detail. Consider sharing 
             // this reason with the user to guide their troubleshooting actions.
             Debug.Log(string.Format("OnPurchaseFailed: FAIL. Product: '{0}', PurchaseFailureReason: {1}", product.definition.storeSpecificId, failureReason));
+            AudioManager.manager.PlayNegativeSound();
         }
     }
 

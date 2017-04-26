@@ -12,30 +12,32 @@ public class HintManager : MonoBehaviour {
 
     public GameObject gameScreen;
     public GameObject iapScreen;
+    public GameObject powerUpScreen;
+
     public GameObject timeStopsGameObject;
     public GameObject flashesGameObject;
     public GameObject flankersGameObject;
 
     public Button timeStopButton;
-    public GameObject timeStopButtonDisabledImage;
     public Button flashButton;
-    public GameObject flashButtonDisabledImage;
     public Button flankerButton;
-    public GameObject flankerButtonDisabledImage;
+    public GameObject disabledImagePrefab;
+    public string prefabName = "Disabled Image(Clone)";
+
+    public GameObject plus5GameScreenPrefab;
+    public GameObject plus5PowerUpScreenPrefab;
+
+    public Text[] flankersAmountTexts;
+    public Text[] flashesAmountTexts;
+    public Text[] timeStopsAmountTexts;
 
     public GameObject sphere;
     public GameObject leftSide;
     public GameObject rightSide;
 
-    public Text hintMessage;
-
-    public Text plus5TimeStops;
-    public Text plus5Flashes;
-    public Text plus5Flankers;
-
-    public Text plus5TimeStopsPUscreen;
-    public Text plus5FlashesPUscreen;
-    public Text plus5FlankersPUscreen;
+    public GameObject hintMessageParent;
+    public GameObject hintMessagePrefab;
+    public string hintMessageName = "HintMessage(Clone)";
 
     [HideInInspector]
     public static bool isTimeStopUsedInMatch;
@@ -62,11 +64,7 @@ public class HintManager : MonoBehaviour {
     public  int amountFlankers;
 
     private Animator sphereAnimator;
-    private Animator leftSideAnimator;
-    private Animator rightSideAnimator;
-    private Animator timeStopAnimator;
-    private Animator flashAnimator;
-    private Animator flankerAnimator;
+
 
     void Awake()
     {
@@ -82,45 +80,33 @@ public class HintManager : MonoBehaviour {
     }
 
     void Start()
-    { 
+    {
         sphereAnimator = sphere.GetComponent<Animator>();
-        leftSideAnimator = leftSide.GetComponent<Animator>();
-        rightSideAnimator = rightSide.GetComponent<Animator>();
-
-        timeStopAnimator = timeStopsGameObject.GetComponent<Animator>();
-        flashAnimator = flashesGameObject.GetComponent<Animator>();
-        flankerAnimator = flankersGameObject.GetComponent<Animator>();
 
         isTimeStopUsedInMatch = false;
         isFlashUsedInRound = false;
         isFlankerUsedInRound = false;
 
     }
-    //добавление времени (можно использовать раз в игру)
     public void TimeStopHint()
     {
-        //проверка что еще не использовалась в матче => вывод сообщения
         if (!ScreenManager.screenManager.isMenuOpen && isTimeStopUsedInMatch) {
             ShowMessage(kOncePerMatchMessage);
         }
-        //проверка количества и что меню не открыто => добавление времени
         else if (!ScreenManager.screenManager.isMenuOpen && amountTimeStops > 0)
         {
-
-            Debug.Log("AddTime");
             GameManager.manager.timeStopsUsed = true;
-            //GameManager.manager.time += 5;
 
             amountTimeStops--;
-            AmountTimeStops.isAmountChanged = true;
+            SetTimeStopsAmount();
             DataControl.control.SaveAll();
 
-            timeStopButtonDisabledImage.SetActive(true);//добавление штриховки
-            isTimeStopUsedInMatch = true; //флаг что использована в этом матче
+            CreateDisabledImage(timeStopButton);
+
+            isTimeStopUsedInMatch = true;
 
             ShowMessage(kTimeStopDescription); 
         }
-        //проверка количества и что меню не открыто и количество 0 => открытие окна поверапа
         else if ( (!ScreenManager.screenManager.isMenuOpen && amountTimeStops == 0) || ScreenManager.screenManager.GetOpenScreen() != timeStopsGameObject)
         {
             GameManager.manager.PauseGame(true);
@@ -130,107 +116,96 @@ public class HintManager : MonoBehaviour {
             ScreenManager.screenManager.OpenScreen(timeStopsGameObject);
         }
     }
-    //сверкание точки (можно использовать раз в раунд)
     public void FlashHint() {
-        //проверка что еще не использовалась в раунде
         if (!ScreenManager.screenManager.isMenuOpen && isFlashUsedInRound)
         {
             ShowMessage(kOncePerRoundMessage);
         }
         else if (!ScreenManager.screenManager.isMenuOpen && amountFlashes > 0)
         {
-            Debug.Log("IncreaseSparkleSpeed");
             sphereAnimator.SetBool("HintOn", true);
 
             amountFlashes--;
-            AmountFlashes.isAmountChanged = true;
+            SetFlashesAmount();
             DataControl.control.SaveAll();
 
-            flashButtonDisabledImage.SetActive(true);//добавление штриховки
-            isFlashUsedInRound = true; //флаг что использована в этом раунде
+            CreateDisabledImage(flashButton);
+
+            isFlashUsedInRound = true;
 
             ShowMessage(kFlashesDescription);
         }
         else if ( (!ScreenManager.screenManager.isMenuOpen && amountFlashes == 0) || ScreenManager.screenManager.GetOpenScreen() != flashesGameObject)
         {
             GameManager.manager.PauseGame(true);
+            ScreenManager.screenManager.isMenuOpen = true;
             gameScreen.GetComponent<Animator>().SetTrigger("HideUp");
             ScreenManager.screenManager.WithoutAdditionalAnimator();
             ScreenManager.screenManager.OpenScreen(flashesGameObject);
         }
     }
-    //определение позиции (можно использовать раз в раунд)
     public void FlankerHint() {
-        //проверка что еще не использовалась в раунде
         if (!ScreenManager.screenManager.isMenuOpen && isFlankerUsedInRound)
         {
             ShowMessage(kOncePerRoundMessage);
         }
         else if (!ScreenManager.screenManager.isMenuOpen && amountFlankers > 0)
         {
-            Debug.Log("ShowSide");
-            Debug.Log("SpherePosition = "+ sphere.GetComponent<RectTransform>().localPosition.x);
             if (sphere.transform.parent.GetComponent<RectTransform>().localPosition.x <= 0)
             {
-                leftSideAnimator.SetBool("HintOn", true);
+                leftSide.SetActive(true);
             }
 
             if (sphere.transform.parent.GetComponent<RectTransform>().localPosition.x >= 0){
-                rightSideAnimator.SetBool("HintOn", true);
+                rightSide.SetActive(true);
             }
 
             amountFlankers--;
-            AmountFlankers.isAmountChanged = true;
+            SetFlankersAmount();
             DataControl.control.SaveAll();
 
-            flankerButtonDisabledImage.SetActive(true);//добавление штриховки
-            isFlankerUsedInRound = true; //флаг что использована в этом раунде
+            CreateDisabledImage(flankerButton);
+
+            isFlankerUsedInRound = true; 
 
             ShowMessage(kFlankerDescription);
         }
         else if ( (!ScreenManager.screenManager.isMenuOpen && amountFlankers == 0) || ScreenManager.screenManager.GetOpenScreen() != flankersGameObject)
         {
             GameManager.manager.PauseGame(true);
+            ScreenManager.screenManager.isMenuOpen = true;
             gameScreen.GetComponent<Animator>().SetTrigger("HideUp");
             ScreenManager.screenManager.WithoutAdditionalAnimator();
             ScreenManager.screenManager.OpenScreen(flankersGameObject);
         }
     }
 
-    public void DeleteEffects(bool first, bool second, bool third) {
-        if (first) {
-            timeStopButtonDisabledImage.SetActive(false);
+    public void DeleteEffects(bool timeStops, bool flashes, bool flankers) {
+        if (timeStops) {
+            DeleteDisabledImage(timeStopButton.transform.FindChild(prefabName));
             isTimeStopUsedInMatch = false;
         }
-        if (second) {
-            flashButtonDisabledImage.SetActive(false);
-            isFlashUsedInRound = false;
-        }
-        if (third) {
-            flankerButtonDisabledImage.SetActive(false);
-            isFlankerUsedInRound = false;
+		if (flashes) {
+            DeleteDisabledImage(flashButton.transform.FindChild(prefabName));
 
+            isFlashUsedInRound = false;
+            RemoveFlash();
+        }     
+		if (flankers) {
+            DeleteDisabledImage(flankerButton.transform.FindChild(prefabName));
+
+            isFlankerUsedInRound = false;
             RemoveFlankers();
         }
     }
-    public void DeleteEffects()
-    {
-        timeStopButtonDisabledImage.SetActive(false);
-        isTimeStopUsedInMatch = false;
 
-        flashButtonDisabledImage.SetActive(false);
-        isFlashUsedInRound = false;
-
-
-        flankerButtonDisabledImage.SetActive(false);
-        isFlankerUsedInRound = false;
-
-        RemoveFlankers();   
-    }
+	public void RemoveFlash(){
+		sphereAnimator.SetBool("HintOn", false);
+	}
 
     public void RemoveFlankers() {
-        leftSideAnimator.SetBool("HintOn", false);
-        rightSideAnimator.SetBool("HintOn", false);
+        leftSide.SetActive(false);
+        rightSide.SetActive(false);
     }
 
     public void HideFlankers(bool value) {
@@ -240,21 +215,16 @@ public class HintManager : MonoBehaviour {
 
     public void BuyTimeStops() {
         if (BankManager.bank >= priceTimeStops)
-        {           
-            if (ScreenManager.screenManager.GetOpenScreen() == timeStopsGameObject)
-            {
-                plus5TimeStopsPUscreen.GetComponent<Animator>().SetTrigger("Show");
-            }
-            else { 
-                plus5TimeStops.GetComponent<Animator>().SetTrigger("Show");
-            }
+        {
+            Plus5Animation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Time Stops"), timeStopButton);
+
             amountTimeStops += 5;
-            AmountTimeStops.isAmountChanged = true;
+            SetTimeStopsAmount();
 
             BankManager.bank -= priceTimeStops;
             BankManager.isBankChanged = true;
 
-            DataControl.control.SaveAll();           
+            DataControl.control.SaveAll();
         }
         else {
             iapScreen.GetComponent<Animator>().SetBool("Open", true);
@@ -265,21 +235,15 @@ public class HintManager : MonoBehaviour {
     {
         if (BankManager.bank >= priceFlashes)
         {
-            if (ScreenManager.screenManager.GetOpenScreen() == flashesGameObject)
-            {
-                plus5FlashesPUscreen.GetComponent<Animator>().SetTrigger("Show");
-            }
-            else
-            {
-                plus5Flashes.GetComponent<Animator>().SetTrigger("Show");
-            }
+            Plus5Animation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Flashes"), flashButton);
+
             amountFlashes += 5;
-            AmountFlashes.isAmountChanged = true;
+            SetFlashesAmount();
 
             BankManager.bank -= priceFlashes;
             BankManager.isBankChanged = true;
 
-            DataControl.control.SaveAll();         
+            DataControl.control.SaveAll();
         }
         else
         {
@@ -291,21 +255,15 @@ public class HintManager : MonoBehaviour {
     {
         if (BankManager.bank >= priceFlankers)
         {
-            if (ScreenManager.screenManager.GetOpenScreen() == flankersGameObject)
-            {
-                plus5FlankersPUscreen.GetComponent<Animator>().SetTrigger("Show");
-            }
-            else
-            {
-                plus5Flankers.GetComponent<Animator>().SetTrigger("Show");
-            }
+            Plus5Animation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Flankers"), flankerButton);
+            
             amountFlankers += 5;
-            AmountFlankers.isAmountChanged = true;
+            SetFlankersAmount();
 
             BankManager.bank -= priceFlankers;
             BankManager.isBankChanged = true;
 
-            DataControl.control.SaveAll();      
+            DataControl.control.SaveAll();
         }
         else
         {
@@ -314,8 +272,62 @@ public class HintManager : MonoBehaviour {
     }
 
     void ShowMessage(string message) {
-        hintMessage.GetComponent<Animator>().SetTrigger("Hide");
-        hintMessage.text = message;
-        hintMessage.GetComponent<Animator>().SetTrigger("Show");
+        if (hintMessageParent.transform.FindChild(hintMessageName)) {
+            Destroy(hintMessageParent.transform.FindChild(hintMessageName).gameObject);
+        }
+        
+        
+        GameObject mess = Instantiate(hintMessagePrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        mess.GetComponent<Text>().text = message;
+        mess.transform.SetParent(hintMessageParent.transform, false);
+        mess.GetComponent<RectTransform>().localScale = new Vector3(1,1,1);
+    }
+
+    void CreateDisabledImage(Button parent) {
+        GameObject disImage = Instantiate(disabledImagePrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        disImage.transform.SetParent(parent.transform, false);
+        disImage.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+    }
+
+    void DeleteDisabledImage(Transform prefabObject) {
+        if (prefabObject)
+        {
+            Destroy(prefabObject.gameObject);
+        }
+    }
+
+    void Plus5Animation(Transform parent, Button parent2) {
+        GameObject plus;
+        if (ScreenManager.screenManager.GetOpenScreen() == powerUpScreen)
+        {
+            plus = Instantiate(plus5PowerUpScreenPrefab, new Vector3(0,0,0), Quaternion.identity);
+            plus.transform.SetParent(parent, false);
+        }
+        else
+        {
+            plus = Instantiate(plus5GameScreenPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            plus.transform.SetParent(parent2.transform, false);
+        }
+        plus.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+    }
+
+    public void SetFlankersAmount() {
+        foreach (Text item in flankersAmountTexts) {
+            item.text = amountFlankers.ToString();
+        }
+    }
+    public void SetFlashesAmount()
+    {
+        foreach (Text item in flashesAmountTexts)
+        {
+            item.text = amountFlashes.ToString();
+        }
+    }
+    public void SetTimeStopsAmount()
+    {
+        foreach (Text item in timeStopsAmountTexts)
+        {
+            item.text = amountTimeStops.ToString();
+        }
     }
 }

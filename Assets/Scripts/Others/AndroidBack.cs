@@ -25,11 +25,9 @@ public class AndroidBack: MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Debug.Log("pressed escape");
             openedScreen = ScreenManager.screenManager.GetOpenScreen();
             if (openedScreen == mainMenu)
             {
-                Debug.Log("main screen");
                 Application.Quit();
             }
             else if (bankCanvas.GetComponent<Animator>().GetBool("Open")) {
@@ -37,12 +35,10 @@ public class AndroidBack: MonoBehaviour {
             }
             else if (openedScreen == gameBoard || openedScreen == gameMenu)
             {
-                Debug.Log("gameboard or gamemenu");
                 transition.Transition();
             }
             else if (openedScreen == endGame || openedScreen == achievementScreen)
             {
-                Debug.Log("endgame");
                 ScreenManager.screenManager.WithoutAdditionalAnimator();
                 ScreenManager.screenManager.OpenScreen(mainMenu);
             }
@@ -54,7 +50,6 @@ public class AndroidBack: MonoBehaviour {
                 ScreenManager.screenManager.SetMenu(false);
             }
             else {
-                Debug.Log("something else");
                 ScreenManager.screenManager.BackToPreviousScreen();
             }
         }     

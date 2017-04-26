@@ -4,10 +4,13 @@ using UnityEngine.UI;
 
 public class BestTimedScore : MonoBehaviour {
 
+	public static bool isUpdated;
 
-	
 	// Update is called once per frame
 	void Update () {
-        GetComponent<Text>().text = DataControl.control.bestScoreTimed.ToString();
-    }
+		if (isUpdated) {
+			GetComponent<Text> ().text = DataControl.control.bestScoreTimed.ToString ();
+			isUpdated = false;
+		}
+	}
 }

@@ -23,9 +23,10 @@ public class IntroScript : MonoBehaviour {
     }
 
     public void PlaySecond() {
-        Debug.Log("play second");
         if (isAnimationEnd)
         {
+            AudioManager.manager.PlayFoundSound();
+
             CreateExplosion();
 
             anim.SetTrigger("PlaySecond");
@@ -38,6 +39,8 @@ public class IntroScript : MonoBehaviour {
     {
         if (isAnimationEnd)
         {
+            AudioManager.manager.PlayFoundSound();
+
             CreateExplosion();
 
             anim.SetTrigger("MoveFirst");
@@ -50,6 +53,8 @@ public class IntroScript : MonoBehaviour {
     {
         if (isAnimationEnd)
         {
+            AudioManager.manager.PlayFoundSound();
+
             CreateExplosion();
 
             anim.SetTrigger("MoveSecond");
@@ -62,6 +67,8 @@ public class IntroScript : MonoBehaviour {
     {
         if (isAnimationEnd)
         {
+            AudioManager.manager.PlayFoundSound();
+
             CreateExplosion();
 
             anim.SetTrigger("PlayThird");
@@ -75,6 +82,8 @@ public class IntroScript : MonoBehaviour {
     {
         if (isAnimationEnd)
         {
+            AudioManager.manager.PlayFoundSound();
+
             CreateExplosion();
 
             anim.SetTrigger("PlayFinal");
@@ -87,10 +96,6 @@ public class IntroScript : MonoBehaviour {
             if (DataControl.control.isTutorialFinished == false)
             {
                 DataControl.control.isTutorialFinished = true;
-                HintManager.manager.amountFlankers = 5;
-                HintManager.manager.amountFlashes = 5;
-                HintManager.manager.amountTimeStops = 5;
-                BankManager.bank = 500;
 
                 DataControl.control.SaveAll();
             }
@@ -98,7 +103,6 @@ public class IntroScript : MonoBehaviour {
             nextScreen.SetActive(true);
             this.gameObject.SetActive(false);
         }
-
     }
 
     public void CreateExplosion()
@@ -112,10 +116,8 @@ public class IntroScript : MonoBehaviour {
     }
 
     public void Miss() {
-        Debug.Log("miss");
         anim.SetTrigger("Miss");
 
         AudioManager.manager.PlayMissedSound();
     }
-
 }

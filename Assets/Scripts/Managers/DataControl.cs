@@ -12,7 +12,11 @@ public class DataControl : MonoBehaviour
     public int bestScoreEndless;
     public int bestScoreZen;
 
+    public int scoreMultiplier;
+
     public bool isTutorialFinished;
+
+    const string path = "/playerInfo.dat";
 
     void Awake()
     {
@@ -20,6 +24,7 @@ public class DataControl : MonoBehaviour
         {
             DontDestroyOnLoad(gameObject);
             control = this;
+
         }
         else if (control != null)
         {
@@ -27,21 +32,16 @@ public class DataControl : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        Debug.Log("DataManager Start to loadALL");
-        LoadAll();
-    }
-
     bool ifFileExist()
     {
-        if (File.Exists(Application.persistentDataPath + "/playerInfo.dat"))
+        if (File.Exists(Application.persistentDataPath + path))
         {
             return true;
         }
         else
         {
-            Debug.Log("Failed to load");
+            Debug.Log("Failed to load data. Set default");
+            SetDefaultData();
             return false;
         }
     }
@@ -49,7 +49,7 @@ public class DataControl : MonoBehaviour
     public void SaveAll()
     {
         BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.persistentDataPath + "/playerInfo.dat");
+        FileStream file = File.Create(Application.persistentDataPath + path);
         PlayerData data = new PlayerData();
 
         data.amountTimeStops = HintManager.manager.amountTimeStops;
@@ -62,6 +62,8 @@ public class DataControl : MonoBehaviour
 
         data.bank = BankManager.bank;
 
+        data.isScoreDoublerEnabled = ScoreManager.manager.isScoreDoublerEnabled;
+
         data.isVibrationOn = SettingsManager.manager.isVibrationOn;
         data.isAudioOn = SettingsManager.manager.isAudioOn;
 
@@ -69,8 +71,6 @@ public class DataControl : MonoBehaviour
         data.isTimedModePlayed = GameManager.manager.isTimedModePlayed;
         data.isZenModePlayed = GameManager.manager.isZenModePlayed;
         data.isTutorialPlayed = isTutorialFinished;
-
-
 
         bf.Serialize(file, data);
         file.Close();
@@ -86,27 +86,34 @@ public class DataControl : MonoBehaviour
         if (ifFileExist())
         {
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
+            FileStream file = File.Open(Application.persistentDataPath + path, FileMode.Open);
             PlayerData data = (PlayerData)bf.Deserialize(file);
             file.Close();
 
             HintManager.manager.amountTimeStops = data.amountTimeStops;
             HintManager.manager.amountFlashes = data.amountFlashes;
             HintManager.manager.amountFlankers = data.amountFlankers;
-            AmountFlankers.isAmountChanged = true;
-            AmountFlashes.isAmountChanged = true;
-            AmountTimeStops.isAmountChanged = true;
+            HintManager.manager.SetFlankersAmount();
+            HintManager.manager.SetFlashesAmount();
+            HintManager.manager.SetTimeStopsAmount();
 
 
             bestScoreTimed = data.bestScoreTimed;
+            BestTimedScore.isUpdated = true;
             bestScoreZen = data.bestScoreZen;
+            BestZenScore.isUpdated = true;
             bestScoreEndless = data.bestScoreEndless;
+            BestEndlessScore.isUpdated = true;
 
             BankManager.bank = data.bank;
             BankManager.isBankChanged = true;
 
+            ScoreManager.manager.isScoreDoublerEnabled = data.isScoreDoublerEnabled;
+            ScoreManager.manager.SetPointsNumber();
+
             SettingsManager.manager.isVibrationOn = data.isVibrationOn;
             SettingsManager.manager.isAudioOn = data.isAudioOn;
+            SettingsManager.manager.SetTexts();
 
             GameManager.manager.isEndlessModePlayed = data.isEndlessModePlayed;
             GameManager.manager.isTimedModePlayed = data.isTimedModePlayed;
@@ -121,155 +128,80 @@ public class DataControl : MonoBehaviour
         }
     }
 
-    //public void SavePU()
-    //{
-    //    BinaryFormatter bf = new BinaryFormatter();
-    //    FileStream file = File.Create(Application.persistentDataPath + "/playerInfo.dat");
-    //    PlayerData data = new PlayerData();
+    public void SetDefaultData()
+    {
 
-    //    data.amountPU1 = HintManager.manager.amountPU1;
-    //    data.amountPU2 = HintManager.manager.amountPU2;
-    //    data.amountPU3 = HintManager.manager.amountPU3;
-
-    //    bf.Serialize(file, data);
-    //    file.Close();
-
-    //    Debug.Log("PU data saved. PU1=" + data.amountPU1 + ", PU2=" + data.amountPU2 + ", PU3=" + data.amountPU3);
-    //}
-    //public void LoadPU()
-    //{
-    //    if (ifFileExist())
-    //    {
-    //        BinaryFormatter bf = new BinaryFormatter();
-    //        FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
-    //        PlayerData data = (PlayerData)bf.Deserialize(file);
-    //        file.Close();
-
-    //        HintManager.manager.amountPU1 = data.amountPU1;
-    //        HintManager.manager.amountPU2 = data.amountPU2;
-    //        HintManager.manager.amountPU3 = data.amountPU3;
-
-    //        Debug.Log("PU data loaded. PU1=" + HintManager.manager.amountPU1 + ", PU2=" + HintManager.manager.amountPU2 + ", PU3=" + HintManager.manager.amountPU3);
-    //    }
-
-    //}
-
-    //public void SaveBank()
-    //{
-    //    BinaryFormatter bf = new BinaryFormatter();
-    //    FileStream file = File.Create(Application.persistentDataPath + "/playerInfo.dat");
-    //    PlayerData data = new PlayerData();
-
-    //    data.bank = BankManager.bank;
-
-    //    bf.Serialize(file, data);
-    //    file.Close();
-
-    //    Debug.Log("bank data saved. bank=" + data.bank);
-    //}
-    //public void LoadBank()
-    //{
-    //    if (ifFileExist())
-    //    {
-    //        BinaryFormatter bf = new BinaryFormatter();
-    //        FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
-    //        PlayerData data = (PlayerData)bf.Deserialize(file);
-    //        file.Close();
-
-    //        BankManager.bank = data.bank;
-    //        Debug.Log("Bank data loaded. bank=" + BankManager.bank);
-    //    }
-    //}
-
-    //public void SaveBestScores()
-    //{
-    //    BinaryFormatter bf = new BinaryFormatter();
-    //    FileStream file = File.Create(Application.persistentDataPath + "/playerInfo.dat");
-
-    //    PlayerData data = new PlayerData();
-
-    //    data.bestScoreTimed = bestScoreTimed;
-    //    data.bestScoreZen = bestScoreZen;
-    //    data.bestScoreEndless = bestScoreEndless;
-
-    //    bf.Serialize(file, data);
-    //    file.Close();
-
-    //    //Debug.Log("Score data saved. best=" + bestScore);
-    //}
-    //public void LoadBestScores()
-    //{
-    //    if (ifFileExist())
-    //    {
-    //        BinaryFormatter bf = new BinaryFormatter();
-    //        FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
-    //        PlayerData data = (PlayerData)bf.Deserialize(file);
-    //        file.Close();
-
-    //        bestScoreTimed = data.bestScoreTimed;
-    //        bestScoreZen = data.bestScoreZen;
-    //        bestScoreEndless = data.bestScoreEndless;
-
-    //        //Debug.Log("Score data loaded. best=" + bestScore);
-    //    }
-    //}
-
-    //public void SaveSettings()
-    //{
-    //    BinaryFormatter bf = new BinaryFormatter();
-    //    FileStream file = File.Create(Application.persistentDataPath + "/playerInfo.dat");
-    //    PlayerData data = new PlayerData();
-
-    //    data.isVibrationOn = SettingsManager.manager.isVibrationOn;
-    //    data.isAudioOn = SettingsManager.manager.isAudioOn;
-
-    //    bf.Serialize(file, data);
-    //    file.Close();
-    //}
-    //public void LoadSettings()
-    //{
-    //    if (ifFileExist())
-    //    {
-    //        BinaryFormatter bf = new BinaryFormatter();
-    //        FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
-    //        PlayerData data = (PlayerData)bf.Deserialize(file);
-    //        file.Close();
-
-    //        SettingsManager.manager.isAudioOn = data.isAudioOn;
-    //        SettingsManager.manager.isVibrationOn = data.isVibrationOn;
-    //    }
-    //}
-
-
-    public void ResetAll() {
         BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.persistentDataPath + "/playerInfo.dat");
+        FileStream file = File.Create(Application.persistentDataPath + path);
         PlayerData data = new PlayerData();
 
-        data.amountTimeStops = 0;
-        data.amountFlashes = 0;
-        data.amountFlankers = 0;
+        data.amountTimeStops = 5;
+        HintManager.manager.amountTimeStops = 5;
+        data.amountFlashes = 5;
+        HintManager.manager.amountFlashes = 5;
+        data.amountFlankers = 5;
+        HintManager.manager.amountFlankers = 5;
+        HintManager.manager.SetFlankersAmount();
+        HintManager.manager.SetFlashesAmount();
+        HintManager.manager.SetTimeStopsAmount();
+
+
 
         data.bestScoreTimed = 0;
+        bestScoreTimed = 0;
         data.bestScoreEndless = 0;
+        bestScoreEndless = 0;
         data.bestScoreZen = 0;
+        bestScoreZen = 0;
+        BestTimedScore.isUpdated = true;
+        BestZenScore.isUpdated = true;
+        BestEndlessScore.isUpdated = true;
 
-        data.bank = 0;
+
+        data.bank = 500;
+        BankManager.bank = 500;
+        BankManager.isBankChanged = true;
+
+
 
         data.isVibrationOn = true;
+        SettingsManager.manager.isVibrationOn = true;
         data.isAudioOn = true;
+        SettingsManager.manager.isAudioOn = true;
+        SettingsManager.manager.SetTexts();
 
         data.isEndlessModePlayed = false;
+        GameManager.manager.isEndlessModePlayed = false;
         data.isTimedModePlayed = false;
+        GameManager.manager.isTimedModePlayed = false;
         data.isZenModePlayed = false;
+        GameManager.manager.isZenModePlayed = false;
         data.isTutorialPlayed = false;
+        isTutorialFinished = false;
 
 
+        data.isScoreDoublerEnabled = false;
+        ScoreManager.manager.isScoreDoublerEnabled = false;
+        ScoreManager.manager.SetPointsNumber();
 
         bf.Serialize(file, data);
         file.Close();
+    }
 
-        LoadAll();
+    public void SetNewBestTimedScore(int newScore)
+    {
+        bestScoreTimed = newScore;
+        BestTimedScore.isUpdated = true;
+    }
+    public void SetNewBestEndlessScore(int newScore)
+    {
+        bestScoreEndless = newScore;
+        BestEndlessScore.isUpdated = true;
+    }
+    public void SetNewBestZenScore(int newScore)
+    {
+        bestScoreZen = newScore;
+        BestZenScore.isUpdated = true;
     }
 }
 
@@ -289,9 +221,15 @@ class PlayerData
     public bool isAudioOn;
     public bool isVibrationOn;
 
+
+
     public bool isTutorialPlayed;
     public bool isTimedModePlayed;
     public bool isEndlessModePlayed;
     public bool isZenModePlayed;
-    
+
+
+    public bool isScoreDoublerEnabled;
+    public bool isZenModeEnabled;
+
 }

@@ -17,47 +17,30 @@ public class MissInput : MonoBehaviour {
     public void Miss() {
         gameBoardAnimator.SetTrigger("Miss");
         AudioManager.manager.PlayMissedSound();
-
-        if (SettingsManager.manager.isVibrationOn)
-        {
-            Handheld.Vibrate();
-            
-        }
+	
         
         if (GameManager.manager.mode == Mode.Zen)
         {
             if (lifesCount == 3)
             {
-                Debug.Log("2 lifes left");
                 anima = life1.GetComponent<Animator>();
                 anima.SetTrigger("Hide");
                 lifesCount--;
             }
             else if (lifesCount == 2)
             {
-                Debug.Log("1 lifes left");
                 anima = life2.GetComponent<Animator>();
                 anima.SetTrigger("Hide");
                 lifesCount--;
             }
             else if (lifesCount == 1)
             {
-                Debug.Log("0 lifes left");
                 anima = life3.GetComponent<Animator>();
                 anima.SetTrigger("Hide");
                 lifesCount--;
-                Debug.Log("game over");
 
                 GameManager.manager.EndGame();
             }
-            else
-            {
-                Debug.Log("game over");
-            }
         }
-
-
-        
-        Debug.Log("Miss");
     }
 }

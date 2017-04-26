@@ -4,10 +4,15 @@ using UnityEngine.UI;
 
 public class BestZenScore : MonoBehaviour {
 
+	public static bool isUpdated;
+
     // Update is called once per frame
     void Update()
-    {
-        GetComponent<Text>().text = DataControl.control.bestScoreZen.ToString();
-    }
+	{
+		if (isUpdated) {
+			GetComponent<Text> ().text = DataControl.control.bestScoreZen.ToString ();
+			isUpdated = false;
+		}
+	}
 }
 

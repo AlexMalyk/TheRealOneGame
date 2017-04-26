@@ -48,11 +48,6 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
         Appodeal.show(Appodeal.REWARDED_VIDEO);
     }
 
-    public void ShowSpecialAd() {
-        Appodeal.setRewardedVideoCallbacks(this);
-        Appodeal.show(Appodeal.REWARDED_VIDEO);
-    }
-
     public void SetupSpecialAd() {
         if (GameManager.manager.isNewRecord)
         {
@@ -70,54 +65,33 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
             kPromoMessage.text = kDefault;
             rewardType = kRewardType3;
             rewardAmount = 1;
-        }
-                    
-
-        
+        }       
     }
 
     #region Rewarded Video callback handlers
     public void onRewardedVideoLoaded() {
-        print("Video loaded");
-        testResult.text += "L";
+
     }
 
     public void onRewardedVideoFailedToLoad() {
-        print("Video failed");
-        testResult.text += "E";
+
     }
     public void onRewardedVideoShown() {
-        print("Video shown");
-        testResult.text += "S";
+
     }
     public void onRewardedVideoClosed() {
-        print("Video closed");
-        testResult.text += "C";
 
-        BankManager.bank += 1;
-        DataControl.control.SaveAll();
     }
     public void onRewardedVideoFinished(int amount, string name) {
-        //if (name == kRewardType4)
-        //{
-        //    BankManager.bank += amount;
-        //    DataControl.control.SaveAll();
-        //}
-        //else
-        //{
-
-
-        //    print("Reward: finished");
-        //    HintManager.manager.amountPU1 += amount;
-        //    HintManager.manager.amountPU2 += amount;
-        //    HintManager.manager.amountPU3 += amount;
-
-        //    DataControl.control.SaveAll();
-        //}
 
         BankManager.bank += 100;
         DataControl.control.SaveAll();
+        
     }
     #endregion
+}
+
+public enum AdType {
+    newRecord, outOfPowerUp, smallScore, gamesPlayed5, gamesPlayed10,
 }
 

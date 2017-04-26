@@ -31,14 +31,11 @@ public class TransitionGameMenu : MonoBehaviour {
 
         Menu.GetComponent<Canvas>().enabled = true;
 
-        Debug.Log("Menu transition");
-
         boardAnimator.SetBool("Open", !boardAnimator.GetBool("Open"));
         menuAnimator.SetBool("Open", !menuAnimator.GetBool("Open"));
         
         if (ScreenManager.screenManager.isMenuOpen)
         {
-            Debug.Log("Menu transition if");
             ScreenManager.screenManager.SetPrevious(Menu);
             ScreenManager.screenManager.SetOpen(Board);
             GameManager.manager.PauseGame(false);
@@ -46,7 +43,6 @@ public class TransitionGameMenu : MonoBehaviour {
             HintManager.manager.HideFlankers(false);
         }
         else {
-            Debug.Log("Menu transition les");
             ScreenManager.screenManager.SetPrevious(Board);
             ScreenManager.screenManager.SetOpen(Menu);
             GameManager.manager.PauseGame(true);

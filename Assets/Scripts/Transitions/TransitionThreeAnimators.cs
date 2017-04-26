@@ -35,12 +35,6 @@ public class TransitionThreeAnimators : MonoBehaviour {
         ScreenManager.screenManager.isTransition = true;
 
         first.SetBool("Open", false);
-        //if (!second.gameObject.GetComponent<Canvas>().isActiveAndEnabled)
-        //{
-        //    second.gameObject.GetComponent<Canvas>().enabled = !second.gameObject.GetComponent<Canvas>().enabled;
-        //}
-        //yield return CoroutineUtil.WaitForRealSeconds(interval1);
-        //second.SetBool("Open", !second.GetBool("Open"));
 
         yield return CoroutineUtil.WaitForRealSeconds(interval1);
 
@@ -60,7 +54,6 @@ public class TransitionThreeAnimators : MonoBehaviour {
 
         if (third.gameObject.GetComponent<Canvas>())
             third.gameObject.GetComponent<Canvas>().enabled = true;
-        //yield return CoroutineUtil.WaitForRealSeconds(interval2);
 
         third.SetBool("Open", true);
 

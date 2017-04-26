@@ -19,8 +19,8 @@ public class GameModesSetup : MonoBehaviour {
     string kPay = "$1,99";
 
     static string kTimedDescription = "You'll have 60 seconds to find as many real dots as you can.";
-    static string kEndlessDescription = "You'll have 5 seconds to find the real dot. After you found it the time restarts";
-    static string kZenDescription = "Play without the limitations of time. In this mode you'll have three lifes, unlimited flankers and flashes.";
+    static string kEndlessDescription = "You'll have 10 seconds to find the real dot. After you found it the time restarts";
+    static string kZenDescription = "Play without the limitations of time. In this mode you'll have three lifes, flankers and flashes.";
 
     public void TimedMode() {
         //if this modeis  already played then start the game

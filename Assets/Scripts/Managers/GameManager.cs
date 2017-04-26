@@ -77,8 +77,7 @@ public class GameManager : MonoBehaviour {
     }
     public void StartGame()
     {
-        Debug.Log("GM Start game");
-        ScoreManager.score = 0;
+        ScoreManager.manager.SetToZero();
 
         MissInput.lifesCount = 3;
 
@@ -89,7 +88,7 @@ public class GameManager : MonoBehaviour {
             {"pu3", HintManager.manager.amountFlankers }
         });
 
-        HintManager.manager.DeleteEffects();
+        HintManager.manager.DeleteEffects(true, true, true);
 
         ScreenManager.screenManager.SetAdditionalAnimator(GameScreen);
         ScreenManager.screenManager.OpenScreen(GameBoard);
@@ -113,9 +112,9 @@ public class GameManager : MonoBehaviour {
         isGameOver = true;
         if (mode == Mode.Timed)
         {
-            if (ScoreManager.score > DataControl.control.bestScoreTimed)
+            if (ScoreManager.manager.score > DataControl.control.bestScoreTimed)
             {
-                DataControl.control.bestScoreTimed = ScoreManager.score;
+				DataControl.control.SetNewBestTimedScore (ScoreManager.manager.score);
 
                 isNewRecord = true;
             }
@@ -124,9 +123,9 @@ public class GameManager : MonoBehaviour {
             BestScoreText.text = (DataControl.control.bestScoreTimed).ToString();
         }
         else if (mode == Mode.Endless) {
-            if (ScoreManager.score > DataControl.control.bestScoreEndless)
+            if (ScoreManager.manager.score > DataControl.control.bestScoreEndless)
             {
-                DataControl.control.bestScoreEndless = ScoreManager.score;
+				DataControl.control.SetNewBestEndlessScore (ScoreManager.manager.score);
 
                 isNewRecord = true;
             }
@@ -134,30 +133,25 @@ public class GameManager : MonoBehaviour {
             BestScoreText.text = (DataControl.control.bestScoreEndless).ToString();
         }
         else if (mode == Mode.Zen) {
-            if (ScoreManager.score > DataControl.control.bestScoreZen)
+            if (ScoreManager.manager.score > DataControl.control.bestScoreZen)
             {
-                DataControl.control.bestScoreZen = ScoreManager.score;             
+				DataControl.control.SetNewBestZenScore (ScoreManager.manager.score);
 
                 isNewRecord = true;
             }
             isZenModePlayed = true;
             BestScoreText.text = (DataControl.control.bestScoreZen).ToString();
-        }
+        }    
+        EndScoreText.text = (ScoreManager.manager.score).ToString();
 
-        
-        AdControl.control.SetupSpecialAd();
-        EndScoreText.text = (ScoreManager.score).ToString();
-
-        BankManager.bank += ScoreManager.score;
+        BankManager.bank += ScoreManager.manager.score;
         BankManager.isBankChanged = true;
-            
 
         DataControl.control.SaveAll();
         ScreenManager.screenManager.OpenScreen(endGameCanvas);
     }
     public void RestartGame()
     {
-        Debug.Log("GM restart game");
         isGameRestarted = true;
         isGameOver = true;
 
@@ -174,23 +168,16 @@ public class GameManager : MonoBehaviour {
         else if (mode == Mode.Zen) {
             ZenMode();
         }
-
-        
-        //ScreenManager.screenManager.SetAdditionalAnimator(GameScreen);
-        //StartGame();
     }
     public void PlayAgain()
     {
-        Debug.Log("GM play again");
         RestartGame();
     }
 
     public void TimedMode()
     {
-        Debug.Log("GM one minute mod");
         timeLimit = kTimedModeTime;
         time = kTimedModeTime;
-        Debug.Log("time="+time+" limit="+timeLimit);
         mode = Mode.Timed;
 
         SetZenModeUI(false);
@@ -200,7 +187,6 @@ public class GameManager : MonoBehaviour {
 
     public void EndlessMode()
     {
-        Debug.Log("GM five second mode");
         timeLimit = kEndlessModeTime;
         time = kEndlessModeTime;
         mode = Mode.Endless;
@@ -210,7 +196,6 @@ public class GameManager : MonoBehaviour {
         StartGame();
     }
 
-    //бесконечное время и три жизни
     public void ZenMode()
     {
         MissInput.lifesCount = 3;
@@ -237,12 +222,10 @@ public class GameManager : MonoBehaviour {
         {
             if (time < 1)
             {
-                Debug.Log("update if if ");
                 EndGame();
             }
             else
             {
-                // Decrease timeLimit.
                 time -= Time.deltaTime;
                 timerDisplay.text = ((int)time).ToString();
             }
