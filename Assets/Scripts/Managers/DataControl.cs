@@ -72,6 +72,8 @@ public class DataControl : MonoBehaviour
         data.isZenModePlayed = GameManager.manager.isZenModePlayed;
         data.isTutorialPlayed = isTutorialFinished;
 
+        data.theme = SettingsManager.manager.theme;
+
         bf.Serialize(file, data);
         file.Close();
 
@@ -79,7 +81,8 @@ public class DataControl : MonoBehaviour
                         ", bestScoreTimed=" + data.bestScoreTimed + ", bestScoreZen=" + data.bestScoreZen + ", bestScoreEndless=" + data.bestScoreEndless +
                         ", bank=" + data.bank + ", isVibratioOn=" + data.isVibrationOn + ", isAudioOn=" + data.isAudioOn +
                         ", isEndlessModePlayed=" + data.isEndlessModePlayed + ", isTimedModePlayed=" + data.isTimedModePlayed +
-                        ", isZenModePlayed=" + data.isZenModePlayed + ", isTutorialPlayed=" + data.isTutorialPlayed);
+                        ", isZenModePlayed=" + data.isZenModePlayed + ", isTutorialPlayed=" + data.isTutorialPlayed +
+                        ", theme=" + data.theme);
     }
     public void LoadAll()
     {
@@ -97,7 +100,6 @@ public class DataControl : MonoBehaviour
             HintManager.manager.SetFlashesAmount();
             HintManager.manager.SetTimeStopsAmount();
 
-
             bestScoreTimed = data.bestScoreTimed;
             BestTimedScore.isUpdated = true;
             bestScoreZen = data.bestScoreZen;
@@ -113,6 +115,14 @@ public class DataControl : MonoBehaviour
 
             SettingsManager.manager.isVibrationOn = data.isVibrationOn;
             SettingsManager.manager.isAudioOn = data.isAudioOn;
+            SettingsManager.manager.theme = data.theme;
+            if (data.theme == Theme.Light)
+            {
+                SettingsManager.manager.SetLightTheme();
+            }
+            else if (data.theme == Theme.Dark) {
+                SettingsManager.manager.SetDarkTheme();
+            }
             SettingsManager.manager.SetTexts();
 
             GameManager.manager.isEndlessModePlayed = data.isEndlessModePlayed;
@@ -124,13 +134,13 @@ public class DataControl : MonoBehaviour
                         ", bestScoreTimed=" + bestScoreTimed + ", bestScoreZen=" + bestScoreZen + ", bestScoreEndless=" + bestScoreEndless +
                         ", bank=" + BankManager.bank + ", isVibratioOn=" + SettingsManager.manager.isVibrationOn + ", isAudioOn=" + SettingsManager.manager.isAudioOn +
                         ", isEndlessModePlayed=" + GameManager.manager.isEndlessModePlayed + ", isTimedModePlayed=" + GameManager.manager.isTimedModePlayed +
-                        ", isZenModePlayed=" + GameManager.manager.isZenModePlayed + ", isTutorialPlayed=" + isTutorialFinished);
+                        ", isZenModePlayed=" + GameManager.manager.isZenModePlayed + ", isTutorialPlayed=" + isTutorialFinished +
+                        ", theme=" + SettingsManager.manager.theme);
         }
     }
 
     public void SetDefaultData()
     {
-
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Application.persistentDataPath + path);
         PlayerData data = new PlayerData();
@@ -145,8 +155,6 @@ public class DataControl : MonoBehaviour
         HintManager.manager.SetFlashesAmount();
         HintManager.manager.SetTimeStopsAmount();
 
-
-
         data.bestScoreTimed = 0;
         bestScoreTimed = 0;
         data.bestScoreEndless = 0;
@@ -157,18 +165,15 @@ public class DataControl : MonoBehaviour
         BestZenScore.isUpdated = true;
         BestEndlessScore.isUpdated = true;
 
-
         data.bank = 500;
         BankManager.bank = 500;
         BankManager.isBankChanged = true;
-
-
-
+    
         data.isVibrationOn = true;
         SettingsManager.manager.isVibrationOn = true;
         data.isAudioOn = true;
         SettingsManager.manager.isAudioOn = true;
-        SettingsManager.manager.SetTexts();
+        SettingsManager.manager.SetLightTheme();    
 
         data.isEndlessModePlayed = false;
         GameManager.manager.isEndlessModePlayed = false;
@@ -178,7 +183,6 @@ public class DataControl : MonoBehaviour
         GameManager.manager.isZenModePlayed = false;
         data.isTutorialPlayed = false;
         isTutorialFinished = false;
-
 
         data.isScoreDoublerEnabled = false;
         ScoreManager.manager.isScoreDoublerEnabled = false;
@@ -231,5 +235,7 @@ class PlayerData
 
     public bool isScoreDoublerEnabled;
     public bool isZenModeEnabled;
+
+    public Theme theme;
 
 }
