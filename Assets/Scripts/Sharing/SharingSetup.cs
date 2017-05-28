@@ -13,11 +13,11 @@ public class SharingSetup : MonoBehaviour {
 
     int bestScore;
 
-    string kTimedTitle = "Timed Mode";
-    string kZenTitle = "Zen Mode";
-    string kEndlessTitle = "Endless Mode";
-    string kBestScore = "BEST SCORE";
-    string kScore = "";
+    string kTimedKey = "timed_mode";
+    string kZenKey = "zen_mode";
+    string kEndlessKey = "endless_mode";
+    string kBestScoreKey = "score_best_caps";
+    string kEmpty = "";
 
     void Start () {
 	
@@ -26,26 +26,26 @@ public class SharingSetup : MonoBehaviour {
     public void SetModeAndOpenShareScreen(Mode md) {
         if (md == Mode.Timed)
         {
-            titleText.text = kTimedTitle;
+            titleText.text = LocalizationManager.manager.GetLocalizedValue(kTimedKey);
             bestScore = DataControl.control.bestScoreTimed;
         }
         else if (md == Mode.Endless)
         {
-            titleText.text = kEndlessTitle;
+            titleText.text = LocalizationManager.manager.GetLocalizedValue(kEndlessKey);
             bestScore = DataControl.control.bestScoreEndless;
         }
         else if (md == Mode.Zen) {
-            titleText.text = kZenTitle;
+            titleText.text = LocalizationManager.manager.GetLocalizedValue(kZenKey);
             bestScore = DataControl.control.bestScoreZen;
         }
 
         if (isBestScore) {
             scoreText.text = bestScore.ToString();
-            scoreTitleText.text = kBestScore;
+            scoreTitleText.text = LocalizationManager.manager.GetLocalizedValue(kBestScoreKey);
         }
         else {
             scoreText.text = (ScoreManager.manager.score).ToString();
-            scoreTitleText.text = kScore;
+            scoreTitleText.text = kEmpty;
         }
 
         ScreenManager.screenManager.WithoutAdditionalAnimator();

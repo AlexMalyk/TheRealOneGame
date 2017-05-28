@@ -83,16 +83,17 @@ public class GameManager : MonoBehaviour {
 
         Analytics.CustomEvent("start game", new Dictionary<string, object>
         {
-            {"pu1", HintManager.manager.amountTimeStops },
-            {"pu2", HintManager.manager.amountFlashes },
-            {"pu3", HintManager.manager.amountFlankers }
+            {"pu1", PowerUpsManager.manager.amountTimeStops },
+            {"pu2", PowerUpsManager.manager.amountSparks },
+            {"pu3", PowerUpsManager.manager.amountWings }
         });
 
-        HintManager.manager.DeleteEffects(true, true, true);
+        PowerUpsManager.manager.DeleteEffects(true, true, true);
 
         ScreenManager.screenManager.SetAdditionalAnimator(GameScreen);
         ScreenManager.screenManager.OpenScreen(GameBoard);
 
+        while (ScreenManager.screenManager.isTransition) {}
         isGameRunning = true;
         isGameOver = false;
         isNewRecord = false;
@@ -148,6 +149,7 @@ public class GameManager : MonoBehaviour {
         BankManager.isBankChanged = true;
 
         DataControl.control.SaveAll();
+        AdControl.control.SetupSpecialAd();
         ScreenManager.screenManager.OpenScreen(endGameCanvas);
     }
     public void RestartGame()

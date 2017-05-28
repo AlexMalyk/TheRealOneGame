@@ -6,22 +6,23 @@ using UnityEngine.UI;
 public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
 
     public static AdControl control;
-    public string zoneId;
-    public Text testResult;
-    public Text score;
 
-    public Text kPromoMessage;
+    public Text kRewardMessage;
 
-    string kNewRecordMessage = "+5 timers";
-    string kZeroAmountOfHint = "+5 flanks";
-    string kDefault = "+5 flashes";
-    string kRewardType1 = "record";
-    string kRewardType2 = "out of hint";
-    string kRewardType3 = "default";
-    string kRewardType4 = "points";
+    public GameObject endGameSpark;
+    public GameObject endGameTimeStop;
+    public GameObject endGameWing;
 
-    string rewardType;
-    int rewardAmount;
+    string kRewardDefault = "ad_points";
+    string kRewardLower = "ad_spark_wing";
+    string kRewardMiddle = "ad_time_stop_wing";
+    string kRewardHigher = "ad_time_stop_spark";
+
+    int rewardAmount = 1;
+    int rewarsPoints = 250;
+
+    delegate void AdDelegate();
+    AdDelegate adReward;
 
     void Awake()
     {
@@ -44,29 +45,74 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
     }
 
     public void ShowRewardedAd() {
-        Appodeal.setRewardedVideoCallbacks(this);
-        Appodeal.show(Appodeal.REWARDED_VIDEO);
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            Appodeal.setRewardedVideoCallbacks(this);
+            Appodeal.show(Appodeal.REWARDED_VIDEO);
+        }
+        else {
+            adReward();
+            DataControl.control.SaveAll();
+        }
     }
 
     public void SetupSpecialAd() {
         if (GameManager.manager.isNewRecord)
         {
-            kPromoMessage.text = kNewRecordMessage;
-            rewardType = kRewardType1;
-            rewardAmount = 3;
+            kRewardMessage.text = LocalizationManager.manager.GetLocalizedValue(kRewardHigher);
+            adReward = HigherReward;
         }
-        else if (HintManager.manager.amountTimeStops == 0 || HintManager.manager.amountFlashes == 0 || HintManager.manager.amountFlankers == 0)
+        else if (PowerUpsManager.manager.amountTimeStops == 0 )
         {
-            kPromoMessage.text = kZeroAmountOfHint;
-            rewardType = kRewardType2;
-            rewardAmount = 2;
+            kRewardMessage.text = LocalizationManager.manager.GetLocalizedValue(kRewardMiddle);
+            adReward = MiddleReward;
+        }
+        else if (PowerUpsManager.manager.amountSparks == 0 || PowerUpsManager.manager.amountWings == 0)
+        {
+            kRewardMessage.text = LocalizationManager.manager.GetLocalizedValue(kRewardLower);
+            adReward = LowerReward;
         }
         else {
-            kPromoMessage.text = kDefault;
-            rewardType = kRewardType3;
-            rewardAmount = 1;
+            kRewardMessage.text = LocalizationManager.manager.GetLocalizedValue(kRewardDefault);
+            adReward = DefaultReward;
         }       
     }
+
+    public void HigherReward() {
+        PowerUpsManager.manager.amountTimeStops += rewardAmount;
+        PowerUpsManager.manager.PlusAnimation(endGameTimeStop, endGameTimeStop, rewardAmount);
+        PowerUpsManager.manager.SetTimeStopsAmount();
+
+        PowerUpsManager.manager.amountSparks += rewardAmount;
+        PowerUpsManager.manager.PlusAnimation(endGameSpark, endGameSpark, rewardAmount);
+        PowerUpsManager.manager.SetSparksAmount();
+    }
+    public void MiddleReward()
+    {
+        PowerUpsManager.manager.amountTimeStops += rewardAmount;
+        PowerUpsManager.manager.PlusAnimation(endGameTimeStop, endGameTimeStop, rewardAmount);
+        PowerUpsManager.manager.SetTimeStopsAmount();
+
+        PowerUpsManager.manager.amountWings += rewardAmount;
+        PowerUpsManager.manager.PlusAnimation(endGameWing, endGameWing, rewardAmount);
+        PowerUpsManager.manager.SetWingsAmount();
+    }
+    public void LowerReward()
+    {
+        PowerUpsManager.manager.amountSparks += rewardAmount;
+        PowerUpsManager.manager.PlusAnimation(endGameSpark, endGameSpark, rewardAmount);
+        PowerUpsManager.manager.SetSparksAmount();
+
+        PowerUpsManager.manager.amountWings += rewardAmount;
+        PowerUpsManager.manager.PlusAnimation(endGameWing, endGameWing, rewardAmount);
+        PowerUpsManager.manager.SetWingsAmount();
+    }
+    public void DefaultReward() {
+        BankManager.bank += rewarsPoints;
+        BankManager.isBankChanged = true;
+    }
+
+
 
     #region Rewarded Video callback handlers
     public void onRewardedVideoLoaded() {
@@ -83,10 +129,8 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
 
     }
     public void onRewardedVideoFinished(int amount, string name) {
-
-        BankManager.bank += 100;
-        DataControl.control.SaveAll();
-        
+        adReward();
+        DataControl.control.SaveAll();      
     }
     #endregion
 }

@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 4f977d4abc8dfe14da3663d7c7147fbb
+timeCreated: 1495403092
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Futuris
+  fontNames:
+  - Futuris
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 1a5cacbd004520b43a82ac79fe1eb13b, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

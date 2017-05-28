@@ -35,7 +35,7 @@ public class ScoreManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        SetToZero();
+        //SetToZero();
     }
 
     public void ChangeScore() {

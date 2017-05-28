@@ -11,11 +11,11 @@ public class SettingsManager : MonoBehaviour {
     public bool isVibrationOn;
     public Text vibroButton;
 
-    string kValueOn = "ON";
-    string kValueOff = "OFF";
+    string kValueOn = "on";
+    string kValueOff = "off";
 
-    string kLightTheme = "Light";
-    string kDarkTheme = "Dark";
+    string kLightTheme = "light";
+    string kDarkTheme = "dark";
 
     public Theme theme;
     public Text themeButton;
@@ -43,45 +43,28 @@ public class SettingsManager : MonoBehaviour {
 
     public void AudioSwitch() {
         isAudioOn = !isAudioOn;
-        SetTexts();
+
+        if (isAudioOn)
+        {
+            audioButton.text = LocalizationManager.manager.GetLocalizedValue(kValueOn);
+        }
+        else
+        {
+            audioButton.text = LocalizationManager.manager.GetLocalizedValue(kValueOff);
+        }
     }
 
     public void VibroSwitch()
     {
         isVibrationOn = !isVibrationOn;
-        SetTexts();
-    }
 
-    string SetValue(bool field) {
-        if (field) {
-            return kValueOn;
-        }
-        else {
-            return kValueOff;
-        }
-    }
-
-    public void SetTexts() {
-        if (isAudioOn){
-            audioButton.text = kValueOn;
-        }
-        else{
-            audioButton.text = kValueOff;
-        }
-
-        if (isVibrationOn){
-            vibroButton.text = kValueOn;
-        }
-        else{
-            vibroButton.text = kValueOff;
-        }
-
-        if (theme == Theme.Light) {
-            themeButton.text = kLightTheme;
-        }
-        else if(theme == Theme.Dark)
+        if (isVibrationOn)
         {
-            themeButton.text = kDarkTheme;
+            vibroButton.text = LocalizationManager.manager.GetLocalizedValue(kValueOn);
+        }
+        else
+        {
+            vibroButton.text = LocalizationManager.manager.GetLocalizedValue(kValueOff);
         }
     }
 
@@ -105,9 +88,8 @@ public class SettingsManager : MonoBehaviour {
 
         materialFirst.SetColor("_Color", colorSecond);
         materialSecond.SetColor("_Color", colorFirst);
-
         mainCamera.backgroundColor = colorSecond;
-        SetTexts();
+        themeButton.text = LocalizationManager.manager.GetLocalizedValue(kDarkTheme);
     }
 
     public void SetLightTheme() {
@@ -115,9 +97,36 @@ public class SettingsManager : MonoBehaviour {
 
         materialFirst.SetColor("_Color", colorFirst);
         materialSecond.SetColor("_Color", colorSecond);
-
         mainCamera.backgroundColor = colorFirst;
-        SetTexts();
+        themeButton.text = LocalizationManager.manager.GetLocalizedValue(kLightTheme);
+    }
+
+
+    //used in DataControl
+    public void SetTexts() {
+        if (isAudioOn)
+        {
+            audioButton.text = LocalizationManager.manager.GetLocalizedValue(kValueOn);
+        }
+        else
+        {
+            audioButton.text = LocalizationManager.manager.GetLocalizedValue(kValueOff);
+        }
+        if (isVibrationOn)
+        {
+            vibroButton.text = LocalizationManager.manager.GetLocalizedValue(kValueOn);
+        }
+        else
+        {
+            vibroButton.text = LocalizationManager.manager.GetLocalizedValue(kValueOff);
+        }
+        if (theme == Theme.Dark)
+        {
+            themeButton.text = LocalizationManager.manager.GetLocalizedValue(kDarkTheme);
+        }
+        else {
+            themeButton.text = LocalizationManager.manager.GetLocalizedValue(kLightTheme);
+        }
     }
 }
 

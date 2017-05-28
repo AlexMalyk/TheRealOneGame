@@ -22,20 +22,20 @@ AnimationClip:
       - serializedVersion: 2
         time: 0
         value: 0
-        inSlope: 2.1960785
-        outSlope: 2.1960785
+        inSlope: 0.436
+        outSlope: 0.436
         tangentMode: 34
       - serializedVersion: 2
         time: 0.25
-        value: 0.54901963
+        value: 0.109
         inSlope: 0
         outSlope: 0
         tangentMode: 34
       - serializedVersion: 2
         time: 0.5
         value: 0
-        inSlope: -2.1960785
-        outSlope: -2.1960785
+        inSlope: -0.436
+        outSlope: -0.436
         tangentMode: 34
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -133,20 +133,20 @@ AnimationClip:
       - serializedVersion: 2
         time: 0
         value: 0
-        inSlope: 2.1960785
-        outSlope: 2.1960785
+        inSlope: 0.436
+        outSlope: 0.436
         tangentMode: 34
       - serializedVersion: 2
         time: 0.25
-        value: 0.54901963
+        value: 0.109
         inSlope: 0
         outSlope: 0
         tangentMode: 34
       - serializedVersion: 2
         time: 0.5
         value: 0
-        inSlope: -2.1960785
-        outSlope: -2.1960785
+        inSlope: -0.436
+        outSlope: -0.436
         tangentMode: 34
       m_PreInfinity: 2
       m_PostInfinity: 2

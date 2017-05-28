@@ -40,14 +40,14 @@ public class TransitionGameMenu : MonoBehaviour {
             ScreenManager.screenManager.SetOpen(Board);
             GameManager.manager.PauseGame(false);
 
-            HintManager.manager.HideFlankers(false);
+            PowerUpsManager.manager.HideWings(false);
         }
         else {
             ScreenManager.screenManager.SetPrevious(Board);
             ScreenManager.screenManager.SetOpen(Menu);
             GameManager.manager.PauseGame(true);
 
-            HintManager.manager.HideFlankers(true);
+            PowerUpsManager.manager.HideWings(true);
         }
         ScreenManager.screenManager.isMenuOpen = !ScreenManager.screenManager.isMenuOpen;
     }

@@ -46,7 +46,7 @@ public class SphereSpawn : MonoBehaviour
         {
             GameManager.manager.time = GameManager.manager.kEndlessModeTime;
         }
-        HintManager.manager.DeleteEffects(false, true, true);
+        PowerUpsManager.manager.DeleteEffects(false, true, true);
     }
 
     public void CreateExplosion() {

@@ -2,8 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class HintManager : MonoBehaviour {
-    public static HintManager manager;
+public class PowerUpsManager : MonoBehaviour {
+    public static PowerUpsManager manager;
 
     int baseSparkleSpeed;
     int doubleSparkleSpeed;
@@ -15,20 +15,20 @@ public class HintManager : MonoBehaviour {
     public GameObject powerUpScreen;
 
     public GameObject timeStopsGameObject;
-    public GameObject flashesGameObject;
-    public GameObject flankersGameObject;
+    public GameObject sparksGameObject;
+    public GameObject wingsGameObject;
 
-    public Button timeStopButton;
-    public Button flashButton;
-    public Button flankerButton;
+    public GameObject timeStopButton;
+    public GameObject sparkButton;
+    public GameObject wingButton;
     public GameObject disabledImagePrefab;
     public string prefabName = "Disabled Image(Clone)";
 
     public GameObject plus5GameScreenPrefab;
     public GameObject plus5PowerUpScreenPrefab;
 
-    public Text[] flankersAmountTexts;
-    public Text[] flashesAmountTexts;
+    public Text[] wingsAmountTexts;
+    public Text[] sparksAmountTexts;
     public Text[] timeStopsAmountTexts;
 
     public GameObject sphere;
@@ -42,26 +42,26 @@ public class HintManager : MonoBehaviour {
     [HideInInspector]
     public static bool isTimeStopUsedInMatch;
     [HideInInspector]
-    public static bool isFlashUsedInRound;
+    public static bool isSparkUsedInRound;
     [HideInInspector]
-    public static bool isFlankerUsedInRound;
+    public static bool isWingUsedInRound;
 
-    static string kOncePerMatchMessage = "Can only be used once a match";
-    static string kOncePerRoundMessage = "Already used";
-    static string kTimeStopDescription = "Time stopped for 10 seconds";
-    static string kFlashesDescription = "Increases flashing";
-    static string kFlankerDescription = "Shows the side to which the dot is closer";
+    static string kOncePerMatchMessage = "once_a_game";
+    static string kOncePerRoundMessage = "already_used";
+    static string kTimeStopDescription = "time_stop_description";
+    static string kSparkDescription = "spark_description";
+    static string kWingDescription = "wing_description";
 
     int priceTimeStops = 2000;
-    int priceFlankers = 500;
-    int priceFlashes = 1000;
+    int priceWings = 500;
+    int priceSparks = 1000;
 
     [HideInInspector]
     public  int amountTimeStops;
     [HideInInspector]
-    public  int amountFlashes;
+    public  int amountSparks;
     [HideInInspector]
-    public  int amountFlankers;
+    public  int amountWings;
 
     private Animator sphereAnimator;
 
@@ -84,14 +84,14 @@ public class HintManager : MonoBehaviour {
         sphereAnimator = sphere.GetComponent<Animator>();
 
         isTimeStopUsedInMatch = false;
-        isFlashUsedInRound = false;
-        isFlankerUsedInRound = false;
+        isSparkUsedInRound = false;
+        isWingUsedInRound = false;
 
     }
-    public void TimeStopHint()
+    public void TimeStopPowerUp()
     {
         if (!ScreenManager.screenManager.isMenuOpen && isTimeStopUsedInMatch) {
-            ShowMessage(kOncePerMatchMessage);
+            ShowMessage(LocalizationManager.manager.GetLocalizedValue(kOncePerMatchMessage));
         }
         else if (!ScreenManager.screenManager.isMenuOpen && amountTimeStops > 0)
         {
@@ -105,7 +105,7 @@ public class HintManager : MonoBehaviour {
 
             isTimeStopUsedInMatch = true;
 
-            ShowMessage(kTimeStopDescription); 
+            //ShowMessage(LocalizationManager.manager.GetLocalizedValue(kTimeStopDescription)); 
         }
         else if ( (!ScreenManager.screenManager.isMenuOpen && amountTimeStops == 0) || ScreenManager.screenManager.GetOpenScreen() != timeStopsGameObject)
         {
@@ -116,40 +116,40 @@ public class HintManager : MonoBehaviour {
             ScreenManager.screenManager.OpenScreen(timeStopsGameObject);
         }
     }
-    public void FlashHint() {
-        if (!ScreenManager.screenManager.isMenuOpen && isFlashUsedInRound)
+    public void SparkPowerUp() {
+        if (!ScreenManager.screenManager.isMenuOpen && isSparkUsedInRound)
         {
-            ShowMessage(kOncePerRoundMessage);
+            ShowMessage(LocalizationManager.manager.GetLocalizedValue(kOncePerRoundMessage));
         }
-        else if (!ScreenManager.screenManager.isMenuOpen && amountFlashes > 0)
+        else if (!ScreenManager.screenManager.isMenuOpen && amountSparks > 0)
         {
             sphereAnimator.SetBool("HintOn", true);
 
-            amountFlashes--;
-            SetFlashesAmount();
+            amountSparks--;
+            SetSparksAmount();
             DataControl.control.SaveAll();
 
-            CreateDisabledImage(flashButton);
+            CreateDisabledImage(sparkButton);
 
-            isFlashUsedInRound = true;
+            isSparkUsedInRound = true;
 
-            ShowMessage(kFlashesDescription);
+            //ShowMessage(LocalizationManager.manager.GetLocalizedValue(kSparkDescription));
         }
-        else if ( (!ScreenManager.screenManager.isMenuOpen && amountFlashes == 0) || ScreenManager.screenManager.GetOpenScreen() != flashesGameObject)
+        else if ( (!ScreenManager.screenManager.isMenuOpen && amountSparks == 0) || ScreenManager.screenManager.GetOpenScreen() != sparksGameObject)
         {
             GameManager.manager.PauseGame(true);
             ScreenManager.screenManager.isMenuOpen = true;
             gameScreen.GetComponent<Animator>().SetTrigger("HideUp");
             ScreenManager.screenManager.WithoutAdditionalAnimator();
-            ScreenManager.screenManager.OpenScreen(flashesGameObject);
+            ScreenManager.screenManager.OpenScreen(sparksGameObject);
         }
     }
-    public void FlankerHint() {
-        if (!ScreenManager.screenManager.isMenuOpen && isFlankerUsedInRound)
+    public void WingPowerUp() {
+        if (!ScreenManager.screenManager.isMenuOpen && isWingUsedInRound)
         {
-            ShowMessage(kOncePerRoundMessage);
+            ShowMessage(LocalizationManager.manager.GetLocalizedValue(kOncePerRoundMessage));
         }
-        else if (!ScreenManager.screenManager.isMenuOpen && amountFlankers > 0)
+        else if (!ScreenManager.screenManager.isMenuOpen && amountWings > 0)
         {
             if (sphere.transform.parent.GetComponent<RectTransform>().localPosition.x <= 0)
             {
@@ -160,23 +160,23 @@ public class HintManager : MonoBehaviour {
                 rightSide.SetActive(true);
             }
 
-            amountFlankers--;
-            SetFlankersAmount();
+            amountWings--;
+            SetWingsAmount();
             DataControl.control.SaveAll();
 
-            CreateDisabledImage(flankerButton);
+            CreateDisabledImage(wingButton);
 
-            isFlankerUsedInRound = true; 
+            isWingUsedInRound = true; 
 
-            ShowMessage(kFlankerDescription);
+            //ShowMessage(LocalizationManager.manager.GetLocalizedValue(kWingDescription));
         }
-        else if ( (!ScreenManager.screenManager.isMenuOpen && amountFlankers == 0) || ScreenManager.screenManager.GetOpenScreen() != flankersGameObject)
+        else if ( (!ScreenManager.screenManager.isMenuOpen && amountWings == 0) || ScreenManager.screenManager.GetOpenScreen() != wingsGameObject)
         {
             GameManager.manager.PauseGame(true);
             ScreenManager.screenManager.isMenuOpen = true;
             gameScreen.GetComponent<Animator>().SetTrigger("HideUp");
             ScreenManager.screenManager.WithoutAdditionalAnimator();
-            ScreenManager.screenManager.OpenScreen(flankersGameObject);
+            ScreenManager.screenManager.OpenScreen(wingsGameObject);
         }
     }
 
@@ -186,29 +186,29 @@ public class HintManager : MonoBehaviour {
             isTimeStopUsedInMatch = false;
         }
 		if (flashes) {
-            DeleteDisabledImage(flashButton.transform.FindChild(prefabName));
+            DeleteDisabledImage(sparkButton.transform.FindChild(prefabName));
 
-            isFlashUsedInRound = false;
-            RemoveFlash();
+            isSparkUsedInRound = false;
+            RemoveSpark();
         }     
 		if (flankers) {
-            DeleteDisabledImage(flankerButton.transform.FindChild(prefabName));
+            DeleteDisabledImage(wingButton.transform.FindChild(prefabName));
 
-            isFlankerUsedInRound = false;
-            RemoveFlankers();
+            isWingUsedInRound = false;
+            RemoveWings();
         }
     }
 
-	public void RemoveFlash(){
+	public void RemoveSpark(){
 		sphereAnimator.SetBool("HintOn", false);
 	}
 
-    public void RemoveFlankers() {
+    public void RemoveWings() {
         leftSide.SetActive(false);
         rightSide.SetActive(false);
     }
 
-    public void HideFlankers(bool value) {
+    public void HideWings(bool value) {
         leftSide.GetComponent<Image>().enabled = !value;
         rightSide.GetComponent<Image>().enabled = !value;
     }
@@ -216,7 +216,7 @@ public class HintManager : MonoBehaviour {
     public void BuyTimeStops() {
         if (BankManager.bank >= priceTimeStops)
         {
-            Plus5Animation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Time Stops"), timeStopButton);
+            PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Time Stop").gameObject, timeStopButton, 5);
 
             amountTimeStops += 5;
             SetTimeStopsAmount();
@@ -231,16 +231,16 @@ public class HintManager : MonoBehaviour {
         }
     }
 
-    public void BuyFlashes()
+    public void BuySparks()
     {
-        if (BankManager.bank >= priceFlashes)
+        if (BankManager.bank >= priceSparks)
         {
-            Plus5Animation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Flashes"), flashButton);
+            PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Spark").gameObject, sparkButton, 5);
 
-            amountFlashes += 5;
-            SetFlashesAmount();
+            amountSparks += 5;
+            SetSparksAmount();
 
-            BankManager.bank -= priceFlashes;
+            BankManager.bank -= priceSparks;
             BankManager.isBankChanged = true;
 
             DataControl.control.SaveAll();
@@ -251,16 +251,16 @@ public class HintManager : MonoBehaviour {
         }
     }
 
-    public void BuyFlankers()
+    public void BuyWings()
     {
-        if (BankManager.bank >= priceFlankers)
+        if (BankManager.bank >= priceWings)
         {
-            Plus5Animation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Flankers"), flankerButton);
+            PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Wing").gameObject, wingButton, 5);
             
-            amountFlankers += 5;
-            SetFlankersAmount();
+            amountWings += 5;
+            SetWingsAmount();
 
-            BankManager.bank -= priceFlankers;
+            BankManager.bank -= priceWings;
             BankManager.isBankChanged = true;
 
             DataControl.control.SaveAll();
@@ -283,7 +283,7 @@ public class HintManager : MonoBehaviour {
         mess.GetComponent<RectTransform>().localScale = new Vector3(1,1,1);
     }
 
-    void CreateDisabledImage(Button parent) {
+    void CreateDisabledImage(GameObject parent) {
         GameObject disImage = Instantiate(disabledImagePrefab, new Vector3(0, 0, 0), Quaternion.identity);
         disImage.transform.SetParent(parent.transform, false);
         disImage.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
@@ -296,31 +296,34 @@ public class HintManager : MonoBehaviour {
         }
     }
 
-    void Plus5Animation(Transform parent, Button parent2) {
+    public void PlusAnimation(GameObject parent, GameObject parent2, int amount) {
         GameObject plus;
         if (ScreenManager.screenManager.GetOpenScreen() == powerUpScreen)
         {
             plus = Instantiate(plus5PowerUpScreenPrefab, new Vector3(0,0,0), Quaternion.identity);
-            plus.transform.SetParent(parent, false);
+            plus.GetComponent<Text>().text = "+" + amount;
+            plus.transform.SetParent(parent.transform, false);
+            
         }
         else
         {
             plus = Instantiate(plus5GameScreenPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            plus.GetComponent<Text>().text = "+" + amount;
             plus.transform.SetParent(parent2.transform, false);
         }
         plus.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
     }
 
-    public void SetFlankersAmount() {
-        foreach (Text item in flankersAmountTexts) {
-            item.text = amountFlankers.ToString();
+    public void SetWingsAmount() {
+        foreach (Text item in wingsAmountTexts) {
+            item.text = amountWings.ToString();
         }
     }
-    public void SetFlashesAmount()
+    public void SetSparksAmount()
     {
-        foreach (Text item in flashesAmountTexts)
+        foreach (Text item in sparksAmountTexts)
         {
-            item.text = amountFlashes.ToString();
+            item.text = amountSparks.ToString();
         }
     }
     public void SetTimeStopsAmount()

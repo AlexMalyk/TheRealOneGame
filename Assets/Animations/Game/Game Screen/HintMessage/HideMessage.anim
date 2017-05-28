@@ -21,15 +21,15 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 2
         time: 0
-        value: -200
-        inSlope: 480
-        outSlope: 480
+        value: -180
+        inSlope: 360
+        outSlope: 360
         tangentMode: 34
       - serializedVersion: 2
         time: 0.16666667
         value: -120
-        inSlope: 480
-        outSlope: 480
+        inSlope: 360
+        outSlope: 360
         tangentMode: 34
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -109,15 +109,15 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 2
         time: 0
-        value: -200
-        inSlope: 480
-        outSlope: 480
+        value: -180
+        inSlope: 360
+        outSlope: 360
         tangentMode: 34
       - serializedVersion: 2
         time: 0.16666667
         value: -120
-        inSlope: 480
-        outSlope: 480
+        inSlope: 360
+        outSlope: 360
         tangentMode: 34
       m_PreInfinity: 2
       m_PostInfinity: 2

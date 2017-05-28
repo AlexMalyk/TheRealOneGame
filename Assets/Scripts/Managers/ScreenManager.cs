@@ -9,6 +9,7 @@ public class ScreenManager : MonoBehaviour
     public static ScreenManager screenManager;
     //Screen to open automatically at the start of the Scene
     public GameObject StartScreen;
+    public GameObject introScreen;
 
     //Currently Open Screen
     private GameObject m_Open;
@@ -44,10 +45,18 @@ public class ScreenManager : MonoBehaviour
 
     public void Start()
     {
-        if (StartScreen.GetComponent<Animator>())
-            StartScreenAnimator = StartScreen.GetComponent<Animator>();
-        OpenScreenAnimator = StartScreenAnimator;
+        DataControl.control.LoadAll();
+        if (DataControl.control.isTutorialFinished)
+        {
 
+            if (StartScreen.GetComponent<Animator>())
+                StartScreenAnimator = StartScreen.GetComponent<Animator>();
+            OpenScreenAnimator = StartScreenAnimator;
+            StartScreen.SetActive(true);
+        }
+        else {
+            introScreen.SetActive(true);
+        }
         isTransition = false;
     }
 

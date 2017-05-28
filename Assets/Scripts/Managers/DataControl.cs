@@ -52,9 +52,9 @@ public class DataControl : MonoBehaviour
         FileStream file = File.Create(Application.persistentDataPath + path);
         PlayerData data = new PlayerData();
 
-        data.amountTimeStops = HintManager.manager.amountTimeStops;
-        data.amountFlashes = HintManager.manager.amountFlashes;
-        data.amountFlankers = HintManager.manager.amountFlankers;
+        data.amountTimeStops = PowerUpsManager.manager.amountTimeStops;
+        data.amountSparks = PowerUpsManager.manager.amountSparks;
+        data.amountWings = PowerUpsManager.manager.amountWings;
 
         data.bestScoreTimed = bestScoreTimed;
         data.bestScoreEndless = bestScoreEndless;
@@ -76,13 +76,6 @@ public class DataControl : MonoBehaviour
 
         bf.Serialize(file, data);
         file.Close();
-
-        Debug.Log("All data saved. PU1=" + data.amountTimeStops + ", PU2=" + data.amountFlashes + ", PU3=" + data.amountFlankers +
-                        ", bestScoreTimed=" + data.bestScoreTimed + ", bestScoreZen=" + data.bestScoreZen + ", bestScoreEndless=" + data.bestScoreEndless +
-                        ", bank=" + data.bank + ", isVibratioOn=" + data.isVibrationOn + ", isAudioOn=" + data.isAudioOn +
-                        ", isEndlessModePlayed=" + data.isEndlessModePlayed + ", isTimedModePlayed=" + data.isTimedModePlayed +
-                        ", isZenModePlayed=" + data.isZenModePlayed + ", isTutorialPlayed=" + data.isTutorialPlayed +
-                        ", theme=" + data.theme);
     }
     public void LoadAll()
     {
@@ -93,12 +86,12 @@ public class DataControl : MonoBehaviour
             PlayerData data = (PlayerData)bf.Deserialize(file);
             file.Close();
 
-            HintManager.manager.amountTimeStops = data.amountTimeStops;
-            HintManager.manager.amountFlashes = data.amountFlashes;
-            HintManager.manager.amountFlankers = data.amountFlankers;
-            HintManager.manager.SetFlankersAmount();
-            HintManager.manager.SetFlashesAmount();
-            HintManager.manager.SetTimeStopsAmount();
+            PowerUpsManager.manager.amountTimeStops = data.amountTimeStops;
+            PowerUpsManager.manager.amountSparks = data.amountSparks;
+            PowerUpsManager.manager.amountWings = data.amountWings;
+            PowerUpsManager.manager.SetWingsAmount();
+            PowerUpsManager.manager.SetSparksAmount();
+            PowerUpsManager.manager.SetTimeStopsAmount();
 
             bestScoreTimed = data.bestScoreTimed;
             BestTimedScore.isUpdated = true;
@@ -129,13 +122,6 @@ public class DataControl : MonoBehaviour
             GameManager.manager.isTimedModePlayed = data.isTimedModePlayed;
             GameManager.manager.isZenModePlayed = data.isZenModePlayed;
             isTutorialFinished = data.isTutorialPlayed;
-
-            Debug.Log("All data loaded. PU1=" + HintManager.manager.amountTimeStops + ", PU2=" + HintManager.manager.amountFlashes + ", PU3=" + HintManager.manager.amountFlankers +
-                        ", bestScoreTimed=" + bestScoreTimed + ", bestScoreZen=" + bestScoreZen + ", bestScoreEndless=" + bestScoreEndless +
-                        ", bank=" + BankManager.bank + ", isVibratioOn=" + SettingsManager.manager.isVibrationOn + ", isAudioOn=" + SettingsManager.manager.isAudioOn +
-                        ", isEndlessModePlayed=" + GameManager.manager.isEndlessModePlayed + ", isTimedModePlayed=" + GameManager.manager.isTimedModePlayed +
-                        ", isZenModePlayed=" + GameManager.manager.isZenModePlayed + ", isTutorialPlayed=" + isTutorialFinished +
-                        ", theme=" + SettingsManager.manager.theme);
         }
     }
 
@@ -146,14 +132,14 @@ public class DataControl : MonoBehaviour
         PlayerData data = new PlayerData();
 
         data.amountTimeStops = 5;
-        HintManager.manager.amountTimeStops = 5;
-        data.amountFlashes = 5;
-        HintManager.manager.amountFlashes = 5;
-        data.amountFlankers = 5;
-        HintManager.manager.amountFlankers = 5;
-        HintManager.manager.SetFlankersAmount();
-        HintManager.manager.SetFlashesAmount();
-        HintManager.manager.SetTimeStopsAmount();
+        PowerUpsManager.manager.amountTimeStops = 5;
+        data.amountSparks = 5;
+        PowerUpsManager.manager.amountSparks = 5;
+        data.amountWings = 5;
+        PowerUpsManager.manager.amountWings = 5;
+        PowerUpsManager.manager.SetWingsAmount();
+        PowerUpsManager.manager.SetSparksAmount();
+        PowerUpsManager.manager.SetTimeStopsAmount();
 
         data.bestScoreTimed = 0;
         bestScoreTimed = 0;
@@ -213,8 +199,8 @@ public class DataControl : MonoBehaviour
 class PlayerData
 {
     public int amountTimeStops;
-    public int amountFlashes;
-    public int amountFlankers;
+    public int amountSparks;
+    public int amountWings;
 
     public int bestScoreTimed;
     public int bestScoreEndless;
@@ -225,17 +211,13 @@ class PlayerData
     public bool isAudioOn;
     public bool isVibrationOn;
 
-
-
     public bool isTutorialPlayed;
     public bool isTimedModePlayed;
     public bool isEndlessModePlayed;
     public bool isZenModePlayed;
 
-
     public bool isScoreDoublerEnabled;
     public bool isZenModeEnabled;
 
     public Theme theme;
-
 }
