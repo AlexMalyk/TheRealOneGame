@@ -28,8 +28,6 @@ public class TransitionTwoAnimators : MonoBehaviour {
     public static IEnumerator MyCoroutine(Animator first, Animator second) {
         ScreenManager.screenManager.isTransition = true;
 
-        Debug.Log(first.gameObject.name + second.gameObject.name);
-
         first.SetBool("Open", false);
         if (second.gameObject.GetComponent<Canvas>()) { 
             second.gameObject.GetComponent<Canvas>().enabled = true;
