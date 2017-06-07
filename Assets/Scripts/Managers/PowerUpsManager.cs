@@ -107,7 +107,7 @@ public class PowerUpsManager : MonoBehaviour {
 
             ShowMessage(LocalizationManager.manager.GetLocalizedValue(kTimeStopDescription)); 
         }
-        else if ( (!ScreenManager.screenManager.isMenuOpen && amountTimeStops == 0) || ScreenManager.screenManager.GetOpenScreen() != timeStopsGameObject)
+        else if ( ( (!ScreenManager.screenManager.isMenuOpen && amountTimeStops == 0) || ScreenManager.screenManager.GetOpenScreen() != timeStopsGameObject) && ScreenManager.screenManager.isTransition == false ) 
         {
             GameManager.manager.PauseGame(true);
             ScreenManager.screenManager.isMenuOpen = true;
@@ -135,7 +135,7 @@ public class PowerUpsManager : MonoBehaviour {
 
             ShowMessage(LocalizationManager.manager.GetLocalizedValue(kSparkDescription));
         }
-        else if ( (!ScreenManager.screenManager.isMenuOpen && amountSparks == 0) || ScreenManager.screenManager.GetOpenScreen() != sparksGameObject)
+        else if ( ((!ScreenManager.screenManager.isMenuOpen && amountSparks == 0) || ScreenManager.screenManager.GetOpenScreen() != sparksGameObject) && ScreenManager.screenManager.isTransition == false)
         {
             GameManager.manager.PauseGame(true);
             ScreenManager.screenManager.isMenuOpen = true;
@@ -170,7 +170,7 @@ public class PowerUpsManager : MonoBehaviour {
 
             ShowMessage(LocalizationManager.manager.GetLocalizedValue(kWingDescription));
         }
-        else if ( (!ScreenManager.screenManager.isMenuOpen && amountWings == 0) || ScreenManager.screenManager.GetOpenScreen() != wingsGameObject)
+        else if ( ((!ScreenManager.screenManager.isMenuOpen && amountWings == 0) || ScreenManager.screenManager.GetOpenScreen() != wingsGameObject) && ScreenManager.screenManager.isTransition == false)
         {
             GameManager.manager.PauseGame(true);
             ScreenManager.screenManager.isMenuOpen = true;
