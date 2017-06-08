@@ -20,9 +20,9 @@ using UnityEngine.Purchasing;
         // when defining the Product Identifiers on the store. Except, for illustration purposes, the 
         // kProductIDSubscription - it has custom Apple and Google identifiers. We declare their store-
         // specific mapping to Unity Purchasing's AddProduct, below.
-        public static string kID50kPoints = "com.ogs.therealone.50k_points";
-        public static string kID15kPoints = "com.ogs.therealone.15k_points";
-        public static string kID5kPoints = "com.ogs.therealone.5k_points";
+        public static string kID50kPoints = "com.ogs.therealone.points_tier_1";
+        public static string kID15kPoints = "com.ogs.therealone.points_tier_2";
+        public static string kID5kPoints = "com.ogs.therealone.points_tier_3";
         public static string kIDdoubler = "com.ogs.therealone.doubler";
 
         void Start()

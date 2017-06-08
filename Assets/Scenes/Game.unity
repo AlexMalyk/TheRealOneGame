@@ -2116,6 +2116,8 @@ MonoBehaviour:
   time: 0
   timeStopsUsed: 0
   timeStopsTimer: 10
+  kTimedModeTime: 61
+  kEndlessModeTime: 11
   isGameOver: 0
   isGameRunning: 0
   isGameRestarted: 0
@@ -2133,8 +2135,6 @@ MonoBehaviour:
   eyeContainer: {fileID: 1083684476}
   TimeStop: {fileID: 211560803}
   infinitySymbol: {fileID: 71986928}
-  kTimedModeTime: 61
-  kEndlessModeTime: 11
 --- !u!114 &92756929
 MonoBehaviour:
   m_ObjectHideFlags: 0
