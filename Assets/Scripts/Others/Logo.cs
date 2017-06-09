@@ -18,8 +18,6 @@ public class Logo : MonoBehaviour {
 	void Start () {
         time = 0;
         onFinish = false;
-
-        //DataControl.control.LoadAll();
     }
 	
 	// Update is called once per frame
@@ -45,19 +43,6 @@ public class Logo : MonoBehaviour {
         yield return CoroutineUtil.WaitForRealSeconds(2f);
         GetComponent<Animator>().SetTrigger("Hide");
         yield return CoroutineUtil.WaitForRealSeconds(2f);
-        //this.GetComponent<Canvas>().enabled = false;
-
-        //if (DataControl.control.isTutorialFinished)
-        //{
-        //    mainMenu.SetActive(true);        
-        //}
-        //else {
-        //    introScreen.SetActive(true);
-        //}
-        //DataControl.control.SaveAll();
-        //this.gameObject.SetActive(false);
-
-        //SceneManager.LoadScene("Game");
 
         LocalizationManager.manager.SetLanguage();
         while (!LocalizationManager.manager.GetIsReady())

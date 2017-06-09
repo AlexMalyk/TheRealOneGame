@@ -10,13 +10,15 @@ public class GameManager : MonoBehaviour {
     [HideInInspector]
     public Mode mode;
     [HideInInspector]
-    public float timeLimit;
-    [HideInInspector]
     public float time;
     [HideInInspector]
     public bool timeStopsUsed;
     [HideInInspector]
     public float timeStopsTimer = 10f;
+    [HideInInspector]
+    public int kTimedModeTime = 61;
+    [HideInInspector]
+    public int kEndlessModeTime = 11;
 
     [HideInInspector]
     public bool isGameOver;
@@ -46,12 +48,8 @@ public class GameManager : MonoBehaviour {
     public GameObject TimeStop;
     public GameObject infinitySymbol;
 
-    [HideInInspector]
-    public int kTimedModeTime = 61;
-    [HideInInspector]
-    public int kEndlessModeTime = 11;
 
-    int timeInt;
+
     Animator[] eyesAnimators;
 
     void Awake()
@@ -81,19 +79,11 @@ public class GameManager : MonoBehaviour {
 
         MissInput.lifesCount = 3;
 
-        Analytics.CustomEvent("start game", new Dictionary<string, object>
-        {
-            {"pu1", PowerUpsManager.manager.amountTimeStops },
-            {"pu2", PowerUpsManager.manager.amountSparks },
-            {"pu3", PowerUpsManager.manager.amountWings }
-        });
-
         PowerUpsManager.manager.DeleteEffects(true, true, true);
 
         ScreenManager.screenManager.SetAdditionalAnimator(GameScreen);
         ScreenManager.screenManager.OpenScreen(GameBoard);
 
-        while (ScreenManager.screenManager.isTransition) {}
         isGameRunning = true;
         isGameOver = false;
         isNewRecord = false;
@@ -178,7 +168,6 @@ public class GameManager : MonoBehaviour {
 
     public void TimedMode()
     {
-        timeLimit = kTimedModeTime;
         time = kTimedModeTime;
         mode = Mode.Timed;
 
@@ -189,7 +178,6 @@ public class GameManager : MonoBehaviour {
 
     public void EndlessMode()
     {
-        timeLimit = kEndlessModeTime;
         time = kEndlessModeTime;
         mode = Mode.Endless;
 
@@ -220,8 +208,7 @@ public class GameManager : MonoBehaviour {
 
     void Update()
     {
-        if (!isGameOver && isGameRunning && mode != Mode.Zen && !timeStopsUsed)
-        {
+        if (!isGameOver && isGameRunning && mode != Mode.Zen && !timeStopsUsed && ScreenManager.screenManager.isTransition == false) { 
             if (time < 1)
             {
                 EndGame();

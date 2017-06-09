@@ -11,7 +11,10 @@ public class TransitionIAP : MonoBehaviour {
 	}
 
     public void OpenCanvas() {
-        IAPCanvasAnimator.SetBool("Open", true);
+        if (ScreenManager.screenManager.isTransition == false)
+        {
+            IAPCanvasAnimator.SetBool("Open", true);
+        }
     }
     public void CloseCanvas()
     {

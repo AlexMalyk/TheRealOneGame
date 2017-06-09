@@ -24,6 +24,10 @@ public class TransitionGameMenu : MonoBehaviour {
 
     public void Transition()
     {
+        if (ScreenManager.screenManager.isTransition)
+        {
+            return;
+        }
         AudioManager.manager.PlayClickSound();
 
         menuAnimator = Menu.GetComponent<Animator>();
