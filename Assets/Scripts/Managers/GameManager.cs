@@ -93,15 +93,7 @@ public class GameManager : MonoBehaviour {
         ScreenManager.screenManager.SetAdditionalAnimator(GameScreen);
         ScreenManager.screenManager.OpenScreen(GameBoard);
 
-        StartCoroutine(WaitForStartGame());
-        
-    }
-
-    IEnumerator WaitForStartGame() {
-        while (ScreenManager.screenManager.isTransition == false)
-        {
-            yield return new WaitForSeconds(.05f);
-        }
+        while (ScreenManager.screenManager.isTransition) {}
         isGameRunning = true;
         isGameOver = false;
         isNewRecord = false;

@@ -26,6 +26,10 @@
     }
 }
 
+-(void) interstitialDidFailToPresent {
+    
+}
+
 -(void) interstitialWillPresent {
     if(self.interstitialWillPresentCallback) {
         self.interstitialWillPresentCallback();

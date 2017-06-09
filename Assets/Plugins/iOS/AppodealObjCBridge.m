@@ -7,15 +7,17 @@
 #import <Appodeal/Appodeal.h>
 
 #import "AppodealInterstitialDelegate.h"
-#import "AppodealSkippableVideoDelegate.h"
 #import "AppodealNonSkippableVideoDelegate.h"
 #import "AppodealBannerDelegate.h"
+#import "AppodealBannerViewDelegate.h"
 #import "AppodealRewardedVideoDelegate.h"
 
-extern UIViewController *UnityGetGLViewController();
+#import "AppodealUnityBannerView.h"
+
+static AppodealUnityBannerView *bannerUnity;
 
 static UIViewController* RootViewController() {
-    return UnityGetGLViewController();
+    return ((UnityAppController *)[UIApplication sharedApplication].delegate).rootViewController;
 }
 
 static NSDateFormatter *DateFormatter() {
@@ -25,11 +27,11 @@ static NSDateFormatter *DateFormatter() {
         formatter = [[NSDateFormatter alloc] init];
         formatter.dateFormat = @"dd/MM/yyyy";
     });
-    
     return formatter;
 }
 
 void AppodealInitializeWithTypes(const char *apiKey, int types) {
+    [Appodeal setFramework:APDFrameworkUnity];
     [Appodeal initializeWithApiKey:[NSString stringWithUTF8String:apiKey] types:types];
 }
 
@@ -53,8 +55,39 @@ BOOL AppodealIsReadyWithStyle(int style) {
     return [Appodeal isReadyForShowWithStyle:style];
 }
 
+static AppodealBannerViewDelegate *AppodealBannerViewDelegateInstance;
+void AppodealSetBannerViewDelegate(AppodealBannerCallbacks bannerViewDidLoadAd,
+                                   AppodealBannerCallbacks bannerViewDidFailToLoadAd,
+                                   AppodealBannerCallbacks bannerViewDidClick) {
+    
+    AppodealBannerViewDelegateInstance = [AppodealBannerViewDelegate new];
+    
+    AppodealBannerViewDelegateInstance.bannerViewDidLoadAdCallback = bannerViewDidLoadAd;
+    AppodealBannerViewDelegateInstance.bannerViewDidFailToLoadAdCallback = bannerViewDidFailToLoadAd;
+    AppodealBannerViewDelegateInstance.bannerViewDidClickCallback = bannerViewDidClick;
+    
+    if(!bannerUnity) {
+        bannerUnity = [AppodealUnityBannerView sharedInstance];
+    }
+    [bannerUnity.bannerView setDelegate:AppodealBannerViewDelegateInstance];
+}
+
+BOOL AppodealShowBannerAdViewforPlacement(int YAxis, int XAxis, const char *placement) {
+    if(!bannerUnity) {
+        bannerUnity = [AppodealUnityBannerView sharedInstance];
+    }
+    [bannerUnity showBannerView:RootViewController() XAxis:XAxis YAxis:YAxis placement:[NSString stringWithUTF8String:placement]];
+    return false;
+}
+
 void AppodealHideBanner() {
     [Appodeal hideBanner];
+}
+
+void AppodealHideBannerView() {
+    if(bannerUnity) {
+        [bannerUnity.bannerView removeFromSuperview];
+    }
 }
 
 void AppodealConfirmUsage(int types) {
@@ -94,24 +127,6 @@ void AppodealSetBannerDelegate(AppodealBannerCallbacks bannerDidLoadAd,
     AppodealBannerDelegateInstance.bannerDidShowCallback = bannerDidShow;
     
     [Appodeal setBannerDelegate:AppodealBannerDelegateInstance];
-}
-
-static AppodealSkippableVideoDelegate *AppodealSkippableVideoDelegateInstance;
-void AppodealSetSkippableVideoDelegate(AppodealSkippableVideoCallbacks skippableVideoDidLoadAd,
-                                       AppodealSkippableVideoCallbacks skippableVideoDidFailToLoadAd,
-                                       AppodealSkippableVideoCallbacks skippableVideoWillDismiss,
-                                       AppodealSkippableVideoCallbacks skippableVideoDidFinish,
-                                       AppodealSkippableVideoCallbacks skippableVideoDidPresent) {
-    
-    AppodealSkippableVideoDelegateInstance = [AppodealSkippableVideoDelegate new];
-    
-    AppodealSkippableVideoDelegateInstance.skippableVideoDidLoadAdCallback = skippableVideoDidLoadAd;
-    AppodealSkippableVideoDelegateInstance.skippableVideoDidFailToLoadAdCallback = skippableVideoDidFailToLoadAd;
-    AppodealSkippableVideoDelegateInstance.skippableVideoWillDismissCallback = skippableVideoWillDismiss;
-    AppodealSkippableVideoDelegateInstance.skippableVideoDidFinishCallback = skippableVideoDidFinish;
-    AppodealSkippableVideoDelegateInstance.skippableVideoDidPresentCallback = skippableVideoDidPresent;
-    
-    [Appodeal setSkippableVideoDelegate:AppodealSkippableVideoDelegateInstance];
 }
 
 static AppodealNonSkippableVideoDelegate *AppodealNonSkippableVideoDelegateInstance;
@@ -208,60 +223,32 @@ void setCustomSegmentDouble(const char *name, double value)
     [Appodeal setCustomRule:dict];
 }
 
-void setCustomSegmentString(const char *name, const char *value)
-{
+void setCustomSegmentString(const char *name, const char *value) {
     NSDictionary *tempDictionary = @{[NSString stringWithUTF8String:name]: [NSString stringWithUTF8String:value]};
     NSDictionary *dict =  [NSDictionary dictionaryWithDictionary:tempDictionary];
     [Appodeal setCustomRule:dict];
 }
 
-void setSmartBanners(bool value)
-{
+void setSmartBanners(bool value) {
     [Appodeal setSmartBannersEnabled:value];
 }
 
+void setBannerBackground(BOOL value) {
+    [Appodeal setBannerBackgroundVisible:value];
+}
 
-#pragma mark - User Settings
+void setBannerAnimation(BOOL value) {
+    [Appodeal setBannerAnimationEnabled:value];
+}
+
+void trackInAppPurchase(int amount, const char * currency) {
+    [[APDSdk sharedSdk] trackInAppPurchase:[NSNumber numberWithInt:amount] currency:[NSString stringWithUTF8String:currency]];
+}
 
 void AppodealSetUserAge(int age) {
     [Appodeal setUserAge:age];
 }
 
-void AppodealSetUserId(const char * userid) {
-    [Appodeal setUserId:[NSString stringWithUTF8String:userid]];
-}
-
-void AppodealSetUserBirthday(const char *birthday) {
-    NSDate *date = [DateFormatter() dateFromString:[NSString stringWithUTF8String:birthday]];
-    if (date) {
-        [Appodeal setUserBirthday:date];
-    }
-}
-
-void AppodealSetUserEmail(const char * email) {
-    [Appodeal setUserEmail:[NSString stringWithUTF8String:email]];
-}
-
 void AppodealSetUserGender(int gender) {
     [Appodeal setUserGender:gender];
-}
-
-void AppodealSetUserInterests(const char * interests) {
-    [Appodeal setUserInterests:[NSString stringWithUTF8String:interests]];
-}
-
-void AppodealSetUserOccupation(int occupation) {
-    [Appodeal setUserOccupation:occupation];
-}
-
-void AppodealSetUserRelationship(int relationship) {
-    [Appodeal setUserRelationship:relationship];
-}
-
-void AppodealSetUserAlcoholAttitude(int attitude) {
-    [Appodeal setUserAlcoholAttitude:attitude];
-}
-
-void AppodealSetUserSmokingAttitude(int attitude) {
-    [Appodeal setUserSmokingAttitude:attitude];
 }

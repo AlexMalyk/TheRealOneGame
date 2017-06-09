@@ -6,51 +6,45 @@ namespace AppodealAds.Unity.Common {
 
 		void initialize(String appKey, int type);
 
-		void orientationChange ();
-		void disableNetwork (String network);
-		void disableNetwork (String network, int type);
+		void orientationChange();
+		void disableNetwork(string network);
+		void disableNetwork(string network, int type);
 		void disableLocationPermissionCheck();
 		void disableWriteExternalStoragePermissionCheck();
 
 		void setInterstitialCallbacks (IInterstitialAdListener listener);
-		void setSkippableVideoCallbacks (ISkippableVideoAdListener listener);
 		void setNonSkippableVideoCallbacks (INonSkippableVideoAdListener listener);
 		void setRewardedVideoCallbacks (IRewardedVideoAdListener listener);
 		void setBannerCallbacks (IBannerAdListener listener);
 		void requestAndroidMPermissions(IPermissionGrantedListener listener);
 		void cache (int adTypes);
-		void confirm(int adTypes);
-		
-		Boolean isLoaded (int adTypes);
-		Boolean isPrecache (int adTypes);
-		Boolean show(int adTypes);
-		Boolean show(int adTypes, string placement);
+
+		bool isLoaded (int adTypes);
+		bool isPrecache (int adTypes);
+		bool show(int adTypes);
+		bool show(int adTypes, string placement);
+		bool showBannerView(int YAxis, int XGravity, string Placement);
 
 		void hide (int adTypes);
-		void setAutoCache (int adTypes, Boolean autoCache);
-		void setOnLoadedTriggerBoth (int adTypes, Boolean onLoadedTriggerBoth);
-		void setTesting(Boolean test);
-		void setLogging(Boolean logging);
-		void setSmartBanners(Boolean value);
+		void hideBannerView();
+		void setAutoCache (int adTypes, bool autoCache);
+		void setTriggerOnLoadedOnPrecache (int adTypes, bool onLoadedTriggerBoth);
+		void setTesting(bool test);
+		void setLogging(bool logging);
+		void setSmartBanners(bool value);
+		void setBannerAnimation(bool value);
+		void setBannerBackground(bool value);
 
 		void trackInAppPurchase(double amount, string currency);
-		void setCustomRule(string name, Boolean value);
+		void setCustomRule(string name, bool value);
 		void setCustomRule(string name, int value);
 		void setCustomRule(string name, double value);
 		void setCustomRule(string name, string value);
 		
 		string getVersion();
 
-		void setUserId(string id);
 		void setAge(int age);
-		void setBirthday(string bDay);
-		void setEmail(String email);
 		void setGender(int gender);
-		void setInterests(String interests);
-		void setOccupation(int occupation);
-		void setRelation(int relation);
-		void setAlcohol(int alcohol);
-		void setSmoking(int smoking);
 		void getUserSettings();
 
 	}

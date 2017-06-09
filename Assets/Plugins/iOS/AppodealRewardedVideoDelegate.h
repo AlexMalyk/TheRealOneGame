@@ -8,6 +8,7 @@ typedef void (*AppodealRewardedVideoDidFinishCallback) (int, const char *);
 
 @property (assign, nonatomic) AppodealRewardedVideoCallbacks rewardedVideoDidLoadAdCallback;
 @property (assign, nonatomic) AppodealRewardedVideoCallbacks rewardedVideoDidFailToLoadAdCallback;
+@property (assign, nonatomic) AppodealRewardedVideoCallbacks rewardedVideoDidFailToPresentCallback;
 @property (assign, nonatomic) AppodealRewardedVideoCallbacks rewardedVideoWillDismissCallback;
 @property (assign, nonatomic) AppodealRewardedVideoCallbacks rewardedVideoDidPresentCallback;
 @property (assign, nonatomic) AppodealRewardedVideoDidFinishCallback rewardedVideoDidFinishCallback;

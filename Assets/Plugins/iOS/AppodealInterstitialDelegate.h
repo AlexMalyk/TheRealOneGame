@@ -10,5 +10,6 @@ typedef void (*AppodealInterstitialCallbacks) ();
 @property (assign, nonatomic) AppodealInterstitialCallbacks interstitialWillPresentCallback;
 @property (assign, nonatomic) AppodealInterstitialCallbacks interstitialDidDismissCallback;
 @property (assign, nonatomic) AppodealInterstitialCallbacks interstitialDidClickCallback;
+@property (assign, nonatomic) AppodealInterstitialCallbacks interstitialDidFailToPresentCallback;
 
 @end

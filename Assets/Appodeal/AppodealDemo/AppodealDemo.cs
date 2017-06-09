@@ -5,7 +5,7 @@ using AppodealAds.Unity.Api;
 using AppodealAds.Unity.Common;
 
 // Example script showing how to invoke the Appodeal Ads Unity plugin.
-public class AppodealDemo : MonoBehaviour, IInterstitialAdListener, IBannerAdListener, INonSkippableVideoAdListener, ISkippableVideoAdListener, IRewardedVideoAdListener, IPermissionGrantedListener
+public class AppodealDemo : MonoBehaviour, IInterstitialAdListener, IBannerAdListener, INonSkippableVideoAdListener, IRewardedVideoAdListener, IPermissionGrantedListener
 {
 
 	#if UNITY_EDITOR && !UNITY_ANDROID && !UNITY_IPHONE
@@ -18,7 +18,7 @@ public class AppodealDemo : MonoBehaviour, IInterstitialAdListener, IBannerAdLis
 		string appKey = "";
 	#endif
 
-	public Toggle LoggingToggle, TestingToggle, ConfirmToggle;
+	public Toggle LoggingToggle, TestingToggle;
 
 	void Awake ()
 	{
@@ -28,22 +28,19 @@ public class AppodealDemo : MonoBehaviour, IInterstitialAdListener, IBannerAdLis
 	public void Init() {
 		//Example for UserSettings usage
 		UserSettings settings = new UserSettings ();
-		settings.setUserId("1234567890").setAge(25).setBirthday ("01/01/1990").setAlcohol(UserSettings.Alcohol.NEUTRAL)
-			    .setSmoking(UserSettings.Smoking.NEUTRAL).setEmail("hi@appodeal.com")
-				.setGender(UserSettings.Gender.OTHER).setRelation(UserSettings.Relation.DATING)
-				.setInterests("gym, cars, cinema, science").setOccupation(UserSettings.Occupation.WORK);
+		settings.setAge(25).setGender(UserSettings.Gender.OTHER);
 		
 		if (LoggingToggle.isOn) Appodeal.setLogging(true);
 		if (TestingToggle.isOn) Appodeal.setTesting(true);
-		if (ConfirmToggle.isOn) Appodeal.confirm(Appodeal.SKIPPABLE_VIDEO);
 
-		Appodeal.setSmartBanners(false);
+		//Appodeal.setSmartBanners(false);
+		Appodeal.setBannerAnimation(false);
+		Appodeal.setBannerBackground(false);
 
-		Appodeal.initialize (appKey, Appodeal.INTERSTITIAL | Appodeal.BANNER | Appodeal.SKIPPABLE_VIDEO | Appodeal.REWARDED_VIDEO);
+		Appodeal.initialize (appKey, Appodeal.INTERSTITIAL | Appodeal.BANNER | Appodeal.REWARDED_VIDEO);
 
 		Appodeal.setBannerCallbacks (this);
 		Appodeal.setInterstitialCallbacks (this);
-		Appodeal.setSkippableVideoCallbacks (this);
 		Appodeal.setRewardedVideoCallbacks(this);
 
 		Appodeal.setCustomRule("newBoolean", true);
@@ -56,25 +53,21 @@ public class AppodealDemo : MonoBehaviour, IInterstitialAdListener, IBannerAdLis
 		Appodeal.show (Appodeal.INTERSTITIAL, "interstitial_button_click");
 	}
 
-	public void showSkippableVideo() {
-		Appodeal.show (Appodeal.SKIPPABLE_VIDEO, "skippable_video_button_click");
-	}
-
 	public void showRewardedVideo() {
 		Appodeal.show (Appodeal.REWARDED_VIDEO);
 	}
 
 	public void showBanner() {
-		Appodeal.show (Appodeal.BANNER_BOTTOM, "banner_button_click");
+		//Appodeal.show (Appodeal.BANNER_BOTTOM, "banner_button_click");
+		Appodeal.showBannerView(Screen.currentResolution.height - 300, Appodeal.BANNER_HORIZONTAL_CENTER, "banner_view");
 	}
 
-	public void showInterstitialOrVideo() {
-		Appodeal.show (Appodeal.INTERSTITIAL | Appodeal.SKIPPABLE_VIDEO);
-	}
 
 	public void hideBanner() {
-		Appodeal.hide (Appodeal.BANNER);
+		//Appodeal.hide (Appodeal.BANNER);
+		Appodeal.hideBannerView ();
 	}
+
 
 	#region Banner callback handlers
 
@@ -88,45 +81,30 @@ public class AppodealDemo : MonoBehaviour, IInterstitialAdListener, IBannerAdLis
 	#region Interstitial callback handlers
 	
 	public void onInterstitialLoaded() { Debug.Log("Interstitial loaded"); }
-	public void onInterstitialFailedToLoad() { Debug.Log("Interstitial failed"); }
+	public void onInterstitialFailedToLoad() { Debug.Log("Interstitial failed to load"); }
 	public void onInterstitialShown() { Debug.Log("Interstitial opened"); }
 	public void onInterstitialClicked() { Debug.Log("Interstitial clicked"); }
 	public void onInterstitialClosed() { Debug.Log("Interstitial closed"); }
 	
 	#endregion
 
-	#region Video callback handlers
-
-	public void onSkippableVideoLoaded() { Debug.Log("Skippable Video loaded"); }
-	public void onSkippableVideoFailedToLoad() { Debug.Log("Skippable Video failed"); }
-	public void onSkippableVideoShown() { Debug.Log("Skippable Video opened"); }
-	public void onSkippableVideoClosed() { Debug.Log("Skippable Video closed"); }
-	public void onSkippableVideoFinished() { Debug.Log("Skippable Video finished"); }
-
-	#endregion
-
 	#region Non Skippable Video callback handlers
-	
 	public void onNonSkippableVideoLoaded() { Debug.Log("NonSkippable Video loaded"); }
-	public void onNonSkippableVideoFailedToLoad() { Debug.Log("NonSkippable Video failed"); }
+	public void onNonSkippableVideoFailedToLoad() { Debug.Log("NonSkippable Video failed to load"); }
 	public void onNonSkippableVideoShown() { Debug.Log("NonSkippable Video opened"); }
 	public void onNonSkippableVideoClosed() { Debug.Log("NonSkippable Video closed"); }
 	public void onNonSkippableVideoFinished() { Debug.Log("NonSkippable Video finished"); }
-	
 	#endregion
 
 	#region Rewarded Video callback handlers
-	
 	public void onRewardedVideoLoaded() { Debug.Log("Rewarded Video loaded"); }
-	public void onRewardedVideoFailedToLoad() { Debug.Log("Rewarded Video failed"); }
+	public void onRewardedVideoFailedToLoad() { Debug.Log("Rewarded Video failed to load"); }
 	public void onRewardedVideoShown() { Debug.Log("Rewarded Video opened"); }
 	public void onRewardedVideoClosed() { Debug.Log("Rewarded Video closed"); }
 	public void onRewardedVideoFinished(int amount, string name) { Debug.Log("Rewarded Video Reward: " + amount + " " + name); }
-	
 	#endregion
 
 	#region Permission Grant callback handlers
-	
 	public void writeExternalStorageResponse(int result) { 
 		if(result == 0) {
 			Debug.Log("WRITE_EXTERNAL_STORAGE permission granted"); 
@@ -141,6 +119,6 @@ public class AppodealDemo : MonoBehaviour, IInterstitialAdListener, IBannerAdLis
 			Debug.Log("ACCESS_COARSE_LOCATION permission grant refused"); 
 		}
 	}
-	
 	#endregion
+
 }

@@ -14,6 +14,13 @@
     }
 }
 
+-(void) nonSkippableVideoDidFailToPresent {
+    if(self.nonSkippableVideoDidFailToPresentCallback) {
+        self.nonSkippableVideoDidFailToPresentCallback();
+    }
+}
+
+
 -(void) nonSkippableVideoDidClick { }
 
 -(void) nonSkippableVideoDidFinish {
@@ -23,9 +30,7 @@
 }
 
 -(void) nonSkippableVideoDidPresent {
-    if(self.nonSkippableVideoDidPresentCallback) {
-        self.nonSkippableVideoDidPresentCallback();
-    }
+
 }
 
 -(void) nonSkippableVideoWillDismiss {

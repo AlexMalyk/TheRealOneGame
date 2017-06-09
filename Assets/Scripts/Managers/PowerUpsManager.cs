@@ -48,9 +48,9 @@ public class PowerUpsManager : MonoBehaviour {
 
     static string kOncePerMatchMessage = "once_a_game";
     static string kOncePerRoundMessage = "already_used";
-    static string kTimeStopDescription = "time_stop_description_short";
-    static string kSparkDescription = "spark_description_short";
-    static string kWingDescription = "wing_description_short";
+    static string kTimeStopDescription = "time_stop_description";
+    static string kSparkDescription = "spark_description";
+    static string kWingDescription = "wing_description";
 
     int priceTimeStops = 2000;
     int priceWings = 500;
@@ -105,7 +105,7 @@ public class PowerUpsManager : MonoBehaviour {
 
             isTimeStopUsedInMatch = true;
 
-            ShowMessage(LocalizationManager.manager.GetLocalizedValue(kTimeStopDescription)); 
+            //ShowMessage(LocalizationManager.manager.GetLocalizedValue(kTimeStopDescription)); 
         }
         else if ( (!ScreenManager.screenManager.isMenuOpen && amountTimeStops == 0) || ScreenManager.screenManager.GetOpenScreen() != timeStopsGameObject)
         {
@@ -133,7 +133,7 @@ public class PowerUpsManager : MonoBehaviour {
 
             isSparkUsedInRound = true;
 
-            ShowMessage(LocalizationManager.manager.GetLocalizedValue(kSparkDescription));
+            //ShowMessage(LocalizationManager.manager.GetLocalizedValue(kSparkDescription));
         }
         else if ( (!ScreenManager.screenManager.isMenuOpen && amountSparks == 0) || ScreenManager.screenManager.GetOpenScreen() != sparksGameObject)
         {
@@ -168,7 +168,7 @@ public class PowerUpsManager : MonoBehaviour {
 
             isWingUsedInRound = true; 
 
-            ShowMessage(LocalizationManager.manager.GetLocalizedValue(kWingDescription));
+            //ShowMessage(LocalizationManager.manager.GetLocalizedValue(kWingDescription));
         }
         else if ( (!ScreenManager.screenManager.isMenuOpen && amountWings == 0) || ScreenManager.screenManager.GetOpenScreen() != wingsGameObject)
         {

@@ -12,14 +12,25 @@ namespace AppodealAds.Unity.Android
 	{
 
 		AndroidJavaClass appodealClass;
+		AndroidJavaClass appodealBannerClass;
+		AndroidJavaObject appodealBannerInstance;
 		AndroidJavaObject userSettings;
 		AndroidJavaObject activity;
+		AndroidJavaObject popupWindow, resources, displayMetrics, window, decorView, attributes, rootView;
 
 		public AndroidJavaClass getAppodealClass() {
 			if (appodealClass == null) {
 				appodealClass = new AndroidJavaClass("com.appodeal.ads.Appodeal");
 			}
 			return appodealClass;
+		}
+
+		public AndroidJavaObject getAppodealBannerInstance() {
+			if (appodealBannerInstance == null) {
+				appodealBannerClass = new AndroidJavaClass("com.appodeal.unity.AppodealUnityBannerView");
+				appodealBannerInstance = appodealBannerClass.CallStatic<AndroidJavaObject>("getInstance");
+			}
+			return appodealBannerInstance;
 		}
 
 		public AndroidJavaObject getActivity() {
@@ -32,6 +43,15 @@ namespace AppodealAds.Unity.Android
 
 		public void initialize(string appKey, int adTypes) 
 		{
+			getAppodealClass().CallStatic("setFramework", "unity", "2.7.2");
+			#if UNITY_5_6_OR_NEWER
+				getAppodealClass().CallStatic("disableNetwork", getActivity(), "amazon_ads", Appodeal.BANNER);
+			#endif
+
+			if((adTypes & Appodeal.BANNER_VIEW) > 0) {
+				getAppodealClass().CallStatic("disableNetwork", getActivity(), "amazon_ads", Appodeal.BANNER);
+			}
+
 			getAppodealClass().CallStatic("initialize", getActivity(), appKey, adTypes);
 		}
 
@@ -41,11 +61,6 @@ namespace AppodealAds.Unity.Android
 			getAppodealClass().CallStatic("setInterstitialCallbacks", new AppodealInterstitialCallbacks(listener));
 		}
 		
-		public void setSkippableVideoCallbacks(ISkippableVideoAdListener listener)
-		{
-			getAppodealClass().CallStatic("setSkippableVideoCallbacks", new AppodealSkippableVideoCallbacks(listener));
-		}
-
 		public void setNonSkippableVideoCallbacks(INonSkippableVideoAdListener listener)
 		{
 			getAppodealClass().CallStatic("setNonSkippableVideoCallbacks", new AppodealNonSkippableVideoCallbacks(listener));
@@ -61,39 +76,79 @@ namespace AppodealAds.Unity.Android
 			getAppodealClass().CallStatic("setBannerCallbacks", new AppodealBannerCallbacks(listener));
 		}
 
-		public void confirm(int adTypes)
-		{
-			getAppodealClass().CallStatic("confirm", adTypes);
-		}
-		
 		public void cache(int adTypes)
 		{
 			getAppodealClass().CallStatic("cache", getActivity(), adTypes);
 		}
 		
-		public Boolean isLoaded(int adTypes) 
+		public bool isLoaded(int adTypes) 
 		{
 			return getAppodealClass().CallStatic<Boolean>("isLoaded", adTypes);
 		}
 		
-		public Boolean isPrecache(int adTypes) 
+		public bool isPrecache(int adTypes) 
 		{
 			return getAppodealClass().CallStatic<Boolean>("isPrecache", adTypes);
 		}
 		
-		public Boolean show(int adTypes)
+		public bool show(int adTypes)
 		{
-			return getAppodealClass().CallStatic<Boolean>("show", getActivity(), adTypes);
+			#if UNITY_5_6_OR_NEWER
+			if((adTypes & Appodeal.BANNER_TOP) > 0) {
+				return showBannerView(Appodeal.BANNER_TOP, Appodeal.BANNER_HORIZONTAL_SMART, "");
+			} else if((adTypes & Appodeal.BANNER_BOTTOM) > 0) {
+				return showBannerView(Appodeal.BANNER_BOTTOM, Appodeal.BANNER_HORIZONTAL_SMART, "");
+			} else if((adTypes & Appodeal.BANNER) > 0) {
+				return showBannerView(Appodeal.BANNER_BOTTOM, Appodeal.BANNER_HORIZONTAL_SMART, "");
+			} else {
+				return getAppodealClass().CallStatic<Boolean>("show", getActivity(), adTypes, "");
+			}
+			#elif UNITY_ANDROID
+			return getAppodealClass().CallStatic<Boolean>("show", getActivity(), adTypes, "");
+			#endif
 		}
 
-		public Boolean show(int adTypes, string placement)
+		public bool show(int adTypes, string placement)
 		{
+			#if UNITY_5_6_OR_NEWER
+			if((adTypes & Appodeal.BANNER_TOP) > 0) {
+				return showBannerView(Appodeal.BANNER_TOP, Appodeal.BANNER_HORIZONTAL_SMART, placement);
+			} else if((adTypes & Appodeal.BANNER_BOTTOM) > 0) {
+				return showBannerView(Appodeal.BANNER_BOTTOM, Appodeal.BANNER_HORIZONTAL_SMART, placement);
+			} else if((adTypes & Appodeal.BANNER) > 0) {
+				return showBannerView(Appodeal.BANNER_BOTTOM, Appodeal.BANNER_HORIZONTAL_SMART, placement);
+			} else {
+				return getAppodealClass().CallStatic<bool>("show", getActivity(), adTypes, placement);
+			}
+			#elif UNITY_ANDROID
 			return getAppodealClass().CallStatic<Boolean>("show", getActivity(), adTypes, placement);
+			#endif
 		}
-		
+
+		public bool showBannerView(int YAxis, int XAxis, string Placement) {
+			bool show = false;
+			getActivity().Call("runOnUiThread", new AndroidJavaRunnable(() => {
+				show = getAppodealBannerInstance().Call<bool>("showBannerView", getActivity(), XAxis, YAxis, Placement);	
+			}));
+			return show;
+		}
+
 		public void hide(int adTypes)
 		{
 			getAppodealClass().CallStatic("hide", getActivity(), adTypes);
+			#if UNITY_5_6_OR_NEWER
+			getActivity().Call("runOnUiThread", new AndroidJavaRunnable(() => {
+				getAppodealBannerInstance().Call("hideBannerView", getActivity());	
+			}));
+			#endif
+		}
+
+		public void hideBannerView()
+		{
+			getAppodealClass().CallStatic("hide", getActivity(), Appodeal.BANNER);
+			getActivity().Call("runOnUiThread", new AndroidJavaRunnable(() => {
+				getAppodealBannerInstance().Call("hideBannerView", getActivity());	
+			}));
 		}
 		
 		public void setAutoCache(int adTypes, Boolean autoCache) 
@@ -101,9 +156,9 @@ namespace AppodealAds.Unity.Android
 			getAppodealClass().CallStatic("setAutoCache", adTypes, autoCache);	
 		}
 		
-		public void setOnLoadedTriggerBoth(int adTypes, Boolean onLoadedTriggerBoth) 
+		public void setTriggerOnLoadedOnPrecache(int adTypes, Boolean onLoadedTriggerBoth) 
 		{
-			getAppodealClass().CallStatic("setOnLoadedTriggerBoth", adTypes, onLoadedTriggerBoth);
+			getAppodealClass().CallStatic("setTriggerOnLoadedOnPrecache", adTypes, onLoadedTriggerBoth);
 		}
 
 		public void disableNetwork(String network) 
@@ -180,6 +235,14 @@ namespace AppodealAds.Unity.Android
 			getAppodealClass().CallStatic("setSmartBanners", value);
 		}
 
+		public void setBannerAnimation(bool value) {
+			getAppodealClass().CallStatic("setBannerAnimation", value);
+		}
+
+		public void setBannerBackground(bool value) {
+			//getAppodealClass().CallStatic("setBannerBackground", value);
+		}
+
 		//User Settings
 
 		public void getUserSettings() 
@@ -187,24 +250,9 @@ namespace AppodealAds.Unity.Android
 			userSettings = getAppodealClass().CallStatic<AndroidJavaObject>("getUserSettings", getActivity());
 		}
 
-		public void setUserId(string id) 
-		{
-			userSettings.Call<AndroidJavaObject>("setUserId", id);
-		}
-
 		public void setAge(int age) 
 		{
 			userSettings.Call<AndroidJavaObject>("setAge", age);
-		}
-
-		public void setBirthday(string bDay)
-		{
-			userSettings.Call<AndroidJavaObject> ("setBirthday", bDay);
-		}
-
-		public void setEmail(String email)
-		{
-			userSettings.Call<AndroidJavaObject> ("setEmail", email);
 		}
 
 		public void setGender(int gender)
@@ -228,120 +276,6 @@ namespace AppodealAds.Unity.Android
 				}
 			}
 		}
-
-		public void setInterests(String interests)
-		{
-			userSettings.Call<AndroidJavaObject> ("setInterests", interests);
-		}
-
-		public void setOccupation(int occupation)
-		{
-			switch(occupation) 
-			{
-				case 1:
-				{
-					userSettings.Call<AndroidJavaObject> ("setOccupation", new AndroidJavaClass("com.appodeal.ads.UserSettings$Occupation").GetStatic<AndroidJavaObject>("OTHER"));
-					break;
-				} 
-				case 2:
-				{
-					userSettings.Call<AndroidJavaObject> ("setOccupation", new AndroidJavaClass("com.appodeal.ads.UserSettings$Occupation").GetStatic<AndroidJavaObject>("WORK"));
-					break;
-				} 
-				case 3:
-				{
-					userSettings.Call<AndroidJavaObject> ("setOccupation", new AndroidJavaClass("com.appodeal.ads.UserSettings$Occupation").GetStatic<AndroidJavaObject>("SCHOOL"));
-					break;
-				}
-				case 4:
-				{
-					userSettings.Call<AndroidJavaObject> ("setOccupation", new AndroidJavaClass("com.appodeal.ads.UserSettings$Occupation").GetStatic<AndroidJavaObject>("UNIVERSITY"));
-					break;
-				}
-			}
-		}
-
-		public void setRelation(int relation)
-		{
-			switch(relation) 
-			{
-				case 1:
-				{
-					userSettings.Call<AndroidJavaObject> ("setRelation", new AndroidJavaClass("com.appodeal.ads.UserSettings$Relation").GetStatic<AndroidJavaObject>("OTHER"));
-					break;
-				} 
-				case 2:
-				{
-					userSettings.Call<AndroidJavaObject> ("setRelation", new AndroidJavaClass("com.appodeal.ads.UserSettings$Relation").GetStatic<AndroidJavaObject>("SINGLE"));
-					break;
-				} 
-				case 3:
-				{
-					userSettings.Call<AndroidJavaObject> ("setRelation", new AndroidJavaClass("com.appodeal.ads.UserSettings$Relation").GetStatic<AndroidJavaObject>("DATING"));
-					break;
-				} 
-				case 4:
-				{
-					userSettings.Call<AndroidJavaObject> ("setRelation", new AndroidJavaClass("com.appodeal.ads.UserSettings$Relation").GetStatic<AndroidJavaObject>("ENGAGED"));
-					break;
-				} 
-				case 5:
-				{
-					userSettings.Call<AndroidJavaObject> ("setRelation", new AndroidJavaClass("com.appodeal.ads.UserSettings$Relation").GetStatic<AndroidJavaObject>("MARRIED"));
-					break;
-				} 
-				case 6:
-				{
-					userSettings.Call<AndroidJavaObject> ("setRelation", new AndroidJavaClass("com.appodeal.ads.UserSettings$Relation").GetStatic<AndroidJavaObject>("SEARCHING"));
-					break;
-				} 
-			}
-		}
-
-		public void setAlcohol(int alcohol)
-		{
-			switch(alcohol) 
-			{
-				case 1:
-				{
-					userSettings.Call<AndroidJavaObject> ("setAlcohol", new AndroidJavaClass("com.appodeal.ads.UserSettings$Alcohol").GetStatic<AndroidJavaObject>("NEGATIVE"));
-					break;
-				} 
-				case 2:
-				{
-					userSettings.Call<AndroidJavaObject> ("setAlcohol", new AndroidJavaClass("com.appodeal.ads.UserSettings$Alcohol").GetStatic<AndroidJavaObject>("NEUTRAL"));
-					break;
-				} 
-				case 3:
-				{
-					userSettings.Call<AndroidJavaObject> ("setAlcohol", new AndroidJavaClass("com.appodeal.ads.UserSettings$Alcohol").GetStatic<AndroidJavaObject>("POSITIVE"));
-					break;
-				}
-			}
-		}
-
-		public void setSmoking(int smoking)
-		{
-			switch(smoking) 
-			{
-				case 1:
-				{
-					userSettings.Call<AndroidJavaObject> ("setSmoking", new AndroidJavaClass("com.appodeal.ads.UserSettings$Smoking").GetStatic<AndroidJavaObject>("NEGATIVE"));
-					break;
-				} 
-				case 2:
-				{
-					userSettings.Call<AndroidJavaObject> ("setSmoking", new AndroidJavaClass("com.appodeal.ads.UserSettings$Smoking").GetStatic<AndroidJavaObject>("NEUTRAL"));
-					break;
-				} 
-				case 3:
-				{
-					userSettings.Call<AndroidJavaObject> ("setSmoking", new AndroidJavaClass("com.appodeal.ads.UserSettings$Smoking").GetStatic<AndroidJavaObject>("POSITIVE"));
-					break;
-				}
-			}
-		}
-
 
 	}
 }

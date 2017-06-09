@@ -1,5 +1,4 @@
 #import "AppodealRewardedVideoDelegate.h"
-#import "AppodealObjCBridge.h"
 
 @implementation AppodealRewardedVideoDelegate
 
@@ -16,6 +15,8 @@
 }
 
 -(void) rewardedVideoDidClick { }
+
+-(void) rewardedVideoDidFailToPresent { }
 
 -(void) rewardedVideoDidPresent {
     if(self.rewardedVideoDidPresentCallback) {

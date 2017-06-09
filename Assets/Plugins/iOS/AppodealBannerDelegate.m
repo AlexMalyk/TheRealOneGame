@@ -10,6 +10,10 @@
 }
 
 -(void) bannerDidShow {
+    UIView * bannerView = [[[UnityGetGLViewController() view] subviews] lastObject];
+    if (bannerView) {
+        UnitySetViewTouchProcessing(bannerView, touchesTransformedToUnityViewCoords);
+    }
     if(self.bannerDidShowCallback) {
         self.bannerDidShowCallback();
     }

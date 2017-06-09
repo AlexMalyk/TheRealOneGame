@@ -73,6 +73,7 @@ public class AppodealPostProcess : MonoBehaviour
 		if (Directory.Exists(fullPath)) {
 			foreach (string file in System.IO.Directory.GetFiles(fullPath)) {
 				if(Path.GetExtension(file).Equals(".zip")) {
+					UnityEngine.Debug.Log("unzipping:"+file);
 					ExtractZip (file, Path.Combine (absoluteProjPath, apdFolder));
 					AddAdaptersDirectory (apdFolder, project, target);
 				}

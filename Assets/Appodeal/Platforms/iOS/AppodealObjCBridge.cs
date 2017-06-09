@@ -6,14 +6,14 @@ namespace AppodealAds.Unity.iOS
 {
 	
 	internal delegate void AppodealInterstitialCallbacks ();
-	internal delegate void AppodealSkippableVideoCallbacks ();
 	internal delegate void AppodealNonSkippableVideoCallbacks ();
 	internal delegate void AppodealBannerCallbacks ();
+	internal delegate void AppodealBannerViewCallbacks ();
 	internal delegate void AppodealRewardedVideoCallbacks ();
-	internal delegate void AppodealRewardedVideoDidFinishCallback (int amount, String name);
+	internal delegate void AppodealRewardedVideoDidFinishCallback (int amount, string name);
 	
-	internal class AppodealObjCBridge
-	{
+	internal class AppodealObjCBridge {
+		
 		[DllImport("__Internal")]
 		internal static extern void AppodealInitializeWithTypes (string apiKey, int types);
 		
@@ -22,6 +22,9 @@ namespace AppodealAds.Unity.iOS
 
 		[DllImport("__Internal")]
 		internal static extern bool AppodealShowAdforPlacement (int style, string placement);
+
+		[DllImport("__Internal")]
+		internal static extern bool AppodealShowBannerAdViewforPlacement (int style, int gravity, string placement);
 		
 		[DllImport("__Internal")]
 		internal static extern void AppodealSetAutocache (bool autocache, int types);
@@ -36,6 +39,9 @@ namespace AppodealAds.Unity.iOS
 		internal static extern void AppodealHideBanner ();
 
 		[DllImport("__Internal")]
+		internal static extern void AppodealHideBannerView ();
+
+		[DllImport("__Internal")]
 		internal static extern void AppodealConfirmUsage (int types);
 		
 		[DllImport("__Internal")]
@@ -45,15 +51,6 @@ namespace AppodealAds.Unity.iOS
 			AppodealInterstitialCallbacks interstitialDidClick,
 			AppodealInterstitialCallbacks interstitialDidDismiss,
 			AppodealInterstitialCallbacks interstitialWillPresent
-		);
-		
-		[DllImport("__Internal")]
-		internal static extern void AppodealSetSkippableVideoDelegate (
-			AppodealSkippableVideoCallbacks skippableVideoDidLoadAd,
-			AppodealSkippableVideoCallbacks skippableVideoDidFailToLoadAd,
-			AppodealSkippableVideoCallbacks skippableVideoWillDismiss,
-			AppodealSkippableVideoCallbacks skippableVideoDidFinish,
-			AppodealSkippableVideoCallbacks skippableVideoDidPresent
 		);
 
 		[DllImport("__Internal")]
@@ -80,6 +77,13 @@ namespace AppodealAds.Unity.iOS
 			AppodealBannerCallbacks bannerDidFailToLoadAd,
 			AppodealBannerCallbacks bannerDidClick,
 			AppodealBannerCallbacks bannerDidShow
+		);
+
+		[DllImport("__Internal")]
+		internal static extern void AppodealSetBannerViewDelegate (
+			AppodealBannerCallbacks bannerDidLoadAd,
+			AppodealBannerCallbacks bannerDidFailToLoadAd,
+			AppodealBannerCallbacks bannerDidClick
 		);
 		
 		[DllImport("__Internal")]
@@ -116,34 +120,22 @@ namespace AppodealAds.Unity.iOS
 		internal static extern void setSmartBanners(bool value);
 
 		[DllImport("__Internal")]
-		internal static extern void AppodealSetUserId(string id);
+		internal static extern void setBannerBackground(bool value);
+
+		[DllImport("__Internal")]
+		internal static extern void setBannerAnimation(bool value);
+
+		[DllImport("__Internal")]
+		internal static extern void trackInAppPurchase(double amount, string currency);
 
 		[DllImport("__Internal")]
 		internal static extern void AppodealSetUserAge(int age);
 		
 		[DllImport("__Internal")]
-		internal static extern void AppodealSetUserBirthday(string birthday);
-		
-		[DllImport("__Internal")]
-		internal static extern void AppodealSetUserEmail(string email);
-		
-		[DllImport("__Internal")]
 		internal static extern void AppodealSetUserGender(int gender);
-		
-		[DllImport("__Internal")]
-		internal static extern void AppodealSetUserInterests(string interests);
-		
-		[DllImport("__Internal")]
-		internal static extern void AppodealSetUserOccupation(int occupation);
-		
-		[DllImport("__Internal")]
-		internal static extern void AppodealSetUserRelationship(int relationship);
-		
-		[DllImport("__Internal")]
-		internal static extern void	AppodealSetUserAlcoholAttitude(int attitude);
-		
-		[DllImport("__Internal")]
-		internal static extern void AppodealSetUserSmokingAttitude(int attitude);
+
 	}
+
 }
+
 #endif
