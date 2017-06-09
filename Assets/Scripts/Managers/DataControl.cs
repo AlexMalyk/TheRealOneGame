@@ -217,7 +217,6 @@ class PlayerData
     public bool isZenModePlayed;
 
     public bool isScoreDoublerEnabled;
-    public bool isZenModeEnabled;
 
     public Theme theme;
 }

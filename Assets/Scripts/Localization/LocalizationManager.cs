@@ -39,7 +39,6 @@ public class LocalizationManager : MonoBehaviour
     {
         localizedText = new Dictionary<string, string>();
         string filePath = Path.Combine(Application.streamingAssetsPath, fileName);
-        Debug.Log(filePath);
         string dataAsJson;
 
         if (Application.platform == RuntimePlatform.Android)
@@ -61,8 +60,6 @@ public class LocalizationManager : MonoBehaviour
         {
             localizedText.Add(loadedData.items[i].key, loadedData.items[i].value);
         }
-        Debug.Log("Data loaded, dictionary contains: " + localizedText.Count + " entries");
-
         isReady = true;
     }
 
@@ -71,33 +68,27 @@ public class LocalizationManager : MonoBehaviour
         {
             if (Application.systemLanguage == SystemLanguage.Ukrainian)
             {
-                Debug.Log("ukr");
                 LoadLocalizedText(filenameUkr);
             }
             else if (Application.systemLanguage == SystemLanguage.Russian)
             {
-                Debug.Log("rus");
                 LoadLocalizedText(filenameRus);
             }
             else
             {
-                Debug.Log("eng");
                 LoadLocalizedText(filenameEng);
             }
         }
         else {
             if (rus)
             {
-                Debug.Log("rus");
                 LoadLocalizedText(filenameRus);
             }
             else if (ukr)
             {
-                Debug.Log("ukr");
                 LoadLocalizedText(filenameUkr);
             }
             else {
-                Debug.Log("eng");
                 LoadLocalizedText(filenameEng);
             }
         }

@@ -71,14 +71,10 @@ public class SettingsManager : MonoBehaviour {
     public void ThemeSwitch() { 
         if (theme == Theme.Light)
         {
-            Debug.Log("light theme");
-
             SetDarkTheme();          
         }
         else if (theme == Theme.Dark)
         {
-            Debug.Log("dark theme");
-
             SetLightTheme();       
         }
     }

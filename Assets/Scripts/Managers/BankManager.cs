@@ -50,7 +50,6 @@ public class BankManager : MonoBehaviour
                 foreach (Text item in texts)
                 {
                     item.text = bank.ToString();
-                    Debug.Log(item.text);
                 }
             }
             isBankChanged = false;
