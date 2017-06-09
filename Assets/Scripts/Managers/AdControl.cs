@@ -40,6 +40,7 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
     void Start() {
         System.String appKey = "55135bf0c0b7525422af600c5a746d85e028da1628431d85";
         Appodeal.disableLocationPermissionCheck();
+        Appodeal.disableWriteExternalStoragePermissionCheck();
         Appodeal.initialize(appKey, Appodeal.REWARDED_VIDEO);
         Appodeal.setTesting(true);
     }
