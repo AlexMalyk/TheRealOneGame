@@ -2113,7 +2113,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  timeLimit: 0
   time: 0
   timeStopsUsed: 0
   timeStopsTimer: 10
@@ -2389,7 +2388,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 93117117}
-        m_MethodName: OnMouseDown
+        m_MethodName: CatchSphere
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

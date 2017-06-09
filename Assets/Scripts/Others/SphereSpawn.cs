@@ -16,18 +16,37 @@ public class SphereSpawn : MonoBehaviour
 
     public GameObject scoreText;
     public Canvas GameBoard;
+    float prevX;
+    float prevY;
+
     int x;
     int y;
 
+    void Start() {
+        SetNewPosition();
+    }
+
     public void SetNewPosition()
     {
-        x = Random.Range(leftMax, rightMax + 1) * rangeOnCanvas;
-        y = Random.Range(downMax, upMax + 1) * rangeOnCanvas;
+        prevX = GetComponent<RectTransform>().localPosition.x;
+        prevY = GetComponent<RectTransform>().localPosition.y;
+
+        do
+        {
+            x = Random.Range(leftMax, rightMax + 1) * rangeOnCanvas;
+        } while (x == prevX);
+
+        do
+        {
+            y = Random.Range(downMax, upMax + 1) * rangeOnCanvas;
+        } while (y == prevY);
+
+        
 
         GetComponent<RectTransform>().localPosition = new Vector3(x, y, 0);
     }
 
-    public void OnMouseDown()
+    public void CatchSphere()
     {
         AudioManager.manager.PlayFoundSound();
 
