@@ -161,10 +161,6 @@ public class GameManager : MonoBehaviour {
             ZenMode();
         }
     }
-    public void PlayAgain()
-    {
-        RestartGame();
-    }
 
     public void TimedMode()
     {

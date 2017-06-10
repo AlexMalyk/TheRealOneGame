@@ -30,8 +30,7 @@ public class Logo : MonoBehaviour {
         {
             time += Time.deltaTime;
         }
-        else if(!onFinish) {
-            
+        else if(!onFinish) {          
             StartCoroutine(LogoAnimationCoroutine());           
         }
 	}
@@ -41,39 +40,21 @@ public class Logo : MonoBehaviour {
     }
 
     IEnumerator LogoAnimationCoroutine() {
-        Debug.Log("LogoAnimation Coroutine starts");
         onFinish = true;
         buttons.SetActive(false);
         GetComponent<Animator>().SetTrigger("Center");
         GetComponent<Animator>().SetTrigger("ShowText");
-        Debug.Log("LogoAnimation Coroutine eye on center");
         yield return CoroutineUtil.WaitForRealSeconds(2f);
         GetComponent<Animator>().SetTrigger("Hide");
-        Debug.Log("LogoAnimation Coroutine hide all");
         yield return CoroutineUtil.WaitForRealSeconds(.5f);
         logoAnimationFinished = true;
-        Debug.Log("LogoAnimation Coroutine finishes");
-
-        //LocalizationManager.manager.SetLanguage();
-        //while (!LocalizationManager.manager.GetIsReady())
-        //{
-        //    yield return null;
-        //}
-
-        //SceneManager.LoadScene("Game");
-
     }
     IEnumerator LoadingCoroutine() {
-        Debug.Log("Loading Coroutine starts");
         LocalizationManager.manager.SetLanguage();
-        Debug.Log("Loading Coroutine set language");
-        Debug.Log("Loading Coroutine before manager=" + LocalizationManager.manager.GetIsReady()+", animation="+ logoAnimationFinished);
         while (!LocalizationManager.manager.GetIsReady() || !logoAnimationFinished)
         {
             yield return new WaitForSeconds(.05f);
         }
-        Debug.Log("Loading Coroutine after  manager=" + LocalizationManager.manager.GetIsReady() + ", animation=" + logoAnimationFinished);
-        Debug.Log("Loading Coroutine load scene");
         SceneManager.LoadScene("Game");
     }
 }
