@@ -27,16 +27,16 @@ public class SharingSetup : MonoBehaviour {
         if (md == Mode.Timed)
         {
             titleText.text = LocalizationManager.manager.GetLocalizedValue(kTimedKey);
-            bestScore = DataControl.control.bestScoreTimed;
+            bestScore = ScoreManager.manager.bestScoreTimed;
         }
         else if (md == Mode.Endless)
         {
             titleText.text = LocalizationManager.manager.GetLocalizedValue(kEndlessKey);
-            bestScore = DataControl.control.bestScoreEndless;
+            bestScore = ScoreManager.manager.bestScoreEndless;
         }
         else if (md == Mode.Zen) {
             titleText.text = LocalizationManager.manager.GetLocalizedValue(kZenKey);
-            bestScore = DataControl.control.bestScoreZen;
+            bestScore = ScoreManager.manager.bestScoreZen;
         }
 
         if (isBestScore) {

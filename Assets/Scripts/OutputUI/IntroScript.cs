@@ -94,11 +94,11 @@ public class IntroScript : MonoBehaviour {
 
     void Update() {
         if (isFinish) {
-            if (DataControl.control.isTutorialFinished == false)
+            if (GameManager.manager.isTutorialFinished == false)
             {
-                DataControl.control.isTutorialFinished = true;
+                GameManager.manager.isTutorialFinished = true;
 
-                DataControl.control.SaveAll();
+                DataManager.manager.SaveAll();
             }
 
             nextScreen.SetActive(true);

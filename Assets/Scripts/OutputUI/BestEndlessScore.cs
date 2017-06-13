@@ -9,7 +9,7 @@ public class BestEndlessScore : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (isUpdated) {
-			GetComponent<Text> ().text = DataControl.control.bestScoreEndless.ToString ();
+			GetComponent<Text> ().text = ScoreManager.manager.bestScoreEndless.ToString ();
 			isUpdated = false;
 		}
 	}

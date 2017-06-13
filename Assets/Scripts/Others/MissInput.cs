@@ -11,32 +11,34 @@ public class MissInput : MonoBehaviour {
 
     private Animator anima;
     private Animator gameBoardAnimator;
+
     void Start() {
         gameBoardAnimator = gameBoard.GetComponent<Animator>();
     }
+
     public void Miss() {
         gameBoardAnimator.SetTrigger("Miss");
         AudioManager.manager.PlayMissedSound();
-	
+        SettingsManager.manager.Vibrate();
         
         if (GameManager.manager.mode == Mode.Zen)
         {
             if (lifesCount == 3)
             {
                 anima = life1.GetComponent<Animator>();
-                anima.SetTrigger("Hide");
+                anima.SetBool("showed", false);
                 lifesCount--;
             }
             else if (lifesCount == 2)
             {
                 anima = life2.GetComponent<Animator>();
-                anima.SetTrigger("Hide");
+                anima.SetBool("showed", false);
                 lifesCount--;
             }
             else if (lifesCount == 1)
             {
                 anima = life3.GetComponent<Animator>();
-                anima.SetTrigger("Hide");
+                anima.SetBool("showed", false);
                 lifesCount--;
 
                 GameManager.manager.EndGame();

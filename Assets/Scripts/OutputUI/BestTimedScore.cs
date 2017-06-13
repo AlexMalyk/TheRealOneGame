@@ -9,7 +9,7 @@ public class BestTimedScore : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (isUpdated) {
-			GetComponent<Text> ().text = DataControl.control.bestScoreTimed.ToString ();
+			GetComponent<Text> ().text = ScoreManager.manager.bestScoreTimed.ToString ();
 			isUpdated = false;
 		}
 	}

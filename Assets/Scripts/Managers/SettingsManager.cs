@@ -28,6 +28,8 @@ public class SettingsManager : MonoBehaviour {
 
     public Camera mainCamera;
 
+    public Text versionText;
+
     void Awake()
     {
         if (manager == null)
@@ -97,6 +99,11 @@ public class SettingsManager : MonoBehaviour {
         themeButton.text = LocalizationManager.manager.GetLocalizedValue(kLightTheme);
     }
 
+    public void Vibrate() {
+        if (isVibrationOn) {
+            Handheld.Vibrate();
+        }
+    }
 
     //used in DataControl
     public void SetTexts() {
@@ -123,6 +130,7 @@ public class SettingsManager : MonoBehaviour {
         else {
             themeButton.text = LocalizationManager.manager.GetLocalizedValue(kLightTheme);
         }
+        versionText.text = Application.version;
     }
 }
 

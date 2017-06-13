@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Purchasing;
+using UnityEngine.UI;
 
 
-    // Deriving the Purchaser class from IStoreListener enables it to receive messages from Unity Purchasing.
-    public class Purchaser : MonoBehaviour, IStoreListener
+// Deriving the Purchaser class from IStoreListener enables it to receive messages from Unity Purchasing.
+public class Purchaser : MonoBehaviour, IStoreListener
     {
         private static IStoreController m_StoreController;          // The Unity Purchasing system.
         private static IExtensionProvider m_StoreExtensionProvider; // The store-specific Purchasing subsystems.
@@ -85,12 +86,16 @@ using UnityEngine.Purchasing;
         {
             // Buy the non-consumable product using its general identifier. Expect a response either 
             // through ProcessPurchase or OnPurchaseFailed asynchronously.
-            BuyProductID(kIDdoubler);
+            if (ScoreManager.manager.isScoreDoublerEnabled == false) {
+                BuyProductID(kIDdoubler);
+            }
+            
         }
 
 
         void BuyProductID(string productId)
         {
+
             // If Purchasing has been initialized ...
             if (IsInitialized())
             {
@@ -129,7 +134,6 @@ using UnityEngine.Purchasing;
         {
             // Purchasing has succeeded initializing. Collect our Purchasing references.
             Debug.Log("OnInitialized: PASS");
-
             // Overall Purchasing system, configured with products for this application.
             m_StoreController = controller;
             // Store specific subsystem, for accessing device-specific store features.
@@ -173,7 +177,7 @@ using UnityEngine.Purchasing;
                 AudioManager.manager.PlayPositiveSound();
             }
             BankManager.isBankChanged = true;
-            DataControl.control.SaveAll();
+            DataManager.manager.SaveAll();
             // Return a flag indicating whether this product has completely been received, or if the application needs 
             // to be reminded of this purchase at next app launch. Use PurchaseProcessingResult.Pending when still 
             // saving purchased products to the cloud, and when that save is delayed. 

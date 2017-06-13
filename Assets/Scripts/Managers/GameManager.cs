@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour {
     public bool isEndlessModePlayed;
     [HideInInspector]
     public bool isZenModePlayed;
+    [HideInInspector]
+    public bool isTutorialFinished;
 
     public GameObject endGameCanvas;
     public GameObject GameBoard;
@@ -97,49 +99,50 @@ public class GameManager : MonoBehaviour {
 
     public void EndGame()
     {
-        AudioManager.manager.PlayNegativeSound();
+        AudioManager.manager.PlayPositiveSound();
+        PowerUpsManager.manager.RemoveWings();
         
 
         isGameOver = true;
         if (mode == Mode.Timed)
         {
-            if (ScoreManager.manager.score > DataControl.control.bestScoreTimed)
+            if (ScoreManager.manager.score > ScoreManager.manager.bestScoreTimed)
             {
-				DataControl.control.SetNewBestTimedScore (ScoreManager.manager.score);
+                ScoreManager.manager.SetNewBestTimedScore (ScoreManager.manager.score);
 
                 isNewRecord = true;
             }
 
             isTimedModePlayed = true;
-            BestScoreText.text = (DataControl.control.bestScoreTimed).ToString();
+            BestScoreText.text = (ScoreManager.manager.bestScoreTimed).ToString();
         }
         else if (mode == Mode.Endless) {
-            if (ScoreManager.manager.score > DataControl.control.bestScoreEndless)
+            if (ScoreManager.manager.score > ScoreManager.manager.bestScoreEndless)
             {
-				DataControl.control.SetNewBestEndlessScore (ScoreManager.manager.score);
+                ScoreManager.manager.SetNewBestEndlessScore (ScoreManager.manager.score);
 
                 isNewRecord = true;
             }
             isEndlessModePlayed = true;
-            BestScoreText.text = (DataControl.control.bestScoreEndless).ToString();
+            BestScoreText.text = (ScoreManager.manager.bestScoreEndless).ToString();
         }
         else if (mode == Mode.Zen) {
-            if (ScoreManager.manager.score > DataControl.control.bestScoreZen)
+            if (ScoreManager.manager.score > ScoreManager.manager.bestScoreZen)
             {
-				DataControl.control.SetNewBestZenScore (ScoreManager.manager.score);
+                ScoreManager.manager.SetNewBestZenScore (ScoreManager.manager.score);
 
                 isNewRecord = true;
             }
             isZenModePlayed = true;
-            BestScoreText.text = (DataControl.control.bestScoreZen).ToString();
+            BestScoreText.text = (ScoreManager.manager.bestScoreZen).ToString();
         }    
         EndScoreText.text = (ScoreManager.manager.score).ToString();
 
         BankManager.bank += ScoreManager.manager.score;
         BankManager.isBankChanged = true;
 
-        DataControl.control.SaveAll();
-        AdControl.control.SetupSpecialAd();
+        DataManager.manager.SaveAll();
+        AdManager.manager.SetupSpecialAd();
         ScreenManager.screenManager.OpenScreen(endGameCanvas);
     }
     public void RestartGame()
@@ -196,9 +199,12 @@ public class GameManager : MonoBehaviour {
     void SetZenModeUI(bool value) {
         TimeStop.SetActive(!value);
         eyeContainer.SetActive(value);
-        eyesAnimators = eyeContainer.GetComponentsInChildren<Animator>();
-        foreach (Animator anim in eyesAnimators)
-            anim.SetTrigger("Show");
+        if (value)
+        {
+            eyesAnimators = eyeContainer.GetComponentsInChildren<Animator>();
+            foreach (Animator anim in eyesAnimators)
+                anim.SetBool("showed", true);
+        }
         infinitySymbol.SetActive(value);
     }
 

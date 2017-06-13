@@ -10,7 +10,7 @@ using System.IO;
 public class NativeShare : MonoBehaviour
 {
     string ScreenshotName = "screenshot.png";
-    string kMessage = "Check out my score!";
+    string kMessage = "Check out my The Real One score! https://play.google.com/store/apps/details?id=com.ogs.therealone";
 
 
     public GameObject HiddenGameObject;
@@ -23,8 +23,6 @@ public class NativeShare : MonoBehaviour
         if (File.Exists(screenShotPath)) File.Delete(screenShotPath);
 
         StartCoroutine(screenshotCaptureCoroutine(SharingCanvas.GetComponent<Animator>(), screenShotPath, kMessage));
-
-        //StartCoroutine(delayedShare(screenShotPath, kMessage));
     }
 
     IEnumerator screenshotCaptureCoroutine(Animator anim, string screenShotPath, string text) {
@@ -77,50 +75,6 @@ public class NativeShare : MonoBehaviour
 
         AndroidJavaObject jChooser = intentClass.CallStatic<AndroidJavaObject>("createChooser", intentObject, subject);
         currentActivity.Call("startActivity", jChooser);
-#elif UNITY_IOS
-		CallSocialShareAdvanced(shareText, subject, url, imagePath);
-#else
-		Debug.Log("No sharing set up for this platform.");
 #endif
     }
-
-#if UNITY_IOS
-	public struct ConfigStruct
-	{
-		public string title;
-		public string message;
-	}
-
-	[DllImport ("__Internal")] private static extern void showAlertMessage(ref ConfigStruct conf);
-
-	public struct SocialSharingStruct
-	{
-		public string text;
-		public string url;
-		public string image;
-		public string subject;
-	}
-
-	[DllImport ("__Internal")] private static extern void showSocialSharing(ref SocialSharingStruct conf);
-
-	public static void CallSocialShare(string title, string message)
-	{
-		ConfigStruct conf = new ConfigStruct();
-		conf.title  = title;
-		conf.message = message;
-		showAlertMessage(ref conf);
-	}
-
-
-	public static void CallSocialShareAdvanced(string defaultTxt, string subject, string url, string img)
-	{
-		SocialSharingStruct conf = new SocialSharingStruct();
-		conf.text = defaultTxt;
-		conf.url = url;
-		conf.image = img;
-		conf.subject = subject;
-
-		showSocialSharing(ref conf);
-	}
-#endif
 }

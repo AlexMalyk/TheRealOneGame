@@ -45,8 +45,8 @@ public class ScreenManager : MonoBehaviour
 
     public void Start()
     {
-        DataControl.control.LoadAll();
-        if (DataControl.control.isTutorialFinished)
+        DataManager.manager.LoadAll();
+        if (GameManager.manager.isTutorialFinished)
         {
 
             if (StartScreen.GetComponent<Animator>())

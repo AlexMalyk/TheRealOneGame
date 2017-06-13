@@ -89,7 +89,7 @@ public class PowerUpsManager : MonoBehaviour {
 
     }
     public void TimeStopPowerUp()
-    {
+    {      
         if (!ScreenManager.screenManager.isMenuOpen && isTimeStopUsedInMatch) {
             ShowMessage(LocalizationManager.manager.GetLocalizedValue(kOncePerMatchMessage));
         }
@@ -99,7 +99,7 @@ public class PowerUpsManager : MonoBehaviour {
 
             amountTimeStops--;
             SetTimeStopsAmount();
-            DataControl.control.SaveAll();
+            DataManager.manager.SaveAll();
 
             CreateDisabledImage(timeStopButton);
 
@@ -127,7 +127,7 @@ public class PowerUpsManager : MonoBehaviour {
 
             amountSparks--;
             SetSparksAmount();
-            DataControl.control.SaveAll();
+            DataManager.manager.SaveAll();
 
             CreateDisabledImage(sparkButton);
 
@@ -151,18 +151,11 @@ public class PowerUpsManager : MonoBehaviour {
         }
         else if (!ScreenManager.screenManager.isMenuOpen && amountWings > 0)
         {
-            if (sphere.transform.parent.GetComponent<RectTransform>().localPosition.x <= 0)
-            {
-                leftSide.SetActive(true);
-            }
-
-            if (sphere.transform.parent.GetComponent<RectTransform>().localPosition.x >= 0){
-                rightSide.SetActive(true);
-            }
+            SetWings();
 
             amountWings--;
             SetWingsAmount();
-            DataControl.control.SaveAll();
+            DataManager.manager.SaveAll();
 
             CreateDisabledImage(wingButton);
 
@@ -213,18 +206,30 @@ public class PowerUpsManager : MonoBehaviour {
         rightSide.GetComponent<Image>().enabled = !value;
     }
 
+    public void SetWings() {
+        if (sphere.transform.parent.GetComponent<RectTransform>().localPosition.x <= 0)
+        {
+            leftSide.SetActive(true);
+        }
+
+        if (sphere.transform.parent.GetComponent<RectTransform>().localPosition.x >= 0)
+        {
+            rightSide.SetActive(true);
+        }
+    }
+
     public void BuyTimeStops() {
         if (BankManager.bank >= priceTimeStops)
         {
             PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Time Stop").gameObject, timeStopButton, 5);
-
+            AudioManager.manager.PlayPositiveSound();
             amountTimeStops += 5;
             SetTimeStopsAmount();
 
             BankManager.bank -= priceTimeStops;
             BankManager.isBankChanged = true;
 
-            DataControl.control.SaveAll();
+            DataManager.manager.SaveAll();
         }
         else {
             iapScreen.GetComponent<Animator>().SetBool("Open", true);
@@ -236,14 +241,14 @@ public class PowerUpsManager : MonoBehaviour {
         if (BankManager.bank >= priceSparks)
         {
             PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Spark").gameObject, sparkButton, 5);
-
+            AudioManager.manager.PlayPositiveSound();
             amountSparks += 5;
             SetSparksAmount();
 
             BankManager.bank -= priceSparks;
             BankManager.isBankChanged = true;
 
-            DataControl.control.SaveAll();
+            DataManager.manager.SaveAll();
         }
         else
         {
@@ -256,14 +261,14 @@ public class PowerUpsManager : MonoBehaviour {
         if (BankManager.bank >= priceWings)
         {
             PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Wing").gameObject, wingButton, 5);
-            
+            AudioManager.manager.PlayPositiveSound();
             amountWings += 5;
             SetWingsAmount();
 
             BankManager.bank -= priceWings;
             BankManager.isBankChanged = true;
 
-            DataControl.control.SaveAll();
+            DataManager.manager.SaveAll();
         }
         else
         {

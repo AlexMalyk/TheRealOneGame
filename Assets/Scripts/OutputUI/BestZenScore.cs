@@ -10,7 +10,7 @@ public class BestZenScore : MonoBehaviour {
     void Update()
 	{
 		if (isUpdated) {
-			GetComponent<Text> ().text = DataControl.control.bestScoreZen.ToString ();
+			GetComponent<Text> ().text = ScoreManager.manager.bestScoreZen.ToString ();
 			isUpdated = false;
 		}
 	}

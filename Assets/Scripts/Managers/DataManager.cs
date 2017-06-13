@@ -4,29 +4,21 @@ using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
-public class DataControl : MonoBehaviour
+public class DataManager : MonoBehaviour
 {
-    public static DataControl control;
-
-    public int bestScoreTimed;
-    public int bestScoreEndless;
-    public int bestScoreZen;
-
-    public int scoreMultiplier;
-
-    public bool isTutorialFinished;
+    public static DataManager manager;
 
     const string path = "/playerInfo.dat";
 
     void Awake()
     {
-        if (control == null)
+        if (manager == null)
         {
             DontDestroyOnLoad(gameObject);
-            control = this;
+            manager = this;
 
         }
-        else if (control != null)
+        else if (manager != null)
         {
             Destroy(gameObject);
         }
@@ -56,9 +48,9 @@ public class DataControl : MonoBehaviour
         data.amountSparks = PowerUpsManager.manager.amountSparks;
         data.amountWings = PowerUpsManager.manager.amountWings;
 
-        data.bestScoreTimed = bestScoreTimed;
-        data.bestScoreEndless = bestScoreEndless;
-        data.bestScoreZen = bestScoreZen;
+        data.bestScoreTimed = ScoreManager.manager.bestScoreTimed;
+        data.bestScoreEndless = ScoreManager.manager.bestScoreEndless;
+        data.bestScoreZen = ScoreManager.manager.bestScoreZen;
 
         data.bank = BankManager.bank;
 
@@ -70,7 +62,7 @@ public class DataControl : MonoBehaviour
         data.isEndlessModePlayed = GameManager.manager.isEndlessModePlayed;
         data.isTimedModePlayed = GameManager.manager.isTimedModePlayed;
         data.isZenModePlayed = GameManager.manager.isZenModePlayed;
-        data.isTutorialPlayed = isTutorialFinished;
+        data.isTutorialPlayed = GameManager.manager.isTutorialFinished;
 
         data.theme = SettingsManager.manager.theme;
 
@@ -93,11 +85,11 @@ public class DataControl : MonoBehaviour
             PowerUpsManager.manager.SetSparksAmount();
             PowerUpsManager.manager.SetTimeStopsAmount();
 
-            bestScoreTimed = data.bestScoreTimed;
+            ScoreManager.manager.bestScoreTimed = data.bestScoreTimed;
             BestTimedScore.isUpdated = true;
-            bestScoreZen = data.bestScoreZen;
+            ScoreManager.manager.bestScoreZen = data.bestScoreZen;
             BestZenScore.isUpdated = true;
-            bestScoreEndless = data.bestScoreEndless;
+            ScoreManager.manager.bestScoreEndless = data.bestScoreEndless;
             BestEndlessScore.isUpdated = true;
 
             BankManager.bank = data.bank;
@@ -121,7 +113,7 @@ public class DataControl : MonoBehaviour
             GameManager.manager.isEndlessModePlayed = data.isEndlessModePlayed;
             GameManager.manager.isTimedModePlayed = data.isTimedModePlayed;
             GameManager.manager.isZenModePlayed = data.isZenModePlayed;
-            isTutorialFinished = data.isTutorialPlayed;
+            GameManager.manager.isTutorialFinished = data.isTutorialPlayed;
         }
     }
 
@@ -142,11 +134,11 @@ public class DataControl : MonoBehaviour
         PowerUpsManager.manager.SetTimeStopsAmount();
 
         data.bestScoreTimed = 0;
-        bestScoreTimed = 0;
+        ScoreManager.manager.bestScoreTimed = 0;
         data.bestScoreEndless = 0;
-        bestScoreEndless = 0;
+        ScoreManager.manager.bestScoreEndless = 0;
         data.bestScoreZen = 0;
-        bestScoreZen = 0;
+        ScoreManager.manager.bestScoreZen = 0;
         BestTimedScore.isUpdated = true;
         BestZenScore.isUpdated = true;
         BestEndlessScore.isUpdated = true;
@@ -168,7 +160,7 @@ public class DataControl : MonoBehaviour
         data.isZenModePlayed = false;
         GameManager.manager.isZenModePlayed = false;
         data.isTutorialPlayed = false;
-        isTutorialFinished = false;
+        GameManager.manager.isTutorialFinished = false;
 
         data.isScoreDoublerEnabled = false;
         ScoreManager.manager.isScoreDoublerEnabled = false;
@@ -178,21 +170,7 @@ public class DataControl : MonoBehaviour
         file.Close();
     }
 
-    public void SetNewBestTimedScore(int newScore)
-    {
-        bestScoreTimed = newScore;
-        BestTimedScore.isUpdated = true;
-    }
-    public void SetNewBestEndlessScore(int newScore)
-    {
-        bestScoreEndless = newScore;
-        BestEndlessScore.isUpdated = true;
-    }
-    public void SetNewBestZenScore(int newScore)
-    {
-        bestScoreZen = newScore;
-        BestZenScore.isUpdated = true;
-    }
+
 }
 
 [Serializable]

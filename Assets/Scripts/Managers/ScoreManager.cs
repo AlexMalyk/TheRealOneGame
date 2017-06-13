@@ -14,6 +14,10 @@ public class ScoreManager : MonoBehaviour {
 
     public Text payDoublerText;
 
+    public int bestScoreTimed;
+    public int bestScoreEndless;
+    public int bestScoreZen;
+
     const string kEnabled = "Enabled";
     const string kPay = "0,99$";
 
@@ -30,12 +34,6 @@ public class ScoreManager : MonoBehaviour {
         {
             Destroy(gameObject);
         }
-    }
-
-
-    // Use this for initialization
-    void Start () {
-        //SetToZero();
     }
 
     public void ChangeScore() {
@@ -79,10 +77,25 @@ public class ScoreManager : MonoBehaviour {
     public void EnableScoreDoubler() {
         if (!isScoreDoublerEnabled)
         {
-            AudioManager.manager.PlayPositiveSound();
             isScoreDoublerEnabled = true;
             SetPointsNumber();
-            DataControl.control.SaveAll();
+            DataManager.manager.SaveAll();
         }
+    }
+
+    public void SetNewBestTimedScore(int newScore)
+    {
+        ScoreManager.manager.bestScoreTimed = newScore;
+        BestTimedScore.isUpdated = true;
+    }
+    public void SetNewBestEndlessScore(int newScore)
+    {
+        ScoreManager.manager.bestScoreEndless = newScore;
+        BestEndlessScore.isUpdated = true;
+    }
+    public void SetNewBestZenScore(int newScore)
+    {
+        ScoreManager.manager.bestScoreZen = newScore;
+        BestZenScore.isUpdated = true;
     }
 }

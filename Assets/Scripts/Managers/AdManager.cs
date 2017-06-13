@@ -3,9 +3,9 @@ using AppodealAds.Unity.Api;
 using AppodealAds.Unity.Common;
 using UnityEngine.UI;
 
-public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
+public class AdManager : MonoBehaviour, IRewardedVideoAdListener{
 
-    public static AdControl control;
+    public static AdManager manager;
 
     public Text kRewardMessage;
 
@@ -19,19 +19,19 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
     string kRewardHigher = "ad_time_stop_spark";
 
     int rewardAmount = 1;
-    int rewarsPoints = 250;
+    int rewardPoints = 250;
 
     delegate void AdDelegate();
     AdDelegate adReward;
 
     void Awake()
     {
-        if (control == null)
+        if (manager == null)
         {
             DontDestroyOnLoad(gameObject);
-            control = this;
+            manager = this;
         }
-        else if (control != null)
+        else if (manager != null)
         {
             Destroy(gameObject);
         }
@@ -45,7 +45,7 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
         Appodeal.setTesting(true);
     }
 
-    public void ShowRewardedAd() {
+    public void ShowSpecialRewardedAd() {
         if (Application.platform == RuntimePlatform.Android)
         {
             Appodeal.setRewardedVideoCallbacks(this);
@@ -53,8 +53,14 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
         }
         else {
             adReward();
-            DataControl.control.SaveAll();
+            DataManager.manager.SaveAll();
         }
+    }
+
+    public void ShowDefaultRewardedAd() {
+        adReward = DefaultReward;
+        Appodeal.setRewardedVideoCallbacks(this);
+        Appodeal.show(Appodeal.REWARDED_VIDEO);
     }
 
     public void SetupSpecialAd() {
@@ -109,7 +115,7 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
         PowerUpsManager.manager.SetWingsAmount();
     }
     public void DefaultReward() {
-        BankManager.bank += rewarsPoints;
+        BankManager.bank += rewardPoints;
         BankManager.isBankChanged = true;
     }
 
@@ -131,12 +137,8 @@ public class AdControl : MonoBehaviour, IRewardedVideoAdListener{
     }
     public void onRewardedVideoFinished(int amount, string name) {
         adReward();
-        DataControl.control.SaveAll();      
+        DataManager.manager.SaveAll();      
     }
     #endregion
-}
-
-public enum AdType {
-    newRecord, outOfPowerUp, smallScore, gamesPlayed5, gamesPlayed10,
 }
 
