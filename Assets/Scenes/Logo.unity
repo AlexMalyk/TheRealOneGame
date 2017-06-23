@@ -1010,6 +1010,7 @@ MonoBehaviour:
   rus: 0
   eng: 0
   ukr: 1
+  language: 0
 --- !u!1 &582149924
 GameObject:
   m_ObjectHideFlags: 0

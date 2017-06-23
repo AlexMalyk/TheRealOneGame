@@ -19,7 +19,7 @@ public class AdManager : MonoBehaviour, IRewardedVideoAdListener{
     string kRewardHigher = "ad_time_stop_spark";
 
     int rewardAmount = 1;
-    int rewardPoints = 250;
+    int rewardPoints = 350;
 
     delegate void AdDelegate();
     AdDelegate adReward;
@@ -42,7 +42,6 @@ public class AdManager : MonoBehaviour, IRewardedVideoAdListener{
         Appodeal.disableLocationPermissionCheck();
         Appodeal.disableWriteExternalStoragePermissionCheck();
         Appodeal.initialize(appKey, Appodeal.REWARDED_VIDEO);
-        Appodeal.setTesting(true);
     }
 
     public void ShowSpecialRewardedAd() {

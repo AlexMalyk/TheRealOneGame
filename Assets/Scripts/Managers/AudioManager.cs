@@ -7,7 +7,6 @@ public class AudioManager : MonoBehaviour {
     public AudioClip clickAudio;
     public AudioClip positiveAudio;
     public AudioClip negativeAudio;
-    public AudioClip lastSecondsAudio;
     public AudioClip foundAudio;
     public AudioClip missedAudio;
 

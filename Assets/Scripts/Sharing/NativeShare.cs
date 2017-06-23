@@ -10,7 +10,8 @@ using System.IO;
 public class NativeShare : MonoBehaviour
 {
     string ScreenshotName = "screenshot.png";
-    string kMessage = "Check out my The Real One score! https://play.google.com/store/apps/details?id=com.ogs.therealone";
+    string kMessage; 
+
 
 
     public GameObject HiddenGameObject;
@@ -22,7 +23,7 @@ public class NativeShare : MonoBehaviour
         string screenShotPath = Application.persistentDataPath + "/" + ScreenshotName;
         if (File.Exists(screenShotPath)) File.Delete(screenShotPath);
 
-        StartCoroutine(screenshotCaptureCoroutine(SharingCanvas.GetComponent<Animator>(), screenShotPath, kMessage));
+        StartCoroutine(screenshotCaptureCoroutine(SharingCanvas.GetComponent<Animator>(), screenShotPath, LocalizationManager.manager.GetLocalizedValue("share_message")));
     }
 
     IEnumerator screenshotCaptureCoroutine(Animator anim, string screenShotPath, string text) {

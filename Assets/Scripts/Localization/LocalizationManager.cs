@@ -12,6 +12,8 @@ public class LocalizationManager : MonoBehaviour
     public bool eng = false;
     public bool ukr = false;
 
+    public Language language;
+
     private Dictionary<string, string> localizedText;
     private bool isReady = false;
     private string missingTextString = "Localized text not found";
@@ -68,14 +70,17 @@ public class LocalizationManager : MonoBehaviour
         {
             if (Application.systemLanguage == SystemLanguage.Ukrainian)
             {
+                language = Language.ukrainian;
                 LoadLocalizedText(filenameUkr);
             }
             else if (Application.systemLanguage == SystemLanguage.Russian)
             {
+                language = Language.russian;
                 LoadLocalizedText(filenameRus);
             }
             else
             {
+                language = Language.english;
                 LoadLocalizedText(filenameEng);
             }
         }
@@ -112,3 +117,5 @@ public class LocalizationManager : MonoBehaviour
     }
 
 }
+
+public enum Language { english, russian, ukrainian}

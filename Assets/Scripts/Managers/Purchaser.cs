@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using UnityEngine.UI;
+using UnityEngine.Analytics;
 
 
 // Deriving the Purchaser class from IStoreListener enables it to receive messages from Unity Purchasing.
@@ -155,7 +156,8 @@ public class Purchaser : MonoBehaviour, IStoreListener
             {
                 Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
                 BankManager.bank += 50000;
-                AudioManager.manager.PlayPositiveSound(); 
+                AudioManager.manager.PlayPositiveSound();
+                
             }
             else if (String.Equals(args.purchasedProduct.definition.id, kID15kPoints, StringComparison.Ordinal))
             {
@@ -168,6 +170,7 @@ public class Purchaser : MonoBehaviour, IStoreListener
                 Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
                 BankManager.bank += 5000;
                 AudioManager.manager.PlayPositiveSound();
+                
             }
             // A non-consumable product has been purchased by this user.
             else if (String.Equals(args.purchasedProduct.definition.id, kIDdoubler, StringComparison.Ordinal))

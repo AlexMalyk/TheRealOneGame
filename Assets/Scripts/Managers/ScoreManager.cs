@@ -18,7 +18,7 @@ public class ScoreManager : MonoBehaviour {
     public int bestScoreEndless;
     public int bestScoreZen;
 
-    const string kEnabled = "Enabled";
+    const string kEnabled = "enabled";
     const string kPay = "0,99$";
 
     public int pointsNumber;
@@ -63,7 +63,7 @@ public class ScoreManager : MonoBehaviour {
         {
             pointsNumber = 20;
             plusScoreText.text = "+20";
-            payDoublerText.text = kEnabled;
+            payDoublerText.text = LocalizationManager.manager.GetLocalizedValue(kEnabled);
 
         }
         else {

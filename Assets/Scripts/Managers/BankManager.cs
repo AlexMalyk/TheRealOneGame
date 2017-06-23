@@ -12,6 +12,8 @@ public class BankManager : MonoBehaviour
 
     int thousands;
     int hundreds;
+	
+	string bankText;
 
 
     void Update()
@@ -24,34 +26,27 @@ public class BankManager : MonoBehaviour
                 hundreds = bank - thousands * 1000;
                 if (hundreds < 10)
                 {
-                    foreach (Text item in texts)
-                    {
-                        item.text = thousands + ",00" + hundreds;
-                    }
+					bankText = thousands + ",00" + hundreds;
                 }
                 else if (hundreds < 100)
                 {
-                    foreach (Text item in texts)
-                    {
-                        item.text = thousands + ",0" + hundreds;
-                    }
-                }
-                
+					bankText = thousands + ",0" + hundreds;
+                }              
                 else
                 {
-                    foreach (Text item in texts)
-                    {
-                        item.text = thousands + "," + hundreds;
-                    }
+					bankText = thousands + "," + hundreds;
                 }
             }
             else
             {
-                foreach (Text item in texts)
-                {
-                    item.text = bank.ToString();
-                }
+				bankText = bank.ToString();
+                
             }
+			foreach (Text item in texts)
+            {
+                item.text = bankText;
+            }
+			
             isBankChanged = false;
         }
     }

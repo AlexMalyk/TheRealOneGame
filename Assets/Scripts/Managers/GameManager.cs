@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour {
 
                 isNewRecord = true;
             }
-
+            
             isTimedModePlayed = true;
             BestScoreText.text = (ScoreManager.manager.bestScoreTimed).ToString();
         }
@@ -135,7 +135,15 @@ public class GameManager : MonoBehaviour {
             }
             isZenModePlayed = true;
             BestScoreText.text = (ScoreManager.manager.bestScoreZen).ToString();
-        }    
+        }
+
+        Analytics.CustomEvent("Played game info", new Dictionary<string, object> {
+                    { "mode", mode },
+                    { "theme", SettingsManager.manager.theme },
+                    { "score", ScoreManager.manager.score },
+                    { "language", LocalizationManager.manager.language }
+                });
+
         EndScoreText.text = (ScoreManager.manager.score).ToString();
 
         BankManager.bank += ScoreManager.manager.score;
@@ -187,9 +195,7 @@ public class GameManager : MonoBehaviour {
 
     public void ZenMode()
     {
-        MissInput.lifesCount = 3;
         mode = Mode.Zen;
-        timerDisplay.text = "";
 
         SetZenModeUI(true);
 
@@ -201,6 +207,8 @@ public class GameManager : MonoBehaviour {
         eyeContainer.SetActive(value);
         if (value)
         {
+			timerDisplay.text = "";
+			
             eyesAnimators = eyeContainer.GetComponentsInChildren<Animator>();
             foreach (Animator anim in eyesAnimators)
                 anim.SetBool("showed", true);

@@ -221,7 +221,7 @@ public class PowerUpsManager : MonoBehaviour {
     public void BuyTimeStops() {
         if (BankManager.bank >= priceTimeStops)
         {
-            PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Time Stop").gameObject, timeStopButton, 5);
+            PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Power Ups").FindChild("Time Stop").gameObject, timeStopButton, 5);
             AudioManager.manager.PlayPositiveSound();
             amountTimeStops += 5;
             SetTimeStopsAmount();
@@ -240,7 +240,7 @@ public class PowerUpsManager : MonoBehaviour {
     {
         if (BankManager.bank >= priceSparks)
         {
-            PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Spark").gameObject, sparkButton, 5);
+            PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Power Ups").FindChild("Spark").gameObject, sparkButton, 5);
             AudioManager.manager.PlayPositiveSound();
             amountSparks += 5;
             SetSparksAmount();
@@ -260,7 +260,7 @@ public class PowerUpsManager : MonoBehaviour {
     {
         if (BankManager.bank >= priceWings)
         {
-            PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Mid").FindChild("Wing").gameObject, wingButton, 5);
+            PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Power Ups").FindChild("Wing").gameObject, wingButton, 5);
             AudioManager.manager.PlayPositiveSound();
             amountWings += 5;
             SetWingsAmount();
