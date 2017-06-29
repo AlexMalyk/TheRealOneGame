@@ -53,6 +53,7 @@ public class Logo : MonoBehaviour {
         LocalizationManager.manager.SetLanguage();
         while (!LocalizationManager.manager.GetIsReady() || !logoAnimationFinished)
         {
+            
             yield return new WaitForSeconds(.05f);
         }
         SceneManager.LoadScene("Game");

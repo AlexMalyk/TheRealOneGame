@@ -88,13 +88,16 @@ public class LocalizationManager : MonoBehaviour
             if (rus)
             {
                 LoadLocalizedText(filenameRus);
+                language = Language.russian;
             }
             else if (ukr)
             {
                 LoadLocalizedText(filenameUkr);
+                language = Language.ukrainian;
             }
             else {
                 LoadLocalizedText(filenameEng);
+                language = Language.english;
             }
         }
     }

@@ -98,10 +98,11 @@ public class GameManager : MonoBehaviour {
 
 
     public void EndGame()
-    {
+    { 
         AudioManager.manager.PlayPositiveSound();
         PowerUpsManager.manager.RemoveWings();
-        
+
+        string gameInfo;
 
         isGameOver = true;
         if (mode == Mode.Timed)
@@ -112,7 +113,7 @@ public class GameManager : MonoBehaviour {
 
                 isNewRecord = true;
             }
-            
+
             isTimedModePlayed = true;
             BestScoreText.text = (ScoreManager.manager.bestScoreTimed).ToString();
         }
@@ -123,6 +124,7 @@ public class GameManager : MonoBehaviour {
 
                 isNewRecord = true;
             }
+
             isEndlessModePlayed = true;
             BestScoreText.text = (ScoreManager.manager.bestScoreEndless).ToString();
         }
@@ -133,15 +135,15 @@ public class GameManager : MonoBehaviour {
 
                 isNewRecord = true;
             }
+
             isZenModePlayed = true;
             BestScoreText.text = (ScoreManager.manager.bestScoreZen).ToString();
         }
 
+        gameInfo = mode + " " + ScoreManager.manager.score + " " + SettingsManager.manager.theme + " " +  LocalizationManager.manager.language;
+        Debug.Log(gameInfo);
         Analytics.CustomEvent("Played game info", new Dictionary<string, object> {
-                    { "mode", mode },
-                    { "theme", SettingsManager.manager.theme },
-                    { "score", ScoreManager.manager.score },
-                    { "language", LocalizationManager.manager.language }
+           { "gameInfo", gameInfo}
                 });
 
         EndScoreText.text = (ScoreManager.manager.score).ToString();
