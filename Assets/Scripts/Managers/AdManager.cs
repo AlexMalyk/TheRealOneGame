@@ -41,6 +41,8 @@ public class AdManager : MonoBehaviour, IRewardedVideoAdListener{
         System.String appKey = "55135bf0c0b7525422af600c5a746d85e028da1628431d85";
         Appodeal.disableLocationPermissionCheck();
         Appodeal.disableWriteExternalStoragePermissionCheck();
+		Appodeal.disableNetwork("amazon_ads");
+		Appodeal.disableNetwork("inmobi");
         Appodeal.initialize(appKey, Appodeal.REWARDED_VIDEO);
     }
 

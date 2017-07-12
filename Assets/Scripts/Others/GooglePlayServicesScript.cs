@@ -7,16 +7,15 @@ using UnityEngine.SocialPlatforms;
 
 public class GooglePlayServicesScript : MonoBehaviour
 {
-
-    private string lbIdTimed = "CgkIlOeA57ICEAIQAA";
-    private string lbIdEndless = "CgkIlOeA57ICEAIQAg";
-    private string lbIdZen = "CgkIlOeA57ICEAIQAQ";
+    static bool isSigned;
 
     // Use this for initialization
     void Start()
     {
+        // Activate the Google Play Games platform
         PlayGamesPlatform.Activate();
         SignIn();
+        
     }
 
     // Update is called once per frame
@@ -32,19 +31,29 @@ public class GooglePlayServicesScript : MonoBehaviour
         Social.localUser.Authenticate((bool success) =>
         {
             // handle success or failure
+            if (success)
+            {
+                Debug.Log("Success authentificate");
+                isSigned = true;
+            }
+            else
+            {
+                Debug.Log("Failure authentificate");
+                isSigned = false;
+            }
         });
     }
 
-    public void PostScoreToLeaderboard(int score, Mode mode) {
+    public static void PostScoreToLeaderboard(int score, Mode mode) {
         string modeId;
         if (mode == Mode.Timed) {
-            modeId = lbIdTimed;
+            modeId = GPGSIds.leaderboard_best_timed_score;
         }
         else if (mode == Mode.Endless) {
-            modeId = lbIdEndless;
+            modeId = GPGSIds.leaderboard_best_endless_score;
         }
         else if (mode == Mode.Zen) {
-            modeId = lbIdZen;
+            modeId = GPGSIds.leaderboard_best_zen_score;
         }
         else {
             Debug.Log("Wrong mode");
@@ -52,12 +61,23 @@ public class GooglePlayServicesScript : MonoBehaviour
         }
 
 
-        Social.ReportScore(score, "modeId", (bool success) => {
+        Social.ReportScore(score, modeId, (bool success) => {
+            if (success) Debug.Log("Success score report: " + modeId + " " + score);
+            //else Debug.Log("Failure score report");
             // handle success or failure
         });
     }
 
     public void ShowLeaderboard() {
-        Social.ShowLeaderboardUI();
+        if (isSigned)
+        {
+            Debug.Log("Success show leaderboard");
+            Social.ShowLeaderboardUI();
+        }
+        else
+        {
+            Debug.Log("Failure authentificate");
+            SignIn();
+        }
     }
 }

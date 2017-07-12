@@ -140,6 +140,8 @@ public class GameManager : MonoBehaviour {
             BestScoreText.text = (ScoreManager.manager.bestScoreZen).ToString();
         }
 
+        GooglePlayServicesScript.PostScoreToLeaderboard(ScoreManager.manager.score, mode);
+
         gameInfo = mode + " " + ScoreManager.manager.score + " " + SettingsManager.manager.theme + " " +  LocalizationManager.manager.language;
         Debug.Log(gameInfo);
         Analytics.CustomEvent("Played game info", new Dictionary<string, object> {

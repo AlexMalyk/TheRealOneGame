@@ -175,17 +175,17 @@ public class PowerUpsManager : MonoBehaviour {
 
     public void DeleteEffects(bool timeStops, bool flashes, bool flankers) {
         if (timeStops) {
-            DeleteDisabledImage(timeStopButton.transform.FindChild(prefabName));
+            DeleteDisabledImage(timeStopButton.transform.Find(prefabName));
             isTimeStopUsedInMatch = false;
         }
 		if (flashes) {
-            DeleteDisabledImage(sparkButton.transform.FindChild(prefabName));
+            DeleteDisabledImage(sparkButton.transform.Find(prefabName));
 
             isSparkUsedInRound = false;
             RemoveSpark();
         }     
 		if (flankers) {
-            DeleteDisabledImage(wingButton.transform.FindChild(prefabName));
+            DeleteDisabledImage(wingButton.transform.Find(prefabName));
 
             isWingUsedInRound = false;
             RemoveWings();
@@ -221,7 +221,7 @@ public class PowerUpsManager : MonoBehaviour {
     public void BuyTimeStops() {
         if (BankManager.bank >= priceTimeStops)
         {
-            PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Power Ups").FindChild("Time Stop").gameObject, timeStopButton, 5);
+            PlusAnimation(powerUpScreen.transform.Find("Mid").Find("Power Ups").Find("Time Stop").gameObject, timeStopButton, 5);
             AudioManager.manager.PlayPositiveSound();
             amountTimeStops += 5;
             SetTimeStopsAmount();
@@ -240,7 +240,7 @@ public class PowerUpsManager : MonoBehaviour {
     {
         if (BankManager.bank >= priceSparks)
         {
-            PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Power Ups").FindChild("Spark").gameObject, sparkButton, 5);
+            PlusAnimation(powerUpScreen.transform.Find("Mid").Find("Power Ups").Find("Spark").gameObject, sparkButton, 5);
             AudioManager.manager.PlayPositiveSound();
             amountSparks += 5;
             SetSparksAmount();
@@ -260,7 +260,7 @@ public class PowerUpsManager : MonoBehaviour {
     {
         if (BankManager.bank >= priceWings)
         {
-            PlusAnimation(powerUpScreen.transform.FindChild("Mid").FindChild("Power Ups").FindChild("Wing").gameObject, wingButton, 5);
+            PlusAnimation(powerUpScreen.transform.Find("Mid").Find("Power Ups").Find("Wing").gameObject, wingButton, 5);
             AudioManager.manager.PlayPositiveSound();
             amountWings += 5;
             SetWingsAmount();
@@ -277,8 +277,8 @@ public class PowerUpsManager : MonoBehaviour {
     }
 
     void ShowMessage(string message) {
-        if (hintMessageParent.transform.FindChild(hintMessageName)) {
-            Destroy(hintMessageParent.transform.FindChild(hintMessageName).gameObject);
+        if (hintMessageParent.transform.Find(hintMessageName)) {
+            Destroy(hintMessageParent.transform.Find(hintMessageName).gameObject);
         }
         
         

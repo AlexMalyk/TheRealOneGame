@@ -24,9 +24,9 @@
 
 public static class GPGSIds
 {
-        public const string leaderboard_best_endless_score = "CgkIlOeA57ICEAIQAg"; // <GPGSID>
-        public const string leaderboard_best_zen_score = "CgkIlOeA57ICEAIQAQ"; // <GPGSID>
-        public const string leaderboard_best_timed_score = "CgkIlOeA57ICEAIQAA"; // <GPGSID>
+        public const string leaderboard_best_endless_score = "CgkIrtuU9LUHEAIQAw"; // <GPGSID>
+        public const string leaderboard_best_zen_score = "CgkIrtuU9LUHEAIQAg"; // <GPGSID>
+        public const string leaderboard_best_timed_score = "CgkIrtuU9LUHEAIQAQ"; // <GPGSID>
 
 }
 

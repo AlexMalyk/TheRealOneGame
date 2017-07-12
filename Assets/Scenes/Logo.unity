@@ -1008,8 +1008,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rus: 0
-  eng: 0
-  ukr: 1
+  eng: 1
+  ukr: 0
   language: 0
 --- !u!1 &582149924
 GameObject:
